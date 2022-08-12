@@ -22,7 +22,7 @@ minimum_data_R(
 
 \item{r_format}{Specific to UK Biobank data. Specify if the input for the data have been downloaded using the R option. If the data have been downloaded using the .csv or .txt options, then no input is required (default).}
 
-\item{data_field_ID}{Full path to the file containing the field_IDs required for Deep-PheWAS if not using default file. Is a plain text file with no header one field-ID per row. Field-ID is a numeric value, example field-ID 54 is UK biobank assesment centre.}
+\item{data_field_ID}{Full path to the file containing the field_IDs required for Deep-PheWAS if not using default file. Is a plain text file with no header one field-ID per row. Field-ID is a numeric value, example field-ID 54 is UK biobank assessment centre.}
 
 \item{data_name_pattern}{Character string for isolating data files if these are in a directory with other files. Defaults to using all files in the directory specified by the data_folder argument.}
 

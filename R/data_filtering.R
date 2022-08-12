@@ -29,7 +29,7 @@ tab_data_clean <- function (x,y,z) {
 #' @param data_folder Full path of the directory that contains the data files that will be formatted and concatenated.
 #' @param data_files Comma separated full file paths of the data files that will be formatted and concatenated.
 #' @param r_format Specific to UK Biobank data. Specify if the input for the data have been downloaded using the R option. If the data have been downloaded using the .csv or .txt options, then no input is required (default).
-#' @param data_field_ID Full path to the file containing the field_IDs required for Deep-PheWAS if not using default file. Is a plain text file with no header one field-ID per row. Field-ID is a numeric value, example field-ID 54 is UK biobank assesment centre.
+#' @param data_field_ID Full path to the file containing the field_IDs required for Deep-PheWAS if not using default file. Is a plain text file with no header one field-ID per row. Field-ID is a numeric value, example field-ID 54 is UK biobank assessment centre.
 #' @param data_name_pattern Character string for isolating data files if these are in a directory with other files. Defaults to using all files in the directory specified by the data_folder argument.
 #' @param N_cores Number of cores requested if parallel computing is desired. Defaults to single core computing.
 #' @param save_loc Full path to save file location for minimum_tab_data.

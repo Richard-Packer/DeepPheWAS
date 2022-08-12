@@ -23,6 +23,7 @@ plink_file_edit_join <- function(x,y,remove_string,analysis_name) {
 #' @param analysis_name Name for the analysis to be used in the naming of the output files, use the same as in 03a_PLINK_association_analysis.
 #' @return an updated results RDS file that includes the now combined group results.
 #' @importFrom magrittr %>%
+#' @export
 combine_split <- function(split_plink_results_folder,
                           results_RDS_file,
                           group_name,

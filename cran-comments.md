@@ -1,3 +1,8 @@
+## Test Enviroments
+* Local CentOS Linux 7 (core), R 4.2.1
+* Local Windows 10
+* Local OS X 
+
 ## R CMD check results
 There were no ERRORs or WARNINGs. 
 
@@ -5,5 +10,4 @@ There were no ERRORs or WARNINGs.
 ## Downstream dependencies
 There are currently no down stream dependencies
 
-## Test Enviroments
-The package has been succesfully installed on Linux, Windows and Mac using the install_github() function.
+

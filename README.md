@@ -1,37 +1,28 @@
-## Welcome to GitHub Pages
+## DeepPheWAS
 
-You can use the [editor on GitHub](https://github.com/Richard-Packer/DeepPheWAS/edit/main/README.md) to maintain and preview the content for your website in Markdown files.
+## Overview
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+DeepPheWAS is an R package for running phenome wide association studies (PheWAS). 
+It allows user control of all the stages of PheWAS, from data wrangling, through
+phenotype generation and association testing. 
 
-### Markdown
+## Installation
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+``` r
+# The development version from GitHub:
+# install.packages("devtools")
+devtools::install_github("Richard-Packer/DeepPheWAS")
 ```
+## Using DeepPheWAS
+DeepPheWAS is designed to be used via the inbuilt R scripts. These R-scripts  accessed via 
+using a bash interface and utilise an argument parser (docopt) to process command line 
+inputs (arguments).
+The inbuilt R-scripts have been split into two folders to represent the two main stages of PheWAS, phenotype generation and association testing. The R scripts are located within the DeepPheWAS package at:
 
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
+/extdata/scripts/phenotype_generation/
 
-### Jekyll Themes
+and:
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/Richard-Packer/DeepPheWAS/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+/extdata/scripts/association_testing/
 
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+For further details of the functionality of the scripts and how to use them, see [user guide](https://www.medrxiv.org/content/10.1101/2022.05.05.22274419v1.supplementary-material)

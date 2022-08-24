@@ -4,7 +4,19 @@
 \alias{making_graphs}
 \title{Makes graphs from converted RDS files.}
 \usage{
-making_graphs(a, b, c, d, FDR_figure, max_FDR_graph, graph_save_location)
+making_graphs(
+  a,
+  b,
+  c,
+  d,
+  FDR_figure,
+  max_FDR_graph,
+  graph_save_location,
+  PheWAS_label_filter,
+  max_overlap,
+  graph_type,
+  label_size
+)
 }
 \arguments{
 \item{a}{type of analysis data}
@@ -20,6 +32,14 @@ making_graphs(a, b, c, d, FDR_figure, max_FDR_graph, graph_save_location)
 \item{max_FDR_graph}{value for lowest fdr value, converts 0 into this number.}
 
 \item{graph_save_location}{full file location to save graphs}
+
+\item{PheWAS_label_filter}{list of PheWAS_IDs to label within the all_pheno graph}
+
+\item{max_overlap}{maximum number of overlaps for labelled phenotypes in the all_pheno graphs}
+
+\item{graph_type}{save format of the graphs any input readable from ggsave is accepted}
+
+\item{label_size}{size of the text for labelled phenotypes.}
 }
 \value{
 Creates and then saves graphs from results files.

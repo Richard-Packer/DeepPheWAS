@@ -11,7 +11,11 @@ per_group_function(
   analysis_name,
   graph_choice,
   FDR_figure,
-  max_FDR_graph
+  max_FDR_graph,
+  PheWAS_label_filter,
+  max_overlap,
+  graph_type,
+  label_size
 )
 }
 \arguments{
@@ -28,6 +32,14 @@ per_group_function(
 \item{FDR_figure}{value of significance for FDR.}
 
 \item{max_FDR_graph}{value for lowest fdr value, converts 0 into this number.}
+
+\item{PheWAS_label_filter}{list of PheWAS_IDs to label within the all_pheno graph.}
+
+\item{max_overlap}{maximum number of overlaps for labelled phenotypes in the all_pheno graphs}
+
+\item{graph_type}{save format of the graphs any input readable from ggsave is accepted}
+
+\item{label_size}{size of the text for labelled phenotypes.}
 }
 \value{
 saved graphs per group

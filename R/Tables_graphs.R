@@ -6,16 +6,20 @@
 #' @param graph_choice numeric value indicating if all or only some graphs are chosen
 #' @param FDR_figure value of significance for FDR.
 #' @param max_FDR_graph value for lowest fdr value, converts 0 into this number.
+#' @param PheWAS_label_filter list of PheWAS_IDs to label within the all_pheno graph.
+#' @param max_overlap maximum number of overlaps for labelled phenotypes in the all_pheno graphs
+#' @param graph_type save format of the graphs any input readable from ggsave is accepted
+#' @param label_size size of the text for labelled phenotypes.
 #' @return saved graphs per group
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
-R_association_function <- function(x,save_root,analysis_name,graph_choice,FDR_figure,max_FDR_graph){
+R_association_function <- function(x,save_root,analysis_name,graph_choice,FDR_figure,max_FDR_graph,PheWAS_label_filter,max_overlap,graph_type,label_size){
   R_association_graph <- x %>%
     dplyr::group_split(.data$name)
   sex_label <- unique(x$sex_pheno_identifier)
   graph_save_location <- save_root
 
-  mapply(making_graphs,R_association_graph,MoreArgs = list(b="R",c=graph_choice,d=sex_label,FDR_figure=FDR_figure,max_FDR_graph=max_FDR_graph,graph_save_location=graph_save_location))
+  mapply(making_graphs,R_association_graph,MoreArgs = list(b="R",c=graph_choice,d=sex_label,FDR_figure=FDR_figure,max_FDR_graph=max_FDR_graph,graph_save_location=graph_save_location,PheWAS_label_filter=PheWAS_label_filter,max_overlap=max_overlap,graph_type=graph_type,label_size=label_size))
 }
 
 #' Produces per-group graphs.
@@ -27,10 +31,14 @@ R_association_function <- function(x,save_root,analysis_name,graph_choice,FDR_fi
 #' @param graph_choice numeric value indicating if all or only some graphs are chosen
 #' @param FDR_figure value of significance for FDR.
 #' @param max_FDR_graph value for lowest fdr value, converts 0 into this number.
+#' @param PheWAS_label_filter list of PheWAS_IDs to label within the all_pheno graph.
+#' @param max_overlap maximum number of overlaps for labelled phenotypes in the all_pheno graphs
+#' @param graph_type save format of the graphs any input readable from ggsave is accepted
+#' @param label_size size of the text for labelled phenotypes.
 #' @return saved graphs per group
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
-per_group_function <- function(x,y,save_root,analysis_name,graph_choice,FDR_figure,max_FDR_graph) {
+per_group_function <- function(x,y,save_root,analysis_name,graph_choice,FDR_figure,max_FDR_graph,PheWAS_label_filter,max_overlap,graph_type,label_size) {
   per_group_name <- x %>%
     dplyr::group_by(.data$collective_name,.data$PheWAS_ID) %>%
     dplyr::slice_min(.data$FDR) %>%
@@ -44,7 +52,7 @@ per_group_function <- function(x,y,save_root,analysis_name,graph_choice,FDR_figu
 
   sex_label <- unique(x$sex_pheno_identifier)
 
-  mapply(making_graphs,per_group_name,MoreArgs = list(b="per_group_name",c=graph_choice,d=sex_label,FDR_figure=FDR_figure,max_FDR_graph=max_FDR_graph,graph_save_location=graph_save_location))
+  mapply(making_graphs,per_group_name,MoreArgs = list(b="per_group_name",c=graph_choice,d=sex_label,FDR_figure=FDR_figure,max_FDR_graph=max_FDR_graph,graph_save_location=graph_save_location,PheWAS_label_filter=PheWAS_label_filter,max_overlap=max_overlap,graph_type=graph_type,label_size=label_size))
 }
 #' Produces per-SNP graphs.
 #'
@@ -55,10 +63,14 @@ per_group_function <- function(x,y,save_root,analysis_name,graph_choice,FDR_figu
 #' @param graph_choice numeric value indicating if all or only some graphs are chosen
 #' @param FDR_figure value of significance for FDR.
 #' @param max_FDR_graph value for lowest fdr value, converts 0 into this number.
+#' @param PheWAS_label_filter list of PheWAS_IDs to label within the all_pheno graph.
+#' @param max_overlap maximum number of overlaps for labelled phenotypes in the all_pheno graphs
+#' @param graph_type save format of the graphs any input readable from ggsave is accepted
+#' @param label_size size of the text for labelled phenotypes.
 #' @return saved graphs per SNP.
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
-per_snp_function <- function(a,y,save_root,analysis_name,graph_choice,FDR_figure,max_FDR_graph){
+per_snp_function <- function(a,y,save_root,analysis_name,graph_choice,FDR_figure,max_FDR_graph,PheWAS_label_filter,max_overlap,graph_type,label_size){
   per_SNP <- a %>%
     dplyr::group_split(.data$ID)
   sex_label <- unique(a$sex_pheno_identifier)
@@ -66,7 +78,7 @@ per_snp_function <- function(a,y,save_root,analysis_name,graph_choice,FDR_figure
   dir.create(per_SNP_folder)
   graph_save_location <- per_SNP_folder
 
-  mapply(making_graphs,per_SNP,MoreArgs = list(b="per_snp",c=graph_choice,d=sex_label,FDR_figure=FDR_figure,max_FDR_graph=max_FDR_graph,graph_save_location=graph_save_location))
+  mapply(making_graphs,per_SNP,MoreArgs = list(b="per_snp",c=graph_choice,d=sex_label,FDR_figure=FDR_figure,max_FDR_graph=max_FDR_graph,graph_save_location=graph_save_location,PheWAS_label_filter=PheWAS_label_filter,max_overlap=max_overlap,graph_type=graph_type,label_size=label_size))
 }
 #' Converts P values into false discovery rate.
 #'
@@ -93,10 +105,14 @@ fdr_calc <- function(x,max_pheno_tests) {
 #' @param FDR_figure value for significance threshold for fdr.
 #' @param max_FDR_graph value for lowest fdr value, converts 0 into this number.
 #' @param graph_save_location full file location to save graphs
+#' @param PheWAS_label_filter list of PheWAS_IDs to label within the all_pheno graph
+#' @param max_overlap maximum number of overlaps for labelled phenotypes in the all_pheno graphs
+#' @param graph_type save format of the graphs any input readable from ggsave is accepted
+#' @param label_size size of the text for labelled phenotypes.
 #' @return Creates and then saves graphs from results files.
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
-making_graphs <- function(a,b,c,d,FDR_figure,max_FDR_graph,graph_save_location) {
+making_graphs <- function(a,b,c,d,FDR_figure,max_FDR_graph,graph_save_location,PheWAS_label_filter,max_overlap,graph_type,label_size) {
 . <- NULL
   data <- a
   data_test <- data %>%
@@ -114,7 +130,7 @@ making_graphs <- function(a,b,c,d,FDR_figure,max_FDR_graph,graph_save_location) 
       dplyr::arrange(.data$min_FDR) %>%
       dplyr::mutate(group_number =seq(1:(nrow(.)))) %>%
       dplyr::select(.data$phenotype_group,.data$group_number)
-
+if(is.null(PheWAS_label_filter)){
     all_pheno_data <- data %>%
       dplyr::left_join(order,by="phenotype_group") %>%
       dplyr::arrange(.data$FDR) %>%
@@ -128,7 +144,22 @@ making_graphs <- function(a,b,c,d,FDR_figure,max_FDR_graph,graph_save_location) 
                     seq=seq+150*(.data$group_number-1)) %>%
       dplyr::mutate(size=dplyr::case_when(is.na(.data$OR) ~ sqrt(.data$Beta^2),
                                                  is.na(.data$Beta) ~ sqrt((log(.data$OR))^2)))
+} else {
+  all_pheno_data <- data %>%
+    dplyr::left_join(order,by="phenotype_group") %>%
+    dplyr::arrange(.data$FDR) %>%
+    dplyr::arrange(.data$group_number) %>%
+    dplyr::mutate(annotate=ifelse(.data$PheWAS_ID %in% PheWAS_label_filter,T,F),
+                  short_desc_T=paste0(.data$short_desc," ",.data$group),
+                  short_desc=factor(.data$short_desc, levels = unique(.$short_desc)),
+                  seq=seq(nrow(.)),
+                  y_axis_info=-log10(.data$FDR)) %>%
+    dplyr::mutate(short_desc_T=factor(.data$short_desc_T, levels = unique(.$short_desc_T)),
+                  seq=seq+150*(.data$group_number-1)) %>%
+    dplyr::mutate(size=dplyr::case_when(is.na(.data$OR) ~ sqrt(.data$Beta^2),
+                                        is.na(.data$Beta) ~ sqrt((log(.data$OR))^2)))
 
+}
     labels= dplyr::summarize(dplyr::group_by(all_pheno_data, .data$group_number), tick=mean(unique(seq)),label=as.character(.data$phenotype_group[1]))
     labels=labels[order(labels$tick),]
 
@@ -157,7 +188,7 @@ making_graphs <- function(a,b,c,d,FDR_figure,max_FDR_graph,graph_save_location) 
       ggplot2::scale_x_continuous(name="Phenotype groups", limits=c(1,max.x), breaks=labels$tick, labels=labels$label, expand=c(.01,0)) +
       ggplot2::geom_hline(yintercept=-log10(FDR_figure),colour="red", alpha=I(1/3),size=1) +
       ggrepel::geom_text_repel(ggplot2::aes(label=.data$short_desc),colour="black",data=all_pheno_data[all_pheno_data$annotate,],
-                      size=2,angle=0,max.overlaps = 15) +
+                      size=label_size,angle=0,max.overlaps = max_overlap) +
       ggplot2::guides(color=F,fill=F,shape=ggplot2::guide_legend("Direction of Effect")) +
       ggplot2::scale_size_area(name="Effect size",breaks=scales::breaks_extended(3),max_size = 4) +
       ggplot2::theme(panel.background=ggplot2::element_blank(),
@@ -166,7 +197,9 @@ making_graphs <- function(a,b,c,d,FDR_figure,max_FDR_graph,graph_save_location) 
             axis.text.x=ggplot2::element_text(size=7, colour="black", angle=-45, hjust=0, vjust=0),
             axis.line =ggplot2::element_line(colour="black"),
             axis.ticks=ggplot2::element_line(colour="black"),
-            legend.key=ggplot2::element_blank())
+            legend.position = c(0.8,0.8),
+            legend.key=ggplot2::element_blank(),
+            plot.margin = ggplot2::margin(1,40,1,1))
 
     sig_pheno_data <- all_pheno_data %>%
       dplyr::filter(.data$FDR<0.01)
@@ -192,18 +225,18 @@ making_graphs <- function(a,b,c,d,FDR_figure,max_FDR_graph,graph_save_location) 
             legend.key=ggplot2::element_blank(),
             legend.key.height=ggplot2::unit(0.5,"line"))
     if(c=="both") {
-      ggplot2::ggsave(filename = paste0(graph_save_location,"/",name_file,"_sig_pheno.png"),
-             plot = sig_results_all, device = "png", dpi = 300, width = 9,height = 6,units = "in")
-      ggplot2::ggsave(filename = paste0(graph_save_location,"/",name_file,"_all_pheno.png"),
-             plot = all_pheno_graph, device = "png", dpi = 300, width = 9,height = 6,units = "in")
+      ggplot2::ggsave(filename = paste0(graph_save_location,"/",name_file,"_sig_pheno.",graph_type),
+             plot = sig_results_all, device = graph_type, dpi = 300, width = 9,height = 6,units = "in")
+      ggplot2::ggsave(filename = paste0(graph_save_location,"/",name_file,"_all_pheno.",graph_type),
+             plot = all_pheno_graph, device = graph_type, dpi = 300, width = 9,height = 6,units = "in")
 
     } else if (c=="sig_only") {
-      ggplot2::ggsave(filename = paste0(graph_save_location,"/",name_file,"_sig_pheno.png"),
-             plot = sig_results_all, device = "png", dpi = 300, width = 9,height = 6,units = "in")
+      ggplot2::ggsave(filename = paste0(graph_save_location,"/",name_file,"_sig_pheno.",graph_type),
+             plot = sig_results_all, device = graph_type, dpi = 300, width = 9,height = 6,units = "in")
 
     } else if(c=="all_pheno") {
-      ggplot2::ggsave(filename = paste0(graph_save_location,"/",name_file,"_all_pheno.png"),
-             plot = all_pheno_graph, device = "png", dpi = 300, width = 9,height = 6,units = "in")
+      ggplot2::ggsave(filename = paste0(graph_save_location,"/",name_file,"_all_pheno.",graph_type),
+             plot = all_pheno_graph, device = graph_type, dpi = 300, width = 9,height = 6,units = "in")
     }
   }
 }
@@ -229,14 +262,18 @@ making_graphs <- function(a,b,c,d,FDR_figure,max_FDR_graph,graph_save_location) 
 #' @param R_association_graph Logical if True indicates use different graph input and data is from R-association rather than Plink.
 #' @param graph_choice Value that indicates whether to produce one or two graphs and which ones.
 #' @param R_association_results Logical if True indicates data is from R-association rather than Plink.
-#' @param per_group_name_graph Logical if true produce grpahs grouping by group.
-#' @param per_snp_graph Logical if true produce grpahs grouping by SNP
+#' @param per_group_name_graph Logical if true produce graphs grouping by group.
+#' @param per_snp_graph Logical if true produce graphs grouping by SNP
 #' @param max_pheno_tests the maximum number of tests that are being run across grouping variable. Must be at => the number of associations.
 #' @param FDR_figure value of significance for FDR.
 #' @param max_FDR_graph value for lowest fdr value, converts 0 into this number.
 #' @param MAC_figure Minor allele count filter numeric.
 #' @param MAC_cases_N Minor allele count filter in cases
 #' @param MAC_control_N Minor allele count filter in controls
+#' @param PheWAS_label_filter list of PheWAS_IDs to label within the all_pheno graph.
+#' @param max_overlap maximum number of overlaps for labelled phenotypes in the all_pheno graphs
+#' @param graph_type save format of the graphs any input readable from ggsave is accepted
+#' @param label_size size of the text for labelled phenotypes.
 #' @return Saved tables and graphs, graphs created through calling additional functions.
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
@@ -266,7 +303,8 @@ Deep_PheWAS_graphs_tables <- function(x,y,
                                       max_FDR_graph,
                                       MAC_figure,
                                       MAC_cases_N,
-                                      MAC_control_N){
+                                      MAC_control_N,
+                                      PheWAS_label_filter,max_overlap,graph_type,label_size){
 
   . <- NULL
   # define save folder
@@ -411,17 +449,18 @@ save_root <- save_folder
     }
     if(per_group_name_graph) {
 
-      mapply(per_group_function,main_table_fdr_split,MoreArgs = list(y=x,save_root=save_root,analysis_name=analysis_name,graph_choice=graph_choice,FDR_figure=FDR_figure,max_FDR_graph=max_FDR_graph))
+      mapply(per_group_function,main_table_fdr_split,MoreArgs = list(y=x,save_root=save_root,analysis_name=analysis_name,graph_choice=graph_choice,FDR_figure=FDR_figure,max_FDR_graph=max_FDR_graph,PheWAS_label_filter=PheWAS_label_filter,max_overlap=max_overlap,graph_type=graph_type,label_size=label_size))
     }
     if(per_snp_graph) {
 
-      mapply(per_snp_function,main_table_fdr_split,MoreArgs = list(y=x,save_root=save_root,analysis_name=analysis_name,graph_choice=graph_choice,FDR_figure=FDR_figure,max_FDR_graph=max_FDR_graph))
+      mapply(per_snp_function,main_table_fdr_split,MoreArgs = list(y=x,save_root=save_root,analysis_name=analysis_name,graph_choice=graph_choice,FDR_figure=FDR_figure,max_FDR_graph=max_FDR_graph,PheWAS_label_filter=PheWAS_label_filter,max_overlap=max_overlap,graph_type=graph_type,label_size=label_size))
     }
   }
 
   if(R_association_graph) {
     mapply(R_association_function,main_table_fdr_split,MoreArgs = list(save_root=save_root,analysis_name=analysis_name,
-           graph_choice=graph_choice,FDR_figure=FDR_figure,max_FDR_graph=max_FDR_graph))
+           graph_choice=graph_choice,FDR_figure=FDR_figure,max_FDR_graph=max_FDR_graph,PheWAS_label_filter=PheWAS_label_filter,
+           max_overlap=max_overlap,graph_type=graph_type,label_size=label_size))
   }
 
 }
@@ -456,6 +495,10 @@ save_root <- save_folder
 #'@param save_table_per_group_name Select if wanting to produce tables per-group_name. This is used when looking to report the most significant finding across several SNPs for a single construct, potentially and gene or a sentinel SNP with a credible set. It is a column in the SNP_list file. Default is FALSE.
 #'@param save_table_per_snp Specify whether a results table should be generated for every SNP provided (TRUE) or not (FALSE). Default is FALSE. Will be saved in a created folder named /analysis_name_group_per_SNP_tables. Example if the group was groupA and analysis_name top_SNPs the folder would be /top_SNPs_groupA_per_SNP_tables.
 #'@param R_association_graph Specify whether a figure of the results from the association analysis from 03b_R_association_testing.R should be produced (TRUE) or not (FALSE). Default is FALSE.
+#'@param PheWAS_ID_label_filter Full file path to plain text file containing single headed column of PheWAS_IDs. Only these PheWAS_IDs will be labelled within any graphical output designed to be used primarily when trying to edit a single graph as the filter will apply to all graphs being created.
+#'@param max_overlap_labels Number, represents maximum overlaps for labelling of phenotypes in the all_pheno graph, lowering the number has the effect of reducing the total number of phenotypes labelled. Default: 20
+#'@param graph_file_save Allows user to specifiy the file format of the graphs, for example pdf or png. Default: png
+#'@param label_text_size Number, represents the text size of the labelled phenotypes in all_pheno graph. Default: 2
 #' @return Tables and graphs of the association results.
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
@@ -485,7 +528,11 @@ graphs_tables_DeepPheWAS <- function(results_file,
                                      per_snp_graph,
                                      save_table_per_group_name,
                                      save_table_per_snp,
-                                     R_association_graph){
+                                     R_association_graph,
+                                     PheWAS_ID_label_filter,
+                                     max_overlap_labels,
+                                     graph_file_save,
+                                     label_text_size){
 if(is.null(PheWAS_manifest_overide)){
   PheWAS_manifest <- data.table::fread(system.file("extdata","PheWAS_manifest.csv.gz", package = "DeepPheWAS"))
 } else {
@@ -580,12 +627,46 @@ if(is.null(max_pheno)) {
 } else {
   max_pheno_tests <- as.numeric(max_pheno)
 }
+if(is.na(as.numeric(sig_FDR))){
+  rlang::abort(paste0("'sig_FDR' must be a numeral"))
+}
 FDR_figure <- as.numeric(sig_FDR)
+if(is.na(as.numeric(MAC))){
+  rlang::abort(paste0("'MAC' must be a numeral"))
+}
 MAC_figure <- as.numeric(MAC)
+if(is.na(as.numeric(MAC_case))){
+  rlang::abort(paste0("'MAC_case' must be a numeral"))
+}
 MAC_cases_N <- as.numeric(MAC_case)
+if(is.na(as.numeric(MAC_control))){
+  rlang::abort(paste0("'MAC_control' must be a numeral"))
+}
 MAC_control_N <- as.numeric(MAC_control)
+if(is.na(as.numeric(max_FDR_graph))){
+  rlang::abort(paste0("'max_FDR_graph' must be a numeral"))
+}
 max_FDR_graph_parse <- as.numeric(max_FDR_graph)
 max_FDR_graph <- 10^(-max_FDR_graph_parse)
+if(!is.null(PheWAS_ID_label_filter)){
+  if(!file.exists(PheWAS_ID_label_filter)){
+    rlang::abort(paste0("'PheWAS_ID_label_filter' must be a file"))
+  }
+  PheWAS_label_filter <- data.table::fread(PheWAS_ID_label_filter) %>%
+    dplyr::pull(1)
+} else {
+  PheWAS_label_filter <- NULL
+}
+if(is.na(as.numeric(max_overlap_labels))){
+  rlang::abort(paste0("'max_overlap_labels' must be a numeral"))
+}
+max_overlap <- as.numeric(max_overlap_labels)
+graph_type <- graph_file_save
+if(is.na(as.numeric(label_text_size))){
+  rlang::abort(paste0("'label_text_size' must be a numeral"))
+}
+label_size <- as.numeric(label_text_size)
+
 # graph choices
 if(no_graph_all & isFALSE(no_graph_sig)) {
   graph_choice <- "sig_only"
@@ -620,5 +701,7 @@ mapply(Deep_PheWAS_graphs_tables,group_names,all_results,MoreArgs = list(save_fo
                                                                          max_FDR_graph=max_FDR_graph,
                                                                          MAC_figure=MAC_figure,
                                                                          MAC_cases_N=MAC_cases_N,
-                                                                         MAC_control_N=MAC_control_N))
+                                                                         MAC_control_N=MAC_control_N,
+                                                                         PheWAS_label_filter=PheWAS_label_filter,
+                                                                         max_overlap=max_overlap,graph_type=graph_type,label_size=label_size))
 }

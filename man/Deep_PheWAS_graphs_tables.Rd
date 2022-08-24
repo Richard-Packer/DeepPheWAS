@@ -32,7 +32,11 @@ Deep_PheWAS_graphs_tables(
   max_FDR_graph,
   MAC_figure,
   MAC_cases_N,
-  MAC_control_N
+  MAC_control_N,
+  PheWAS_label_filter,
+  max_overlap,
+  graph_type,
+  label_size
 )
 }
 \arguments{
@@ -76,9 +80,9 @@ Deep_PheWAS_graphs_tables(
 
 \item{R_association_results}{Logical if True indicates data is from R-association rather than Plink.}
 
-\item{per_group_name_graph}{Logical if true produce grpahs grouping by group.}
+\item{per_group_name_graph}{Logical if true produce graphs grouping by group.}
 
-\item{per_snp_graph}{Logical if true produce grpahs grouping by SNP}
+\item{per_snp_graph}{Logical if true produce graphs grouping by SNP}
 
 \item{max_pheno_tests}{the maximum number of tests that are being run across grouping variable. Must be at => the number of associations.}
 
@@ -91,6 +95,14 @@ Deep_PheWAS_graphs_tables(
 \item{MAC_cases_N}{Minor allele count filter in cases}
 
 \item{MAC_control_N}{Minor allele count filter in controls}
+
+\item{PheWAS_label_filter}{list of PheWAS_IDs to label within the all_pheno graph.}
+
+\item{max_overlap}{maximum number of overlaps for labelled phenotypes in the all_pheno graphs}
+
+\item{graph_type}{save format of the graphs any input readable from ggsave is accepted}
+
+\item{label_size}{size of the text for labelled phenotypes.}
 }
 \value{
 Saved tables and graphs, graphs created through calling additional functions.

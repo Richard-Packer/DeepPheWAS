@@ -31,7 +31,11 @@ graphs_tables_DeepPheWAS(
   per_snp_graph,
   save_table_per_group_name,
   save_table_per_snp,
-  R_association_graph
+  R_association_graph,
+  PheWAS_ID_label_filter,
+  max_overlap_labels,
+  graph_file_save,
+  label_text_size
 )
 }
 \arguments{
@@ -88,6 +92,14 @@ graphs_tables_DeepPheWAS(
 \item{save_table_per_snp}{Specify whether a results table should be generated for every SNP provided (TRUE) or not (FALSE). Default is FALSE. Will be saved in a created folder named /analysis_name_group_per_SNP_tables. Example if the group was groupA and analysis_name top_SNPs the folder would be /top_SNPs_groupA_per_SNP_tables.}
 
 \item{R_association_graph}{Specify whether a figure of the results from the association analysis from 03b_R_association_testing.R should be produced (TRUE) or not (FALSE). Default is FALSE.}
+
+\item{PheWAS_ID_label_filter}{Full file path to plain text file containing single headed column of PheWAS_IDs. Only these PheWAS_IDs will be labelled within any graphical output designed to be used primarily when trying to edit a single graph as the filter will apply to all graphs being created.}
+
+\item{max_overlap_labels}{Number, represents maximum overlaps for labelling of phenotypes in the all_pheno graph, lowering the number has the effect of reducing the total number of phenotypes labelled. Default: 20}
+
+\item{graph_file_save}{Allows user to specifiy the file format of the graphs, for example pdf or png. Default: png}
+
+\item{label_text_size}{Number, represents the text size of the labelled phenotypes in all_pheno graph. Default: 2}
 }
 \value{
 Tables and graphs of the association results.

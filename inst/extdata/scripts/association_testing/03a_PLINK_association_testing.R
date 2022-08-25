@@ -14,14 +14,14 @@ Options:
     --analysis_folder=<FOLDER>          Full path of the directory in which the association results will be saved.
     --phenotype_files=<FILE>            Comma-separated list containing the full paths of the phenotype data.
     --covariate=<file>                  Full path of a file containing covariate data to be used in model adjustment.
-    --variants_for_association=<FILE>   Full path of the genetic data for the SNPs of interest (produced by the extract_SNP.R script).                          
+    --variants_for_association=<FILE>   Full path of the genetic data for the SNPs of interest (produced by the extract_SNP.R script).
 	--analysis_name=<name>              Name for the analysis to be used in the naming of the output files.
 
     Options
-    --group_name_overide=<text>         Comma-separated list containing alternative group names. By default, group names are extracted from 
-									    the suffix of the file names provided in the phenotype_files argument. For example, if a file named 
-										/home/phenotypes/EUR_phenotypes.csv were provided, the corresponding group name would be "EUR". This 
-										argument allows for a different group name to be specified. The order of names provided should match 
+    --group_name_overide=<text>         Comma-separated list containing alternative group names. By default, group names are extracted from
+									    the suffix of the file names provided in the phenotype_files argument. For example, if a file named
+										/home/phenotypes/EUR_phenotypes.csv were provided, the corresponding group name would be "EUR". This
+										argument allows for a different group name to be specified. The order of names provided should match
 										the files specified in the phenotype_files argument.
 
     --PheWAS_manifest_overide=<FILE>    Full file path of the alternative PheWAS_manifest file.
@@ -39,13 +39,13 @@ Options:
                                         N_quant_split and N_binary_split. Split files are saved in analysis_folder/group_split with group being the group
                                         name. A file is created in analysis_folder/group_split saved as group_split_guide with group once again being the
                                         group name inputted. This file lists the file names of the splits, which can be used to guide distributed
-                                        computing analysis. 
+                                        computing analysis.
     --N_quant_split=<number>            Number of quantitative phenotypes per split file. [default: 200]
     --N_binary_split=<number>           Number of binary phenotypes per split file. [default: 80]
     --split_analysis                    Specify whether the input being analysed is from the split_group argument.
     --model=<text>                      Genetic model to use for analysis, can be one of genotypic, hethom, dominant, recessive, hetonly. If not one of
                                         these options will be converted to blank.
-    --check_existing_results            Input if wanting to re-run part of the analysis whilst checking for existing results in the plink_results folder. Used 
+    --check_existing_results            Input if wanting to re-run part of the analysis whilst checking for existing results in the plink_results folder. Used
 										primarily where a run has aborted part way through.
 
 ' -> doc
@@ -54,8 +54,7 @@ suppressMessages(library(docopt))
 
 arguments <- docopt(doc, version = 'v0.2 03a_PLINK_association_testing')
 
-library(devtools)
-load_all()
+library(DeepPheWAS)
 
 plink_association_testing(analysis_folder=arguments$analysis_folder,
                           phenotype_files=arguments$phenotype_files,

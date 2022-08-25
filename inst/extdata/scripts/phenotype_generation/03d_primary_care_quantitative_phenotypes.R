@@ -10,7 +10,7 @@ Options:
 
     Mandated inputs
     --GPC=<FILE>                              Full path of the primary care clinical data file from UK Biobank.
-    --DOB=<FILE>                              Full path of a file describing participant date of birth. This does not need to be the exact date. By default for UK Biobank data, 
+    --DOB=<FILE>                              Full path of a file describing participant date of birth. This does not need to be the exact date. By default for UK Biobank data,
 											  the script creates the date of birth from month and year of birth (data-fields 52 and 34).
     --phenotype_save_file=<FILE>              Full path of the save file for the generated concepts RDS to be used for phenotype creation.
 
@@ -23,8 +23,7 @@ Options:
 suppressMessages(library(docopt))
 arguments <- docopt(doc, version = 'v0.2 03d_primary_care_quantitiative_phenotypes.R')
 
-library(devtools)
-load_all()
+library(DeepPheWAS)
 
 primarycare_quantitative_phenotypes(GPC=arguments$GPC,
                                     DOB=arguments$DOB,

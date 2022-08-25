@@ -1,7 +1,7 @@
 #! /usr/bin/env Rscript
-'CThis script concatenates and edits linked healthcare data from UK Biobank into a single long file with participant identifier, clinical code, date of clinical code’s recording, and data source. 
+'CThis script concatenates and edits linked healthcare data from UK Biobank into a single long file with participant identifier, clinical code, date of clinical code’s recording, and data source.
 Current data sources are:MD – when ICD-10 code is taken from mortality data; cancer – when ICD-10 code is taken from cancer registry data; ICD10-1 – when an ICD-10 code is taken from hospital records as one of the primary causes of admission; ICD10-2 – when an ICD-10 code is taken from hospital records as a secondary cause of admission; ICD10-3 – when an ICD-10 code is taken from hospital records as an external cause of admission; ICD9-1 – when an ICD-9 code is taken from hospital records as one of the primary causes of admission; ICD9-2 – when an ICD-9 code is taken from hospital records as an external cause of admission; ICD9-3 – when an ICD-9 code is taken from hospital records as one of the primary causes of admission; OPCS – A OPCS-4 code taken from the hospital records; SR – A self-report code for a non-cancer illness taken from data field 20002; SROP - A self-report code for an operation taken from data field 20004; V2 – A Read V2 code taken from the primary care clinical data; V3 – A Read V3 code taken from the primary care clinical data.
-The current iteration of this script is purpose-built for UK Biobank data. As such, if this script is to be applied to non-UK Biobank data, it would first need to be formatted to mimic that of UK Biobank or to mimic the expected output of the script. The two self-reported data sources are specific to UK Biobank and if similar data were available in another data set, these would need to be mapped to the UK Biobank code used in data fields 20002 and 20004. 
+The current iteration of this script is purpose-built for UK Biobank data. As such, if this script is to be applied to non-UK Biobank data, it would first need to be formatted to mimic that of UK Biobank or to mimic the expected output of the script. The two self-reported data sources are specific to UK Biobank and if similar data were available in another data set, these would need to be mapped to the UK Biobank code used in data fields 20002 and 20004.
 Primary care prescription data from UK Biobank does not lend itself to be easily combined in this way and so it is edited and saved as a separate file.
 
 Usage:
@@ -32,8 +32,7 @@ Options:
 suppressMessages(library(docopt))
 arguments <- docopt(doc, version = 'v0.2 02_data_preparation.R')
 
-library(devtools)
-load_all()
+library(DeepPheWAS)
 
 data_preparation_R(min_data=arguments$min_data,
                    GPC=arguments$GPC,

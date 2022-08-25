@@ -33,9 +33,9 @@ Options:
                                           GRS analysis this name is always the trait being analysed.
     Options
     --covariates=<FILE>                   Full file path for the covariates file see user guide for more information.
-    --group_name_overide=<text>           Comma-separated list containing alternative group names. By default, group names are extracted from the suffix of 
-										  the file names provided in the phenotype_files argument. For example, if a file named /home/phenotypes/EUR_phenotypes.csv 
-										  were provided, the corresponding group name would be "EUR". This argument allows for a different group name to be specified. 
+    --group_name_overide=<text>           Comma-separated list containing alternative group names. By default, group names are extracted from the suffix of
+										  the file names provided in the phenotype_files argument. For example, if a file named /home/phenotypes/EUR_phenotypes.csv
+										  were provided, the corresponding group name would be "EUR". This argument allows for a different group name to be specified.
 										  The order of names provided should match the files specified in the phenotype_files argument.
 
     --N_cores=<number>                    Number of cores requested if parallel computing is desired. Defaults to single core computing.
@@ -57,8 +57,7 @@ suppressMessages(library(docopt))
 
 arguments <- docopt(doc, version = 'v0.2 03b_R_association_testing.R')
 
-library(devtools)
-load_all()
+library(DeepPheWAS)
 
 R_association_testing(analysis_folder=arguments$analysis_folder,
                       phenotype_files=arguments$phenotype_files,

@@ -22,8 +22,7 @@ Options:
 suppressMessages(library(docopt))
 arguments <- docopt(doc, version = 'v0.2 03b_data_field_phenotypes.R')
 
-library(devtools)
-load_all()
+library(DeepPheWAS)
 
 data_field_phenotyping(arguments$min_data,
                        arguments$phenotype_save_file,

@@ -21,7 +21,7 @@ Options:
 
 
     Optional arguments
-    --groupings=<FILE>                      Full path of the file containing group information used for stratifying the sample. If this argument is specified, 
+    --groupings=<FILE>                      Full path of the file containing group information used for stratifying the sample. If this argument is specified,
  										    the phenotype filtering will be performed within the groups. Otherwise, the filtering will be performed in all individuals.
     --quantitative_Case_N=<number>          Number that represents the minimum number of cases for quantitative phenotype inclusion.
                                             [default: 100]
@@ -44,7 +44,7 @@ Options:
                                             (if any) that should be applied to the phenotype. Current accepted transformations are IVNT for inverse normal
                                             transformation. All age of onset phenotypes to be labelled (PheWAS_ID)_age_of_onset.
     --DOB_file=<FILE>                       Full file path to file containing DOB information.
-    --IVNT                                  Specify whether quantitative phenotypes, defined in the PheWAS manifest, should undergo a rank-based inverse normal 
+    --IVNT                                  Specify whether quantitative phenotypes, defined in the PheWAS manifest, should undergo a rank-based inverse normal
 										    transformation (TRUE) or not (FALSE). Default is FALSE.
     --save_RDS=<FILE>                       Full file path to save location to save and intermediate RDS file that has been filtererd by case_N and
                                             relatedness (if chosen) but not converted to dataframe for analysis.
@@ -58,8 +58,7 @@ suppressMessages(library(docopt))
 
 arguments <- docopt(doc, version = 'v1.0 01_phenotype_preparation.R')
 
-library(devtools)
-load_all()
+library(DeepPheWAS)
 
 phenotype_preparation(phenotype_filtered_save_name=arguments$phenotype_filtered_save_name,
                       phenotype_folder=arguments$phenotype_folder,

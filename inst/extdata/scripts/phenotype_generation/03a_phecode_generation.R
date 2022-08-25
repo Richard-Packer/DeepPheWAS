@@ -27,7 +27,7 @@ Options:
     --N_cores=<number>                        Number of cores requested if parallel computing is desired. Defaults to single core computing.
     --no_range_ID                             Choose whether to save lists of participant identifiers to be excluded from control definitions (FALSE) or not (TRUE). Defaults to FALSE.
 
-    --ICD10=<text_comma>                      Comma-separated string representing the column names used in health_data for ICD-10 values. If there are no ICD-10 values, 
+    --ICD10=<text_comma>                      Comma-separated string representing the column names used in health_data for ICD-10 values. If there are no ICD-10 values,
 											  use NA or any text not used as a source in health data. Defaults to "ICD10".
 
     --ICD9=<text_comma>                       Comma-separated string representing the column names used in health_data for ICD-9 values. If there are
@@ -39,8 +39,7 @@ Options:
 suppressMessages(library(docopt))
 arguments <- docopt(doc, version = 'v0.1 pheocode_generation.R')
 
-library(devtools)
-load_all()
+library(DeepPheWAS)
 
 generating_phecodes(health_data=arguments$health_data,
                     sex_info=arguments$sex_info,

@@ -1,5 +1,5 @@
 #!/usr/bin/env Rscript
-'This script creates composite phenotypes and composite concepts using a central map file. Also creates population_control ID lists that are used when creating the composite phenotypes. The phenotype creating script iterates over itself (default five times) as some composite phenotypes use other composite phenotypes in their definition.  
+'This script creates composite phenotypes and composite concepts using a central map file. Also creates population_control ID lists that are used when creating the composite phenotypes. The phenotype creating script iterates over itself (default five times) as some composite phenotypes use other composite phenotypes in their definition.
 
 Usage:
     05_composite_phenotypes.R (--phenotype_save_file=<FILE>) (--phenotype_folder=<FOLDER> | --phenotype_files=<FILES>)[--curated_phenotype_map=<FILE> --control_populations=<FILE> --N_iterations=<number> --update_list=<FILE>]
@@ -18,14 +18,14 @@ Options:
 
     --N_iterations=<number>                   Number of iterations curated phenotype script is to run through. [default: 5]
 
-    --control_populations=<FILE>              Full path of the "control_populations" file containing columns of IDs, column names are used to create lists of IDs. 
-											  Saved as a list called control_populations.RDS in the folder inputted in the phenotype_folder flag. The lists are used to 
-											  define some of the composite phenotype control populations as directed by the composite_phenotype_map file. The unedited 
-									          version of the composite_phenotype_map file uses two populations, all_pop and primary_care_pop, which represent all IDs 
+    --control_populations=<FILE>              Full path of the "control_populations" file containing columns of IDs, column names are used to create lists of IDs.
+											  Saved as a list called control_populations.RDS in the folder inputted in the phenotype_folder flag. The lists are used to
+											  define some of the composite phenotype control populations as directed by the composite_phenotype_map file. The unedited
+									          version of the composite_phenotype_map file uses two populations, all_pop and primary_care_pop, which represent all IDs
 											  in the sample and all IDs with available primary care data. To create composite phenotypes, the names of these list must match
 											  the composite_phenotype_map file. The 02_data_preparation.R script creates a control_populations file that is used by default.
 
-    --update_list=<FILE>                      Option to run this script as an update to an existing composite_phenotype list object. If specified, this script will use 
+    --update_list=<FILE>                      Option to run this script as an update to an existing composite_phenotype list object. If specified, this script will use
 											  phenotype_save_file to load the existing list and then save over that file upon completion.
 ' -> doc
 
@@ -33,8 +33,7 @@ suppressMessages(library(docopt))
 
 arguments <- docopt(doc, version = 'v0.2 05_composite_phenotypes.R')
 
-library(devtools)
-load_all()
+library(DeepPheWAS)
 
 composite_phenotyping(composite_phenotype_map_overide=arguments$composite_phenotype_map_overide,
                       phenotype_folder=arguments$phenotype_folder,

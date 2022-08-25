@@ -24,8 +24,7 @@ Options:
 suppressMessages(library(docopt))
 arguments <- docopt(doc, version = 'v0.2 04_formula_phenotypes.R')
 
-library(devtools)
-load_all()
+library(DeepPheWAS)
 
 formula_phenotypes(min_data=arguments$min_data,
                    data_field_phenotypes=arguments$data_field_phenotypes,

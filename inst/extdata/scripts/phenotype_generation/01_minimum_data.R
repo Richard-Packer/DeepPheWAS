@@ -16,7 +16,7 @@ Options:
     --data_files=<FILES>          Comma separated full file paths of the data files that will be formatted and concatenated.
 
     Options
-    --r_format                    Specific to UK Biobank data. Specify if the input for the data have been downloaded using the R option. If the data 
+    --r_format                    Specific to UK Biobank data. Specify if the input for the data have been downloaded using the R option. If the data
 								  have been downloaded using the .csv or .txt options, then no input is required (default).
 
     --data_field_ID=<FILE>        Full path to the file containing the field_IDs required for Deep-PheWAS if not using default file. Is a plain text
@@ -33,8 +33,7 @@ Options:
 suppressMessages(library(docopt))
 arguments <- docopt(doc, version = 'v0.2 01_minimum_data.R')
 
-library(devtools)
-load_all()
+library(DeepPheWAS)
 
 minimum_data_R(data_folder=arguments$data_folder,
                data_files=arguments$data_files,

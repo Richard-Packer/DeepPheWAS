@@ -76,8 +76,7 @@ suppressMessages(library(docopt))
 
 arguments <- docopt(doc, version = 'v0.2 05_tables_graphs.R')
 
-library(devtools)
-load_all()
+library(DeepPheWAS)
 
 graphs_tables_DeepPheWAS(results_file=arguments$results_file,
                          analysis_name=arguments$analysis_name,

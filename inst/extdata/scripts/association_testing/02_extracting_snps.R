@@ -13,11 +13,11 @@ Options:
     Mandatory inputs
     --genetic_file_guide=<FILE>           Full path of the completed genetic_file_guide_template.csv.
 
-    --SNP_list=<FILE>                     Full path of the file describing which SNPs are to be extracted from the genetic data files ahead of association testing. 
+    --SNP_list=<FILE>                     Full path of the file describing which SNPs are to be extracted from the genetic data files ahead of association testing.
 
-    --analysis_folder=<FOLDER>            Full path of the folder that will contain the data for the SNPs given by SNP_list. A temporary folder, named "temp_plink" 
-										  by default, will be created within the folder specified by this argument as a place to hold temporary files needed for the 
-										  SNP extraction process. Unless otherwise requested by specifying the no_delete_temp argument, the temporary folder and its 
+    --analysis_folder=<FOLDER>            Full path of the folder that will contain the data for the SNPs given by SNP_list. A temporary folder, named "temp_plink"
+										  by default, will be created within the folder specified by this argument as a place to hold temporary files needed for the
+										  SNP extraction process. Unless otherwise requested by specifying the no_delete_temp argument, the temporary folder and its
 										  contents will be deleted following successful SNP extraction.
     Select one of
     --bgen_input                          Specify that the genetic data files are in .bgen format.
@@ -26,7 +26,7 @@ Options:
     Options
     --plink_exe=<text>                    Full path to the PLINK2 executable. [default: plink2]
     --plink_type=<text>                   Specify whether the PLINK-formatted genetic data are in .bed or .pgen format. [default: bed]
-    --ref_bgen=<text>                     One of the following three values that specifies which allele is to be used as the reference: ref-first (first allele is the reference, default), 
+    --ref_bgen=<text>                     One of the following three values that specifies which allele is to be used as the reference: ref-first (first allele is the reference, default),
 										  ref-last (last allele is the reference), red-unknown (last allele is provisionally treated as the reference). [default: ref-first]
     --bgenix_exe=<text>                   Full path to the bgenix executable. [default: bgenix]
     --variant_save_name=<name>            Name of the output genetic data files. [default: variants_for_association]
@@ -39,8 +39,7 @@ suppressMessages(library(docopt))
 
 arguments <- docopt(doc, version = 'v0.2 02_extracting_SNPs')
 
-library(devtools)
-load_all()
+library(DeepPheWAS)
 
 snp_extractor(genetic_file_guide=arguments$genetic_file_guide,
               SNP_list=arguments$SNP_list,

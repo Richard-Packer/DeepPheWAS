@@ -25,8 +25,7 @@ suppressMessages(library(docopt))
 
 arguments <- docopt(doc, version = 'v0.2 04_combine_split.R')
 
-library(devtools)
-load_all()
+library(DeepPheWAS)
 
 combine_split(split_plink_results_folder=arguments$split_plink_results_folder,
               results_RDS_file=arguments$results_RDS_file,

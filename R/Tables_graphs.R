@@ -126,13 +126,14 @@ making_graphs <- function(a,b,c,d,FDR_figure,max_FDR_graph,graph_save_location,P
 
     order <- data  %>%
       dplyr::group_by(.data$phenotype_group) %>%
-      dplyr::summarise(min_FDR=min(.data$FDR)) %>%
+      dplyr::summarise(min_FDR=min(.data$FDR,na.rm = T)) %>%
       dplyr::arrange(.data$min_FDR) %>%
       dplyr::mutate(group_number =seq(1:(nrow(.)))) %>%
       dplyr::select(.data$phenotype_group,.data$group_number)
 if(is.null(PheWAS_label_filter)){
     all_pheno_data <- data %>%
       dplyr::left_join(order,by="phenotype_group") %>%
+      tidyr::drop_na(.data$FDR) %>%
       dplyr::arrange(.data$FDR) %>%
       dplyr::arrange(.data$group_number) %>%
       dplyr::mutate(annotate=ifelse(.data$FDR<=FDR_figure,T,F),
@@ -147,6 +148,7 @@ if(is.null(PheWAS_label_filter)){
 } else {
   all_pheno_data <- data %>%
     dplyr::left_join(order,by="phenotype_group") %>%
+    tidyr::drop_na(.data$FDR) %>%
     dplyr::arrange(.data$FDR) %>%
     dplyr::arrange(.data$group_number) %>%
     dplyr::mutate(annotate=ifelse(.data$PheWAS_ID %in% PheWAS_label_filter,T,F),
@@ -199,7 +201,7 @@ if(is.null(PheWAS_label_filter)){
             axis.ticks=ggplot2::element_line(colour="black"),
             legend.position = c(0.8,0.8),
             legend.key=ggplot2::element_blank(),
-            plot.margin = ggplot2::margin(1,40,1,1))
+            plot.margin = ggplot2::margin(1,60,1,1))
 
     sig_pheno_data <- all_pheno_data %>%
       dplyr::filter(.data$FDR<0.01)

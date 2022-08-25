@@ -13,7 +13,7 @@ Options:
     Mandatory with any input
     --results_file=<FILE>             Full file path of the results file RDS R list object.
     --analysis_name=<name>            Name for the analysis.
-	--save_folder=<FOLDER>            Full file path of the folder to which the output will be saved.
+	  --save_folder=<FOLDER>            Full file path of the folder to which the output will be saved.
 
     Plink result input
     --plink_results                   Select if results are from 03a_PLINK_association_testing.R
@@ -25,7 +25,7 @@ Options:
     Options for both inputs
 
     --group_filter=<text>             Comma-separated text input, used to filter the group to which the table and graph functions are applied. Inputted groups
-									  are the ones that are retained for analysis, group here refers to the grouping variable used to subset the analysis classically ancestry.
+									                    are the ones that are retained for analysis, group here refers to the grouping variable used to subset the analysis classically ancestry.
     --PheWAS_ID_filter=<FILE>         Full path of a file describing the subset of PheWAS IDs that will be included in the output.
     --PheWAS_manifest_overide=<FILE>  Full file path of the alternative PheWAS_manifest file.
     --max_pheno=<number>              Manual override for inputting maximum phenotypes analysed. Used for calculating FDR. The default used the largest number

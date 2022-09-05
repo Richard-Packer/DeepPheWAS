@@ -571,7 +571,7 @@ if(!is.null(health_data)) {
     concept_file_list <- data.table::fread(system.file("extdata","clinical_concept_file_list.csv.gz", package = "DeepPheWAS")) %>%
       dplyr::pull()
   } else {
-    concept_file_list <- list.files(code_list_folder_location,pattern = "_codes_rated.csv.gz")
+    concept_file_list <- list.files(code_list_folder_location,pattern = "_codes_rated.csv")
   }
 
   concept_clinical_codes <- data.frame(names=(stringr::str_remove(concept_file_list,"_codes_rated.csv.gz")))%>%

@@ -571,7 +571,7 @@ if(!is.null(health_data)) {
     concept_file_list <- data.table::fread(system.file("extdata","clinical_concept_file_list.csv.gz", package = "DeepPheWAS")) %>%
       dplyr::pull()
   } else {
-    concept_file_list <- list.files(code_list_folder_location,pattern = "_codes_rated.csv")
+    concept_file_list <- list.files(code_list_folder_location,pattern = "_codes_rated.csv.gz")
   }
 
   concept_clinical_codes <- data.frame(names=(stringr::str_remove(concept_file_list,"_codes_rated.csv.gz")))%>%
@@ -661,7 +661,7 @@ if(!is.null(GPP)) {
     V2_concept_file_list <- data.table::fread(system.file("extdata","V2_concept_file_list.csv.gz", package = "DeepPheWAS")) %>%
       dplyr::pull()
   } else {
-    V2_concept_file_list <- list.files(code_list_folder_location,pattern = "_BNF_DMD.csv.gz")
+    V2_concept_file_list <- list.files(code_list_folder_location,pattern = "_V2_rated.csv.gz")
   }
   V2_search_terms <- data.frame(names=(stringr::str_remove(V2_concept_file_list,"_V2_rated.csv.gz"))) %>%
     dplyr::left_join(PheWAS_manifest, by=c("names"="concept_name")) %>%

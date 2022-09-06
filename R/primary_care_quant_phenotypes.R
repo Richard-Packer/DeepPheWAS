@@ -7,17 +7,23 @@
 #' @param e upper_limit quant value
 #' @param prim_care primary care data
 #' @param DOB DOB information
+#' @param code_lists Full file path of the folder containing alternative primary care code lists.
 #' @return A list of primary care quantitative phenotypes
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 
-quant_primary_care <- function(a,b,c,d,e,prim_care,DOB) {
+quant_primary_care <- function(a,b,c,d,e,prim_care,DOB,code_lists) {
 # message to track progress
 message(a)
 # create an age column for that phenotype
 PheWAS_ID_age <- paste0(a,"_age")
 # read in codes from list
+if(code_lists=="default"){
 codes <-  data.table::fread(system.file("extdata","PQP_codes",b, package = "DeepPheWAS"))
+} else {
+  codes <-  data.table::fread(paste0(code_lists,"/",b))
+}
+
 if(c==0) {
   # splitting by Read code Version
   read_V2 <- codes %>%
@@ -81,6 +87,7 @@ if(c==0) {
 #' @param phenotype_save_file Full path of the save file for the generated concepts RDS to be used for phenotype creation.
 #' @param N_cores Number of cores requested if parallel computing is desired. Defaults to single core computing.
 #' @param PheWAS_manifest_overide Full file path of the alternative PheWAS_manifest file.
+#' @param code_list_overide Full file path of the folder containing alternative primary care code lists.
 #' @return An RDS file containing lists of data-frames each representing a single primary-care quantitative phenotype
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
@@ -90,7 +97,8 @@ primarycare_quantitative_phenotypes <- function(GPC,
                                                 DOB,
                                                 phenotype_save_file,
                                                 N_cores,
-                                                PheWAS_manifest_overide){
+                                                PheWAS_manifest_overide,
+                                                code_list_overide){
 # Load in defining variables
 # primary care data
   if(!base::file.exists(GPC)){
@@ -183,7 +191,7 @@ if(is.numeric(N_cores)) {
                                                         primary_care_phewas_ID_info$limits,
                                                         primary_care_phewas_ID_info$lower_limit,
                                                         primary_care_phewas_ID_info$upper_limit,
-                                                        MoreArgs = list(prim_care=prim_care,DOB=DOB),
+                                                        MoreArgs = list(prim_care=prim_care,DOB=DOB,code_lists=code_list_overide),
                                                         SIMPLIFY = F,mc.cores = N_cores,USE.NAMES = T)
 } else {
   primary_care_quantitiative_data <- mapply(quant_primary_care,
@@ -192,7 +200,7 @@ if(is.numeric(N_cores)) {
                                             primary_care_phewas_ID_info$limits,
                                             primary_care_phewas_ID_info$lower_limit,
                                             primary_care_phewas_ID_info$upper_limit,
-                                            MoreArgs = list(prim_care=prim_care,DOB=DOB),
+                                            MoreArgs = list(prim_care=prim_care,DOB=DOB,code_lists=code_list_overide),
                                             SIMPLIFY = F,USE.NAMES = T)
 
 }

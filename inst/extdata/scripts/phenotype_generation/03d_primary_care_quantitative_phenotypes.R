@@ -2,7 +2,7 @@
 'This script creates quantitative phenotypes from UK Biobank primary care data. The script uses the PheWAS_manifest.csv file (provided with package) as a guide to creating phenotypes.
 
 Usage:
-    03d_primary_care_quantitiative_phenotypes.R (--GPC=<FILE> --DOB=<FILE> --phenotype_save_file=<FILE>) [--N_cores=<number> --PheWAS_manifest_overide=<FILE>]
+    03d_primary_care_quantitiative_phenotypes.R (--GPC=<FILE> --DOB=<FILE> --phenotype_save_file=<FILE>) [--N_cores=<number> --PheWAS_manifest_overide=<FILE> --code_list_overide=<FOLDER>]
 
 Options:
     -h --help                                 Show this screen.
@@ -17,6 +17,7 @@ Options:
     Options
     --N_cores=<number>                        Number of cores requested if parallel computing is desired. Defaults to single core computing.
     --PheWAS_manifest_overide=<FILE>          Full file path of the alternative PheWAS_manifest file.
+    --code_list_overide=<FOLDER>              Full file path of the folder containing alternative primary care code lists.
 
 ' -> doc
 
@@ -29,4 +30,5 @@ primarycare_quantitative_phenotypes(GPC=arguments$GPC,
                                     DOB=arguments$DOB,
                                     phenotype_save_file=arguments$phenotype_save_file,
                                     N_cores=arguments$N_cores,
-                                    PheWAS_manifest_overide=arguments$PheWAS_manifest_overide)
+                                    PheWAS_manifest_overide=arguments$PheWAS_manifest_overide,
+                                    code_list_overide=arguments$code_list_overide)

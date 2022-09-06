@@ -2,7 +2,7 @@
 'This script creates composite phenotypes and composite concepts using a central map file. Also creates population_control ID lists that are used when creating the composite phenotypes. The phenotype creating script iterates over itself (default five times) as some composite phenotypes use other composite phenotypes in their definition.
 
 Usage:
-    05_composite_phenotypes.R (--phenotype_save_file=<FILE>) (--phenotype_folder=<FOLDER> | --phenotype_files=<FILES>)[--curated_phenotype_map=<FILE> --control_populations=<FILE> --N_iterations=<number> --update_list=<FILE>]
+    05_composite_phenotypes.R (--phenotype_save_file=<FILE>) (--phenotype_folder=<FOLDER> | --phenotype_files=<FILES>)[--control_populations=<FILE> --N_iterations=<number> --update_list=<FILE> --composite_phenotype_map_overide=<FILE>]
 
 Options:
     -h --help                                 Show this screen.

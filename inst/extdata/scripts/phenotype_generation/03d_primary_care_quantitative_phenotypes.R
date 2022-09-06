@@ -17,7 +17,7 @@ Options:
     Options
     --N_cores=<number>                        Number of cores requested if parallel computing is desired. Defaults to single core computing.
     --PheWAS_manifest_overide=<FILE>          Full file path of the alternative PheWAS_manifest file.
-    --code_list_overide=<FOLDER>              Full file path of the folder containing alternative primary care code lists.
+    --code_list_overide=<FOLDER>              Full file path of the folder containing alternative primary care code lists. [default: default]
 
 ' -> doc
 

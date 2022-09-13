@@ -9,7 +9,8 @@ primarycare_quantitative_phenotypes(
   DOB,
   phenotype_save_file,
   N_cores,
-  PheWAS_manifest_overide
+  PheWAS_manifest_overide,
+  code_list_overide
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ primarycare_quantitative_phenotypes(
 \item{N_cores}{Number of cores requested if parallel computing is desired. Defaults to single core computing.}
 
 \item{PheWAS_manifest_overide}{Full file path of the alternative PheWAS_manifest file.}
+
+\item{code_list_overide}{Full file path of the folder containing alternative primary care code lists.}
 }
 \value{
 An RDS file containing lists of data-frames each representing a single primary-care quantitative phenotype

@@ -5,7 +5,7 @@ Takes the created phenotypes and filters for case number and optionally for rela
 All inputs are optional, by default the script will filter for default case numbers in the phenotypes marked for inclusion by the PheWAS_manifest and save the output, edit these default values with quantitative_Case_N and binary_Case_N inputs and use no_case_N_save if not wanting to save the output of the initial case number filtering. If wanting to filter by group use groupings input, if wanting to filter for relatedness then use relate_remove and kinship inputs, to save to none default name use relate_remove_save_name. T add in additional sex specific phenotypes choose the sex_split input alongside the sex_info file and what value male and females are coded in using male and female inputs.
 
 Usage:
-    01_phenotype_preparation.R (--phenotype_folder=<FOLDER> | --phenotype_files=<FILES>) (--phenotype_filtered_save_name=<FILE>) [(--relate_remove --kinship_file=<FILE>)] [(--sex_split_phenotypes=<FILE> --sex_info=<FILE>)] [(--age_of_onset_phenotypes=<FILE> --DOB_file=<FILE>)] [--groupings=<FILE> --quantitative_Case_N=<number> --binary_Case_N=<number> --male=<number> --female=<number> --PheWAS_manifest_overide=<FILE> --IVNT --save_RDS=<FILE> --stats_save=<FILE>]
+    01_phenotype_preparation.R (--phenotype_folder=<FOLDER> | --phenotype_files=<FILES>) (--phenotype_filtered_save_name=<FILE>) [(--relate_remove --kinship_file=<FILE>)] [(--sex_split_phenotypes=<FILE> --sex_info=<FILE>) | (--sex_split_all --sex_info=<FILE>)] [(--age_of_onset_phenotypes=<FILE> --DOB_file=<FILE>)] [--groupings=<FILE> --quantitative_Case_N=<number> --binary_Case_N=<number> --male=<number> --female=<number> --PheWAS_manifest_overide=<FILE> --IVNT --save_RDS=<FILE> --stats_save=<FILE>]
 
 Options:
     -h --help  Show this screen.
@@ -22,13 +22,17 @@ Options:
 
     Optional arguments
     --groupings=<FILE>                      Full path of the file containing group information used for stratifying the sample. If this argument is specified,
- 										    the phenotype filtering will be performed within the groups. Otherwise, the filtering will be performed in all individuals.
+ 										                        the phenotype filtering will be performed within the groups. Otherwise, the filtering will be performed in all individuals.
     --quantitative_Case_N=<number>          Number that represents the minimum number of cases for quantitative phenotype inclusion.
                                             [default: 100]
     --binary_Case_N=<number>                Number that represents the minimum number of cases for binary phenotype inclusion.
                                             [default: 50]
     --relate_remove                         Specify whether related individuals are additionally excluded (TRUE) or not (FALSE). Default is FALSE.
     --kinship_file=<FILE>                   Full path to the file containing kinship coefficient estimates.
+
+    --sex_split_all                         Specify whether all phenotypes should be made into sex specific phenotypes (TRUE) or not (FALSE). Only one of sex_split_all
+                                            and sex_split_phenotypes, can be selected, all sex specific phenotypes be labelled (PheWAS_ID)_male or (PheWAS_ID)_female.
+                                            Default to FALSE.
 
     --sex_split_phenotypes=<FILE>           Full file path to file containing single column labelled PheWAS_ID, containing PheWAS_IDs to make sex specific
                                             phenotypes, will derive and add a male and female version of each phenotype. All sex specific phenotypes
@@ -43,9 +47,11 @@ Options:
                                             as <=, upper_limit is the upper age boundary acceptable read as >=. Transformation is the type of transformation
                                             (if any) that should be applied to the phenotype. Current accepted transformations are IVNT for inverse normal
                                             transformation. All age of onset phenotypes to be labelled (PheWAS_ID)_age_of_onset.
+    --age_of_onset_all                      Specify if wanting to create an age of onset version for all suitable phenotypes (TRUE) will default lower limit to 30
+                                            and upper limit to 120 and request IVNT transformation for each created phenotype. Default is FALSE.
     --DOB_file=<FILE>                       Full file path to file containing DOB information.
     --IVNT                                  Specify whether quantitative phenotypes, defined in the PheWAS manifest, should undergo a rank-based inverse normal
-										    transformation (TRUE) or not (FALSE). Default is FALSE.
+										                        transformation (TRUE) or not (FALSE). Default is FALSE.
     --save_RDS=<FILE>                       Full file path to save location to save and intermediate RDS file that has been filtererd by case_N and
                                             relatedness (if chosen) but not converted to dataframe for analysis.
     --stats_save=<FILE>                     Full file path to save file for stats, saves summary stats for phenotypes for number of cases and controls in
@@ -68,6 +74,7 @@ phenotype_preparation(phenotype_filtered_save_name=arguments$phenotype_filtered_
                       binary_Case_N=arguments$binary_Case_N,
                       relate_remove=arguments$relate_remove,
                       kinship_file=arguments$kinship_file,
+                      sex_split_all=arguments$sex_split_all,
                       sex_split_phenotypes=arguments$sex_split_phenotypes,
                       sex_info=arguments$sex_info,
                       male=arguments$male,

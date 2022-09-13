@@ -1,6 +1,6 @@
 Package: DeepPheWAS
 Title: Phenotype Generation and Association Testing Novel Phenotypes for Phenome Wide Association Studies
-Version: 0.2.4
+Version: 0.2.5
 Authors@R: 
     person("Richard", "packer", , "richard.packer@leicester.ac.uk", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-2459-1020"))

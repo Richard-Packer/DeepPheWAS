@@ -81,6 +81,7 @@ phenotype_preparation(phenotype_filtered_save_name=arguments$phenotype_filtered_
                       female=arguments$female,
                       PheWAS_manifest_overide=arguments$PheWAS_manifest_overide,
                       age_of_onset_phenotypes=arguments$age_of_onset_phenotypes,
+                      age_of_onset_all=arguments$age_of_onset_all,
                       DOB_file=arguments$DOB_file,
                       IVNT=arguments$IVNT,
                       save_RDS=arguments$save_RDS,

@@ -507,8 +507,18 @@ return(phenotype)
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 IVNT_transformation <- function(x,y,PheWAS_manifest,age_of_onset_phenotypes) {
-if(!is.null(age_of_onset_phenotypes)){
+  if(any(!is.null(age_of_onset_phenotypes) | age_of_onset_all)){
+    if(!is.null(age_of_onset_phenotypes)){
   age_of_onset_df <- data.table::fread(age_of_onset_phenotypes)
+  }
+  else{
+  age_of_onset_df <- PheWAS_manifest %>%
+    dplyr::filter(.data$included_in_analysis == 1) %>%
+    dplyr::filter(.data$analysis == "binary") %>%
+    dplyr::select(.data$PheWAS_ID) %>%
+    dplyr::mutate(lower_limit=1,upper_limit=120,transformation="IVNT") %>%
+    dplyr::filter(.data$PheWAS_ID %in% names(all_phenotypes))
+  }
 }
   if(stringr::str_detect(y,"age_of_onset")){
     name <- stringr::str_remove(y,"_age_of_onset")
@@ -807,7 +817,7 @@ if(any(!is.null(age_of_onset_phenotypes) | age_of_onset_all)){
       dplyr::filter(.data$included_in_analysis == 1) %>%
       dplyr::filter(.data$analysis == "binary") %>%
       dplyr::select(.data$PheWAS_ID) %>%
-      dplyr::mutate(lower_limit=30,upper_limit=120,transformation="IVNT") %>%
+      dplyr::mutate(lower_limit=1,upper_limit=120,transformation="IVNT") %>%
       dplyr::filter(.data$PheWAS_ID %in% names(all_phenotypes))
 
 }

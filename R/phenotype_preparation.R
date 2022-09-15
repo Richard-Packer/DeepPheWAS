@@ -405,10 +405,11 @@ relate_remove_all_pops <- function(x,call_rate_kinships,PheWAS_manifest) {
 #' @param IVNT logical value if using IVNT transformations
 #' @param age_of_onset_phenotypes data frame of age_of_onset phenotypes or a NULL value
 #' @param PheWAS_manifest manifest document
+#' @param age_of_onset_all if True creates all age of onset phenotypes
 #' @return Phenotypes as dataframe ready for analysis
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
-join_cols_pheno <- function (x,IVNT,age_of_onset_phenotypes,PheWAS_manifest) {
+join_cols_pheno <- function (x,IVNT,age_of_onset_phenotypes,PheWAS_manifest,age_of_onset_all) {
   per_list <- x
   PheWAS_ID <- names(per_list)
   final_phenotypes <- mapply(converted_for_association,
@@ -425,7 +426,8 @@ join_cols_pheno <- function (x,IVNT,age_of_onset_phenotypes,PheWAS_manifest) {
                                             final_phenotypes,
                                             PheWAS_IDs,
                                             MoreArgs = list(PheWAS_manifest=PheWAS_manifest,
-                                                            age_of_onset_phenotypes=age_of_onset_phenotypes),
+                                                            age_of_onset_phenotypes=age_of_onset_phenotypes,
+                                                            age_of_onset_all=age_of_onset_all),
                                             SIMPLIFY = F,USE.NAMES = T) %>%
       purrr::reduce(dplyr::full_join)
 
@@ -503,10 +505,11 @@ return(phenotype)
 #' @param y PheWAS_ID of phenotype
 #' @param PheWAS_manifest the PheWAS manifest
 #' @param age_of_onset_phenotypes either NULL or location of age_of_onset phenotypes file
-#' @return Phenotypes as list transformed as directed ready to convery into  a dataframe
+#' @param age_of_onset_all If T creates all age_of_onset phenotypes
+#' @return Phenotypes as list transformed as directed ready to convert into a dataframe
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
-IVNT_transformation <- function(x,y,PheWAS_manifest,age_of_onset_phenotypes) {
+IVNT_transformation <- function(x,y,PheWAS_manifest,age_of_onset_phenotypes,age_of_onset_all) {
   if(any(!is.null(age_of_onset_phenotypes) | age_of_onset_all)){
     if(!is.null(age_of_onset_phenotypes)){
   age_of_onset_df <- data.table::fread(age_of_onset_phenotypes)
@@ -706,7 +709,7 @@ phenotypes <- phenotype_files_vector %>%
 # first edit the phenotypes to those included in the phenotype manifest for inclusion
 included_phenotypes <- PheWAS_manifest %>%
   dplyr::filter(.data$included_in_analysis == 1)
-all_phenotypes <- phenotypes[names(phenotypes) %in% included_phenotypes$PheWAS_ID == TRUE]
+F <- phenotypes[names(phenotypes) %in% included_phenotypes$PheWAS_ID == TRUE]
 
 # optional addition of sex_split phenotypes
 
@@ -992,7 +995,8 @@ final_phenotypes_columns <- mapply(join_cols_pheno,
                                    pheno_list_final,
                                    MoreArgs = list(PheWAS_manifest=PheWAS_manifest,
                                                    IVNT=IVNT,
-                                                   age_of_onset_phenotypes=age_of_onset_phenotypes),
+                                                   age_of_onset_phenotypes=age_of_onset_phenotypes,
+                                                   age_of_onset_all=age_of_onset_all),
                                    SIMPLIFY = F,USE.NAMES = T)
 
 mapply(saving_files,

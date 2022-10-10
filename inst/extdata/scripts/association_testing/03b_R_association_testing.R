@@ -34,9 +34,9 @@ Options:
     Options
     --covariates=<FILE>                   Full file path for the covariates file see user guide for more information.
     --group_name_overide=<text>           Comma-separated list containing alternative group names. By default, group names are extracted from the suffix of
-										  the file names provided in the phenotype_files argument. For example, if a file named /home/phenotypes/EUR_phenotypes.csv
-										  were provided, the corresponding group name would be "EUR". This argument allows for a different group name to be specified.
-										  The order of names provided should match the files specified in the phenotype_files argument.
+										                      the file names provided in the phenotype_files argument. For example, if a file named /home/phenotypes/EUR_phenotypes.csv
+										                      were provided, the corresponding group name would be "EUR". This argument allows for a different group name to be specified.
+										                      The order of names provided should match the files specified in the phenotype_files argument.
 
     --N_cores=<number>                    Number of cores requested if parallel computing is desired. Defaults to single core computing.
 

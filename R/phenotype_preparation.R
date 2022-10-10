@@ -712,7 +712,7 @@ phenotypes <- phenotype_files_vector %>%
 # first edit the phenotypes to those included in the phenotype manifest for inclusion
 included_phenotypes <- PheWAS_manifest %>%
   dplyr::filter(.data$included_in_analysis == 1)
-F <- phenotypes[names(phenotypes) %in% included_phenotypes$PheWAS_ID == TRUE]
+all_phenotypes <- phenotypes[names(phenotypes) %in% included_phenotypes$PheWAS_ID == TRUE]
 
 # optional addition of sex_split phenotypes
 

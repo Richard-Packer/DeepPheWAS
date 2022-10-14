@@ -4,7 +4,14 @@
 \alias{IVNT_transformation}
 \title{Applies transformations to phenotypes as directed by manifest file.}
 \usage{
-IVNT_transformation(x, y, PheWAS_manifest, age_of_onset_phenotypes)
+IVNT_transformation(
+  x,
+  y,
+  PheWAS_manifest,
+  age_of_onset_phenotypes,
+  age_of_onset_all,
+  all_phenotypes
+)
 }
 \arguments{
 \item{x}{Phenotypes as list object}
@@ -14,9 +21,13 @@ IVNT_transformation(x, y, PheWAS_manifest, age_of_onset_phenotypes)
 \item{PheWAS_manifest}{the PheWAS manifest}
 
 \item{age_of_onset_phenotypes}{either NULL or location of age_of_onset phenotypes file}
+
+\item{age_of_onset_all}{If T creates all age_of_onset phenotypes}
+
+\item{all_phenotypes}{all available phenotypes}
 }
 \value{
-Phenotypes as list transformed as directed ready to convery into  a dataframe
+Phenotypes as list transformed as directed ready to convert into a dataframe
 }
 \description{
 Applies transformations to phenotypes as directed by manifest file.

@@ -504,6 +504,7 @@ save_root <- save_folder
 #' @return Tables and graphs of the association results.
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
+#' @export
 graphs_tables_DeepPheWAS <- function(results_file,
                                      analysis_name,
                                      plink_results,

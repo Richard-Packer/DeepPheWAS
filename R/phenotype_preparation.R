@@ -950,7 +950,7 @@ if(relate_remove) {
                                   MoreArgs = list(PheWAS_manifest=PheWAS_manifest),
                                   SIMPLIFY = F,USE.NAMES = T)
   if(!is.null(stats_save)){
-    stats_save_RR <- per_population_summary %>%
+    stats_save_RR <- RR_population_summary %>%
       purrr::reduce(dplyr::full_join) %>%
       dplyr::mutate(ID_2=ifelse(stringr::str_detect(.data$PheWAS_ID,"_male|_female"),stringr::str_remove(.data$PheWAS_ID,"_male|_female"),
                                 ifelse(stringr::str_detect(.data$PheWAS_ID,"_age_of_onset"),stringr::str_remove(.data$PheWAS_ID,"_age_of_onset"),.data$PheWAS_ID))) %>%

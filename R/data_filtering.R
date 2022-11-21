@@ -66,7 +66,8 @@ minimum_data_R <- function(data_folder,
     }
   }
   #exclusions
-  if(!is.null(exclusions) & !file.exists(exclusions)){
+  if(!is.null(exclusions)){
+    if(!file.exists(exclusions))
     rlang::abort(paste0("'exclusions' must be a readable file"))
   }
   # save_loc

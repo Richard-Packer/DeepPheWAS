@@ -345,7 +345,7 @@ plink_association_testing <- function(analysis_folder,
 
   # create required folder
   if(!dir.exists(paste0(analysis_folder,"/","plink_results"))) {
-    dir.create(paste0(analysis_folder,"plink_results"))
+    dir.create(paste0(analysis_folder,"/","plink_results"))
   }
   # split phenotypes
   binary_ID <- all_phenos %>%

@@ -131,7 +131,7 @@ making_graphs <- function(a,b,c,d,FDR_figure,max_FDR_graph,graph_save_location,P
       dplyr::mutate(group_number =seq(1:(nrow(.)))) %>%
       dplyr::select(.data$phenotype_group,.data$group_number)
 if(is.null(PheWAS_label_filter)){
-    all_pheno_data <- data %>%
+  all_pheno_data <- data %>%
       dplyr::left_join(order,by="phenotype_group") %>%
       tidyr::drop_na(.data$FDR) %>%
       dplyr::arrange(.data$FDR) %>%
@@ -142,9 +142,7 @@ if(is.null(PheWAS_label_filter)){
                     seq=seq(nrow(.)),
                     y_axis_info=-log10(.data$FDR)) %>%
       dplyr::mutate(short_desc_T=factor(.data$short_desc_T, levels = unique(.$short_desc_T)),
-                    seq=seq+150*(.data$group_number-1)) %>%
-      dplyr::mutate(size=dplyr::case_when(is.na(.data$OR) ~ sqrt(.data$Beta^2),
-                                                 is.na(.data$Beta) ~ sqrt((log(.data$OR))^2)))
+                    seq=seq+150*(.data$group_number-1))
 } else {
   all_pheno_data <- data %>%
     dplyr::left_join(order,by="phenotype_group") %>%
@@ -157,11 +155,21 @@ if(is.null(PheWAS_label_filter)){
                   seq=seq(nrow(.)),
                   y_axis_info=-log10(.data$FDR)) %>%
     dplyr::mutate(short_desc_T=factor(.data$short_desc_T, levels = unique(.$short_desc_T)),
-                  seq=seq+150*(.data$group_number-1)) %>%
-    dplyr::mutate(size=dplyr::case_when(is.na(.data$OR) ~ sqrt(.data$Beta^2),
-                                        is.na(.data$Beta) ~ sqrt((log(.data$OR))^2)))
-
+                  seq=seq+150*(.data$group_number-1))
 }
+    if(all(!is.na(match(c("Beta","OR"),colnames(all_pheno_data))))){
+      all_pheno_data <- all_pheno_data %>%
+      dplyr::mutate(size=dplyr::case_when(is.na(.data$OR) ~ sqrt(.data$Beta^2),
+                                          is.na(.data$Beta) ~ sqrt((log(.data$OR))^2)))
+    } else if(all(!is.na(match("Beta",colnames(all_pheno_data))) && is.na(match("OR",colnames(all_pheno_data))))) {
+      all_pheno_data <- all_pheno_data %>%
+        dplyr::mutate(size=sqrt(.data$Beta^2))
+    } else if(all(!is.na(match("OR",colnames(all_pheno_data))) && is.na(match("Beta",colnames(all_pheno_data))))) {
+      all_pheno_data <- all_pheno_data %>%
+        dplyr::mutate(size=sqrt((log(.data$OR))^2))
+    }
+
+
     labels= dplyr::summarize(dplyr::group_by(all_pheno_data, .data$group_number), tick=mean(unique(seq)),label=as.character(.data$phenotype_group[1]))
     labels=labels[order(labels$tick),]
 
@@ -481,7 +489,6 @@ save_root <- save_folder
     dplyr::relocate(.data$FDR,.before = .data$P) %>%
     dplyr::arrange(.data$FDR) %>%
     dplyr::mutate(sex_pheno_identifier="")
-  message(paste("loc_2"))
   if(sex_split){
     main_table_fdr <- main_table_fdr %>%
       dplyr::mutate(male=ifelse(stringr::str_detect(.data$PheWAS_ID,"_male$"),1,0),

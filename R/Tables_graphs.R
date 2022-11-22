@@ -406,7 +406,6 @@ save_root <- save_folder
                       ID=as.factor(.data$ID),
                       MAC=ifelse(.data$A1_FREQ<0.5,.data$A1_CT,.data$ALLELE_CT-.data$A1_CT),
                       keep=ifelse(!is.na(.data$Beta),2),
-                      ratio=1/((.data$A1_CASE_CT/.data$A1_CASE_FREQ)/(.data$A1_CTRL_CT/.data$A1_CTRL_FREQ)),
                       sex_pheno=sub(".*_", "", .data$PheWAS_ID),
                       join_name = stringr::str_remove(.data$PheWAS_ID,"_male|_female")) %>%
         dplyr::filter(.data$MAC >=MAC_figure,

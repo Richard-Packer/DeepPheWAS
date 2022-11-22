@@ -4,7 +4,7 @@
 Requires location of a folder where analysis will be hosted, a comma separated list of phenotype files derived from pre_association_preparation.R, a covariate file edited for use in plink (see user guide), and the location of the variants for association prepared with extract_SNPs.R. By default, it will run association tests on all included phenotypes in the phenotype files used and use those phenotype files to assign group names, all analysis is then performed per group. Phenotypes can be specified using one of two arguments phenotype_inclusion_file or phenotype_exclusion_file, group names can be specified using the group_name_overide argument. Results are saved as an R object with option to save tables per-group of the combined raw plink results. With a large number of variants the regression analysis can take a long time, to make for more efficient analysis the phenotypes for any one or more of the analysed groups can be split using the split_group input. When a group is split the phenotype files are split into smaller chunks, the analysis can then be performed in a cluster enviroment.To perfomrm the analysis this same script can be used again but with the split_analysis flag used to amend how results are saved. Results are then combined with 04_combine_split_analysis.R. If splitting analysis tables and figures should not be compiled until 04_combine_split_analysis.R is complete.
 
 Usage:
-03a_PLINK_association_testing.R  (--analysis_folder=<FOLDER> --covariate=<file> --phenotype_files=<FILE> --variants_for_association=<FILE> --analysis_name=<name>) [--group_name_overide=<text>] [--split_analysis --PheWAS_manifest_overide=<FILE> --plink_exe=<command> --save_plink_tables --split_group=<name> --N_quant_split=<number> --N_binary_split=<number> --model=<text> --check_existing_results] [--phenotype_inclusion_file=<FILE>  | --phenotype_exclusion_file=<FILE>]
+03a_PLINK_association_testing.R  (--analysis_folder=<FOLDER> --phenotype_files=<FILE> --variants_for_association=<FILE> --analysis_name=<name>) [--covariate=<file> --group_name_overide=<text>] [--split_analysis --PheWAS_manifest_overide=<FILE> --plink_exe=<command> --save_plink_tables --split_group=<name> --N_quant_split=<number> --N_binary_split=<number> --model=<text> --check_existing_results] [--phenotype_inclusion_file=<FILE>  | --phenotype_exclusion_file=<FILE>]
 
 Options:
     -h --help  Show this screen.
@@ -13,11 +13,11 @@ Options:
     Mandatory inputs
     --analysis_folder=<FOLDER>          Full path of the directory in which the association results will be saved.
     --phenotype_files=<FILE>            Comma-separated list containing the full paths of the phenotype data.
-    --covariate=<file>                  Full path of a file containing covariate data to be used in model adjustment.
     --variants_for_association=<FILE>   Full path of the genetic data for the SNPs of interest (produced by the extract_SNP.R script).
 	  --analysis_name=<name>              Name for the analysis to be used in the naming of the output files.
 
     Options
+    --covariate=<file>                  Full path of a file containing covariate data to be used in model adjustment.
     --group_name_overide=<text>         Comma-separated list containing alternative group names. By default, group names are extracted from
 									                      the suffix of the file names provided in the phenotype_files argument. For example, if a file named
 										                    /home/phenotypes/EUR_phenotypes.csv were provided, the corresponding group name would be "EUR". This

@@ -332,9 +332,8 @@ save_root <- save_folder
       save_name_plink <- paste0(analysis_name,"_",x,"_plink_results_raw.csv")
       data.table::fwrite(results,paste0(save_root,"/",save_name_plink))
     }
-    message(paste("loc_4"))
 
-    if(all(stringr::str_detect(c("A1_CASE_CT","T_STAT"),colnames(results_PheWAS_ID_filter)))){
+    if(all(!is.na(match(c("A1_CASE_COUNT","T_STAT"),colnames(results_PheWAS_ID_filter))))){
 
     main_table <- results_PheWAS_ID_filter %>%
       dplyr::left_join(SNP_list) %>%
@@ -381,7 +380,9 @@ save_root <- save_folder
       dplyr::left_join(PheWAS_manifest,by=c("join_name"="PheWAS_ID")) %>%
       dplyr::mutate(short_desc=ifelse(.data$sex_pheno!=.data$PheWAS_ID,paste0(.data$short_desc," (",.data$sex_pheno,")"), .data$short_desc)) %>%
       dplyr::select(.data$group,collective_name=.data$group_name,.data$PheWAS_ID,.data$category,description=.data$phenotype,N_ID=.data$OBS_CT,.data$rsid,.data$P,.data$OR,.data$Beta,L95=.data$N_L95,U95=.data$N_U95,.data$coded_allele,.data$non_coded_allele,.data$minor_allele,.data$MAF,.data$MAC,.data$MAC_cases,.data$MAC_controls,chromosome=.data$`#CHROM`,position=.data$POS,.data$Z_T_STAT,.data$SE,.data$effect_direction,.data$category,phenotype_group=.data$pheno_group,phenoytpe_group_narrow=.data$group_narrow,.data$short_desc,Info_score=.data$MACH_R2,firth=.data$`FIRTH?`,.data$TEST,.data$Error_flag,.data$ID,.data$graph_save_name)
-    } else if(any(stringr::str_detect("T_STAT",colnames(results_PheWAS_ID_filter))) &&  any(stringr::str_detect("A1_CASE_CT",colnames(results_PheWAS_ID_filter)))==F){
+
+    } else if(all(!is.na(match("T_STAT",colnames(results_PheWAS_ID_filter))) &&  is.na(match("A1_CASE_CT",colnames(results_PheWAS_ID_filter))))){
+
       main_table <- results_PheWAS_ID_filter %>%
         dplyr::left_join(SNP_list) %>%
         dplyr::filter(.data$ID %in% SNP_list$ID,
@@ -415,7 +416,7 @@ save_root <- save_folder
         dplyr::select(.data$group,collective_name=.data$group_name,.data$PheWAS_ID,.data$category,description=.data$phenotype,N_ID=.data$OBS_CT,.data$rsid,.data$P,.data$Beta,L95=.data$N_L95,U95=.data$N_U95,.data$coded_allele,.data$non_coded_allele,.data$minor_allele,.data$MAF,.data$MAC,chromosome=.data$`#CHROM`,position=.data$POS,.data$Z_T_STAT,.data$SE,.data$effect_direction,.data$category,phenotype_group=.data$pheno_group,phenoytpe_group_narrow=.data$group_narrow,.data$short_desc,Info_score=.data$MACH_R2,firth=.data$`FIRTH?`,.data$TEST,.data$Error_flag,.data$ID,.data$graph_save_name)
 
 
-    } else if(any(stringr::str_detect("A1_CASE_CT",colnames(results_PheWAS_ID_filter))) &&  any(stringr::str_detect("T_STAT",colnames(results_PheWAS_ID_filter)))==F){
+    } else if(all(!is.na(match("A1_CASE_CT",colnames(results_PheWAS_ID_filter))) &&  is.na(match("T_STAT",colnames(results_PheWAS_ID_filter))))){
       main_table <- results_PheWAS_ID_filter %>%
         dplyr::left_join(SNP_list) %>%
         dplyr::filter(.data$ID %in% SNP_list$ID,
@@ -454,9 +455,9 @@ save_root <- save_folder
         dplyr::mutate(short_desc=ifelse(.data$sex_pheno!=.data$PheWAS_ID,paste0(.data$short_desc," (",.data$sex_pheno,")"), .data$short_desc)) %>%
         dplyr::select(.data$group,collective_name=.data$group_name,.data$PheWAS_ID,.data$category,description=.data$phenotype,N_ID=.data$OBS_CT,.data$rsid,.data$P,.data$OR,L95=.data$N_L95,U95=.data$N_U95,.data$coded_allele,.data$non_coded_allele,.data$minor_allele,.data$MAF,.data$MAC,.data$MAC_cases,.data$MAC_controls,chromosome=.data$`#CHROM`,position=.data$POS,.data$Z_T_STAT,.data$SE,.data$effect_direction,.data$category,phenotype_group=.data$pheno_group,phenoytpe_group_narrow=.data$group_narrow,.data$short_desc,Info_score=.data$MACH_R2,firth=.data$`FIRTH?`,.data$TEST,.data$Error_flag,.data$ID,.data$graph_save_name)
 
+    } else {
+        rlang::abort(paste0("Results loaded do not have the correct coloumns and are missing at minimum 'T_STAT' or 'A1_CASE_CT'"))
 }
-
-
     main_table_fdr_split <- main_table %>%
       dplyr::filter(.data$PheWAS_ID %in% updated_manifest$PheWAS_ID) %>%
       dplyr::group_split(.data$ID)

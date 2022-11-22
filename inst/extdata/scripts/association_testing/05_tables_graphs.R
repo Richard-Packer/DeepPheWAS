@@ -55,7 +55,7 @@ Options:
     --MAC=<number>                    MAC (minor allele count) filter applied to all associations, only applicable in results from03a_PLINK_association_testing.R
                                       [default: 20]
     --MAC_case=<number>               Minor allele count among cases for filtering the association results. only applicable in results from 03a_PLINK_association_testing.R and only in binary phenotypes.
-							          Default is 5. [default: 5]
+							                        Default is 5. [default: 5]
     --MAC_control=<number>            MAC (minor allele count) filter applied only to controls, only applicable in results from PheWAS_association_PLINK.R
                                       and only in binary phenotypes. [default: 10]
     --per_group_name_graph            Select if wanting to produce graphs per-group_name. This is used when looking to report the most significant finding

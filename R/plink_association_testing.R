@@ -150,7 +150,7 @@ association_tests <- function(y,x,
       # option to save raw results per group
       if(save_plink_tables){
         save_results_table_name <- paste0(y,"_",analysis_name,"_plink_results_raw.csv")
-        data.table::fwrite(plink_results,paste0(analysis_folder,"/","association_results","/",y,"/",save_results_table_name), na = NA)
+        data.table::fwrite(plink_results,paste0(analysis_folder,"/","association_results","/",save_results_table_name), na = NA)
       }
       return(plink_results)
     } else {
@@ -223,7 +223,7 @@ association_tests <- function(y,x,
     # option to save raw results per group
     if(save_plink_tables){
       save_results_table_name <- paste0(y,"_",analysis_name,"_plink_results_raw.csv")
-      data.table::fwrite(plink_results,paste0(analysis_folder,"/","association_results","/",y,"/",save_results_table_name), na = NA)
+      data.table::fwrite(plink_results,paste0(analysis_folder,"/","association_results","/",save_results_table_name), na = NA)
     }
     return(plink_results)
   } else {
@@ -292,8 +292,8 @@ plink_association_testing <- function(analysis_folder,
     }
   }
   # creating analysis folder
-  if(!dir.exists(analysis_folder)) {
-    dir.create(analysis_folder,recursive = T)
+  if(!dir.exists(paste0(analysis_folder,"/","association_results"))) {
+    dir.create(paste0(analysis_folder,"/","association_results"),recursive = T)
   }
   #create folder for temp phenotypes
   if(!dir.exists(paste0(analysis_folder,"/","temp_pheno"))){
@@ -303,10 +303,8 @@ plink_association_testing <- function(analysis_folder,
   phenotype_files <- unlist(stringr::str_split(phenotype_files, ","))
   if(!is.null(group_name_overide)) {
     groups <- unlist(stringr::str_split(group_name_overide, ","))
-    lapply(groups, function(x) dir.create(paste0(analysis_folder,"/","association_results","/",x),recursive = T))
   } else {
     groups <-gsub("_.*", "", basename(unlist(strsplit(phenotype_files,","))))
-    lapply(groups, function(x) dir.create(paste0(analysis_folder,"/","association_results","/",x),recursive = T))
   }
 
   if(!is.null(split_group)) {

@@ -173,13 +173,21 @@ association_tests <- function(y,x,
     # write temp binary file
     data.table::fwrite(binary_pheno,binary_pheno_file, sep = "\t", na = NA, quote = F)
     # run the regression in plink2
-    system(paste0(plink_exe," --pfile ",association_variants," --glm sex cols=+totallele,+a1count,+a1countcc,+a1countcc,+a1freq,+machr2,+a1freqcc hide-covar ",model," --pheno ",binary_pheno_file," --covar ",covariates," --ci 0.95  --1 --vif 90 --out ",save_location," --covar-variance-standardize"))
+    if(is.null(covariates)){
+      system(paste0(plink_exe," --pfile ",association_variants," --glm allow-no-covars sex cols=+totallele,+a1count,+a1countcc,+a1countcc,+a1freq,+machr2,+a1freqcc hide-covar ",model," --pheno ",binary_pheno_file," --ci 0.95  --1 --vif 90 --out ",save_location," --covar-variance-standardize"))
+    } else {
+      system(paste0(plink_exe," --pfile ",association_variants," --glm sex cols=+totallele,+a1count,+a1countcc,+a1countcc,+a1freq,+machr2,+a1freqcc hide-covar ",model," --pheno ",binary_pheno_file," --covar ",covariates," --ci 0.95  --1 --vif 90 --out ",save_location," --covar-variance-standardize"))
+    }
     # remove the binary file
     file.remove(binary_pheno_file)
   } else if(ncol(binary_pheno)==2) {
     data.table::fwrite(quant_pheno,quant_pheno_file, sep="\t", na = NA,quote = F)
     # run the regression in plink2
-    system(paste0(plink_exe," --pfile ",association_variants," --glm sex cols=+totallele,+a1count,+a1countcc,+a1countcc,+a1freq,+machr2,+a1freqcc hide-covar ",model," --pheno ",quant_pheno_file," --covar ",covariates," --ci 0.95 --1 --vif 90 --out ",save_location," --covar-variance-standardize"))
+    if(is.null(covariates)){
+      system(paste0(plink_exe," --pfile ",association_variants," --glm allow-no-covars sex cols=+totallele,+a1count,+a1countcc,+a1countcc,+a1freq,+machr2,+a1freqcc hide-covar ",model," --pheno ",quant_pheno_file," --ci 0.95 --1 --vif 90 --out ",save_location," --covar-variance-standardize"))
+    } else {
+      system(paste0(plink_exe," --pfile ",association_variants," --glm sex cols=+totallele,+a1count,+a1countcc,+a1countcc,+a1freq,+machr2,+a1freqcc hide-covar ",model," --pheno ",quant_pheno_file," --covar ",covariates," --ci 0.95 --1 --vif 90 --out ",save_location," --covar-variance-standardize"))
+    }
     # remove the quant file
     file.remove(quant_pheno_file)
   } else {
@@ -187,9 +195,14 @@ association_tests <- function(y,x,
     data.table::fwrite(binary_pheno,binary_pheno_file, sep = "\t", na = NA, quote = F)
     data.table::fwrite(quant_pheno,quant_pheno_file, sep="\t", na = NA, quote = F)
     # run the regression in plink2
-    system(paste0(plink_exe," --pfile ",association_variants," --glm sex cols=+totallele,+a1count,+a1countcc,+a1countcc,+a1freq,+machr2,+a1freqcc hide-covar ",model," --pheno ",binary_pheno_file," --covar ",covariates," --ci 0.95 --1 --vif 90 --out ",save_location," --covar-variance-standardize"))
+    if(is.null(covariates)){
+      system(paste0(plink_exe," --pfile ",association_variants," --glm allow-no-covars sex cols=+totallele,+a1count,+a1countcc,+a1countcc,+a1freq,+machr2,+a1freqcc hide-covar ",model," --pheno ",quant_pheno_file," --ci 0.95 --1 --vif 90 --out ",save_location," --covar-variance-standardize"))
+      system(paste0(plink_exe," --pfile ",association_variants," --glm allow-no-covars sex cols=+totallele,+a1count,+a1countcc,+a1countcc,+a1freq,+machr2,+a1freqcc hide-covar ",model," --pheno ",binary_pheno_file," --ci 0.95  --1 --vif 90 --out ",save_location," --covar-variance-standardize"))
 
+    } else {
+    system(paste0(plink_exe," --pfile ",association_variants," --glm sex cols=+totallele,+a1count,+a1countcc,+a1countcc,+a1freq,+machr2,+a1freqcc hide-covar ",model," --pheno ",binary_pheno_file," --covar ",covariates," --ci 0.95 --1 --vif 90 --out ",save_location," --covar-variance-standardize"))
     system(paste0(plink_exe," --pfile ",association_variants," --glm sex cols=+totallele,+a1count,+a1countcc,+a1countcc,+a1freq,+machr2,+a1freqcc hide-covar ",model," --pheno ",quant_pheno_file," --covar ",covariates," --ci 0.95 --1 --vif 90 --out ",save_location," --covar-variance-standardize"))
+    }
     # remove the temp phenotype files
     file.remove(binary_pheno_file)
     file.remove(quant_pheno_file)
@@ -360,14 +373,18 @@ plink_association_testing <- function(analysis_folder,
   }
   psam <- data.table::fread(paste0(association_variants,".psam"))
   # edited to match psam and required col names
-  if(!file.exists(covariate)){
-    rlang::abort(paste0("'covariate' file required"))
+  if(!is.null(covariate)){
+    if(!file.exists(covariate)){
+      rlang::abort(paste0("'covariate' file required"))
+    }
+    edited_covartiate <- data.table::fread(covariate) %>%
+      dplyr::filter(.data$IID %in% psam$IID)
+    data.table::fwrite(edited_covartiate,paste0(analysis_folder,"/","edited_covariate"),na = NA,quote = F,sep = "\t")
+    covariates <- paste0(analysis_folder,"/","edited_covariate")
+  } else {
+    covariates <- NULL
   }
-  edited_covartiate <- data.table::fread(covariate) %>%
-    dplyr::filter(.data$IID %in% psam$IID)
-  data.table::fwrite(edited_covartiate,paste0(analysis_folder,"/","edited_covariate"),na = NA,quote = F,sep = "\t")
   # location for plink2 commands
-  covariates <- paste0(analysis_folder,"/","edited_covariate")
   plink_exe <- plink_exe
   if(!is.null(model)){
     model <- model

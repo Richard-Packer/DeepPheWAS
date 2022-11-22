@@ -199,7 +199,7 @@ if(is.null(PheWAS_label_filter)){
       ggplot2::geom_hline(yintercept=-log10(FDR_figure),colour="red", alpha=I(1/3),size=1) +
       ggrepel::geom_text_repel(ggplot2::aes(label=.data$short_desc),colour="black",data=all_pheno_data[all_pheno_data$annotate,],
                       size=label_size,angle=0,max.overlaps = max_overlap) +
-      ggplot2::guides(color=F,fill=F,shape=ggplot2::guide_legend("Direction of Effect")) +
+      ggplot2::guides(color="none",fill="none",shape=ggplot2::guide_legend("Direction of Effect")) +
       ggplot2::scale_size_area(name="Effect size",breaks=scales::breaks_extended(3),max_size = 4) +
       ggplot2::theme(panel.background=ggplot2::element_blank(),
             panel.grid.minor=ggplot2::element_blank(),

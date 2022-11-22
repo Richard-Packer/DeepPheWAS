@@ -333,6 +333,9 @@ save_root <- save_folder
       data.table::fwrite(results,paste0(save_root,"/",save_name_plink))
     }
     message(paste("loc_4"))
+
+    if(all(stringr::str_detect(c("A1_CASE_CT","T_STAT"),colnames(results_PheWAS_ID_filter)))){
+
     main_table <- results_PheWAS_ID_filter %>%
       dplyr::left_join(SNP_list) %>%
       dplyr::filter(.data$ID %in% SNP_list$ID,
@@ -378,13 +381,85 @@ save_root <- save_folder
       dplyr::left_join(PheWAS_manifest,by=c("join_name"="PheWAS_ID")) %>%
       dplyr::mutate(short_desc=ifelse(.data$sex_pheno!=.data$PheWAS_ID,paste0(.data$short_desc," (",.data$sex_pheno,")"), .data$short_desc)) %>%
       dplyr::select(.data$group,collective_name=.data$group_name,.data$PheWAS_ID,.data$category,description=.data$phenotype,N_ID=.data$OBS_CT,.data$rsid,.data$P,.data$OR,.data$Beta,L95=.data$N_L95,U95=.data$N_U95,.data$coded_allele,.data$non_coded_allele,.data$minor_allele,.data$MAF,.data$MAC,.data$MAC_cases,.data$MAC_controls,chromosome=.data$`#CHROM`,position=.data$POS,.data$Z_T_STAT,.data$SE,.data$effect_direction,.data$category,phenotype_group=.data$pheno_group,phenoytpe_group_narrow=.data$group_narrow,.data$short_desc,Info_score=.data$MACH_R2,firth=.data$`FIRTH?`,.data$TEST,.data$Error_flag,.data$ID,.data$graph_save_name)
+    } else if(any(stringr::str_detect("T_STAT",colnames(results_PheWAS_ID_filter))) &&  any(stringr::str_detect("A1_CASE_CT",colnames(results_PheWAS_ID_filter)))==F){
+      main_table <- results_PheWAS_ID_filter %>%
+        dplyr::left_join(SNP_list) %>%
+        dplyr::filter(.data$ID %in% SNP_list$ID,
+                      .data$rsid %in% SNP_filter,
+                      .data$group_name %in% group_name_filter) %>%
+        dplyr::mutate(dplyr::across(c(.data$POS,.data$A1_CT,.data$ALLELE_CT,.data$A1_FREQ,.data$MACH_R2,.data$OBS_CT,
+                                      .data$L95,.data$U95,.data$P,.data$BETA,
+                                      .data$SE,.data$T_STAT), as.numeric),
+                      Beta=.data$BETA,
+                      group=paste0(x),
+                      minor_allele=ifelse(.data$A1_FREQ<0.5,.data$A1,.data$REF),
+                      MAF=ifelse(.data$A1_FREQ<0.5,.data$A1_FREQ,1-.data$A1_FREQ),
+                      alter_direction=dplyr::case_when(.data$coded_allele==.data$A1 ~ 0,
+                                                       .data$coded_allele!=.data$A1 ~ 1),
+                      Beta=ifelse(is.na(.data$Beta),NA,ifelse(.data$alter_direction==1,-1*.data$Beta,.data$Beta)),
+                      N_L95=ifelse(.data$alter_direction==1,-1*.data$U95,.data$L95),
+                      N_U95=ifelse(.data$alter_direction==1,-1*.data$L95,.data$U95),
+                      effect_direction=ifelse(is.na(.data$Beta),NA,ifelse(.data$Beta>0,"positive","negative")),
+                      Z_T_STAT=ifelse(.data$alter_direction==1,-1*.data$T_STAT,.data$T_STAT),
+                      Error_flag=ifelse(.data$ERRCODE!=".",.data$ERRCODE,NA),
+                      ID=as.factor(.data$ID),
+                      MAC=ifelse(.data$A1_FREQ<0.5,.data$A1_CT,.data$ALLELE_CT-.data$A1_CT),
+                      keep=ifelse(!is.na(.data$Beta),2),
+                      ratio=1/((.data$A1_CASE_CT/.data$A1_CASE_FREQ)/(.data$A1_CTRL_CT/.data$A1_CTRL_FREQ)),
+                      sex_pheno=sub(".*_", "", .data$PheWAS_ID),
+                      join_name = stringr::str_remove(.data$PheWAS_ID,"_male|_female")) %>%
+        dplyr::filter(.data$MAC >=MAC_figure,
+                      dplyr::case_when(.data$keep==2 ~ .data$MAC >= MAC_figure)) %>%
+        dplyr::left_join(PheWAS_manifest,by=c("join_name"="PheWAS_ID")) %>%
+        dplyr::mutate(short_desc=ifelse(.data$sex_pheno!=.data$PheWAS_ID,paste0(.data$short_desc," (",.data$sex_pheno,")"), .data$short_desc)) %>%
+        dplyr::select(.data$group,collective_name=.data$group_name,.data$PheWAS_ID,.data$category,description=.data$phenotype,N_ID=.data$OBS_CT,.data$rsid,.data$P,.data$Beta,L95=.data$N_L95,U95=.data$N_U95,.data$coded_allele,.data$non_coded_allele,.data$minor_allele,.data$MAF,.data$MAC,chromosome=.data$`#CHROM`,position=.data$POS,.data$Z_T_STAT,.data$SE,.data$effect_direction,.data$category,phenotype_group=.data$pheno_group,phenoytpe_group_narrow=.data$group_narrow,.data$short_desc,Info_score=.data$MACH_R2,firth=.data$`FIRTH?`,.data$TEST,.data$Error_flag,.data$ID,.data$graph_save_name)
 
-    message(paste("loc_6"))
+
+    } else if(any(stringr::str_detect("A1_CASE_CT",colnames(results_PheWAS_ID_filter))) &&  any(stringr::str_detect("T_STAT",colnames(results_PheWAS_ID_filter)))==F){
+      main_table <- results_PheWAS_ID_filter %>%
+        dplyr::left_join(SNP_list) %>%
+        dplyr::filter(.data$ID %in% SNP_list$ID,
+                      .data$rsid %in% SNP_filter,
+                      .data$group_name %in% group_name_filter) %>%
+        dplyr::mutate(dplyr::across(c(.data$POS,.data$A1_CT,.data$ALLELE_CT,.data$A1_CASE_CT,.data$A1_CTRL_CT,
+                                      .data$A1_FREQ,.data$A1_CASE_FREQ,.data$A1_CTRL_FREQ,.data$MACH_R2,.data$OBS_CT,
+                                      .data$OR,.data$`LOG(OR)_SE`,.data$L95,.data$U95,.data$Z_STAT,.data$P), as.numeric),
+                      group=paste0(x),
+                      minor_allele=ifelse(.data$A1_FREQ<0.5,.data$A1,.data$REF),
+                      MAF=ifelse(.data$A1_FREQ<0.5,.data$A1_FREQ,1-.data$A1_FREQ),
+                      SE=.data$`LOG(OR)_SE`,
+                      alter_direction=dplyr::case_when(.data$coded_allele==.data$A1 ~ 0,
+                                                       .data$coded_allele!=.data$A1 ~ 1),
+                      OR=ifelse(.data$alter_direction==1,1/.data$OR,.data$OR),
+                      N_L95=ifelse(.data$alter_direction==1,1/.data$U95,.data$L95),
+                      N_U95=ifelse(.data$alter_direction==1,1/.data$L95,.data$U95),
+                      effect_direction=ifelse(.data$OR>1,"positive","negative"),
+                      Z_T_STAT=ifelse(.data$alter_direction==1,-1*.data$Z_STAT,.data$Z_STAT),
+                      Error_flag=ifelse(.data$ERRCODE!=".",.data$ERRCODE,NA),
+                      ID=as.factor(.data$ID),
+                      MAC=ifelse(.data$A1_FREQ<0.5,.data$A1_CT,.data$ALLELE_CT-.data$A1_CT),
+                      MAC_cases=ifelse(.data$A1_FREQ<0.5,.data$A1_CASE_CT,(.data$A1_CASE_CT/.data$A1_CASE_FREQ)*(1-.data$A1_CASE_FREQ)),
+                      MAC_controls=ifelse(.data$A1_FREQ<0.5,.data$A1_CTRL_CT,(.data$A1_CTRL_CT/.data$A1_CTRL_FREQ)*(1-.data$A1_CTRL_FREQ)),
+                      expected_MAC_cases=ifelse(.data$A1_FREQ<0.5,(.data$A1_CASE_CT/.data$A1_CASE_FREQ)*.data$A1_CTRL_FREQ,(.data$A1_CASE_CT/.data$A1_CASE_FREQ)*(1-.data$A1_CTRL_FREQ)),
+                      MAC_diff=.data$MAC_cases-.data$expected_MAC_cases,
+                      keep=ifelse(!is.na(.data$Beta),2,ifelse(.data$expected_MAC_cases<=2&.data$MAC_cases>=3,1,ifelse(.data$expected_MAC_cases>=7&(.data$MAC_cases<=5&.data$MAC_cases>=1),1,0))),
+                      ratio=1/((.data$A1_CASE_CT/.data$A1_CASE_FREQ)/(.data$A1_CTRL_CT/.data$A1_CTRL_FREQ)),
+                      sex_pheno=sub(".*_", "", .data$PheWAS_ID),
+                      join_name = stringr::str_remove(.data$PheWAS_ID,"_male|_female")) %>%
+        dplyr::filter(.data$MAC >=MAC_figure,
+                      dplyr::case_when(.data$keep==0 ~ .data$MAC_cases >= MAC_cases_N & .data$MAC_controls >= MAC_control_N,
+                                       .data$keep==1 ~ .data$MAC_cases>=1 & .data$MAC_controls >= MAC_control_N,
+                                       .data$keep==2 ~ .data$MAC >= MAC_figure)) %>%
+        dplyr::left_join(PheWAS_manifest,by=c("join_name"="PheWAS_ID")) %>%
+        dplyr::mutate(short_desc=ifelse(.data$sex_pheno!=.data$PheWAS_ID,paste0(.data$short_desc," (",.data$sex_pheno,")"), .data$short_desc)) %>%
+        dplyr::select(.data$group,collective_name=.data$group_name,.data$PheWAS_ID,.data$category,description=.data$phenotype,N_ID=.data$OBS_CT,.data$rsid,.data$P,.data$OR,L95=.data$N_L95,U95=.data$N_U95,.data$coded_allele,.data$non_coded_allele,.data$minor_allele,.data$MAF,.data$MAC,.data$MAC_cases,.data$MAC_controls,chromosome=.data$`#CHROM`,position=.data$POS,.data$Z_T_STAT,.data$SE,.data$effect_direction,.data$category,phenotype_group=.data$pheno_group,phenoytpe_group_narrow=.data$group_narrow,.data$short_desc,Info_score=.data$MACH_R2,firth=.data$`FIRTH?`,.data$TEST,.data$Error_flag,.data$ID,.data$graph_save_name)
+
+}
+
 
     main_table_fdr_split <- main_table %>%
       dplyr::filter(.data$PheWAS_ID %in% updated_manifest$PheWAS_ID) %>%
       dplyr::group_split(.data$ID)
-    message(paste("loc_1"))
   }
   if(R_association_results){
     main_table <- results_PheWAS_ID_filter %>%

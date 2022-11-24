@@ -43,7 +43,7 @@ phecoding <- function(a,b,c,d,e,f,g,h,i,j,k,l) {
                     earliest_date=NA,
                     earliest_date=lubridate::ymd(.data$earliest_date)) %>%
       dplyr::distinct(.data$eid, .keep_all = T) %>%
-      dplyr::select(.data$eid,{{a}},.data$earliest_date)
+      dplyr::select("eid",{{a}},"earliest_date")
     # vector to use later
     excluded_epi <- excluded_epi_df %>%
       dplyr::select(.data$eid) %>%
@@ -60,6 +60,7 @@ phecoding <- function(a,b,c,d,e,f,g,h,i,j,k,l) {
       dplyr::select(.data$eid,{{a}},.data$earliest_date)
     # final output
     phecode_status <- cases_epi %>%
+      dplyr::mutate(earliest_date=as.Date(.data$earliest_date)) %>%
       dplyr::bind_rows(controls_epi, excluded_epi_df)
     return(phecode_status)
   } else {
@@ -106,6 +107,7 @@ phecoding <- function(a,b,c,d,e,f,g,h,i,j,k,l) {
       dplyr::select(.data$eid,{{a}},.data$earliest_date)
     # final output
     phecode_status <- cases_epi %>%
+      dplyr::mutate(earliest_date=as.Date(.data$earliest_date)) %>%
       dplyr::bind_rows(controls_epi, excluded_epi_df)
     return(phecode_status)
   }

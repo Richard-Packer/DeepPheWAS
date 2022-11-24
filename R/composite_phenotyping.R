@@ -63,6 +63,7 @@ curated_phenotype_creation <- function(a,x,phenotypes,curated_pheno_list) {
                       !.data$eid %in% range_ID_full)
 
       completed_phenotype <- curated_cases %>%
+        dplyr::mutate(earliest_date=as.Date(.data$earliest_date)) %>%
         dplyr::bind_rows(curated_controls)
 
     } else {

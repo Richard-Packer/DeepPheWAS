@@ -53,7 +53,7 @@ graphs_tables_DeepPheWAS(
 
 \item{group_filter}{Comma-separated text input, used to filter the group to which the table and graph functions are applied. Inputted groups are the ones that are retained for analysis, group here refers to the grouping variable used to subset the analysis classically ancestry.}
 
-\item{PheWAS_ID_filter}{Full file path to file containing list of PheWAS_IDs, these will be retained and must include any sex split PheWAS_IDs in full. Use if wanting to apply the table and/or graphing functions a subset of phenotypes.}
+\item{PheWAS_ID_filter}{Full file path to a plain txt file containing single column NO header containing full PheWAS_ID of phenotypes that will be included Use if wanting to apply the table and/or graphing functions a subset of phenotypes.}
 
 \item{PheWAS_manifest_overide}{Full file path of the alternative PheWAS_manifest file.}
 

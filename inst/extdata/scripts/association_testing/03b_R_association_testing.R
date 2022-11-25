@@ -11,9 +11,9 @@ If a covariate file is included then it must contain a column age, when selectin
 
 
 Usage:
-    03b_R_association_testing.R --analysis_folder=<folder> --GRS_input=<FILE> [--covariates=<FILE> --N_cores=<number> --PheWAS_manifest_overide=<FILE>] [--phenotype_inclusion_file=<FILE> | --phenotype_exclusion_file=<FILE>]
+    03b_R_association_testing.R --analysis_folder=<folder> --GRS_input=<FILE> [--covariates=<FILE> --N_cores=<number> --PheWAS_manifest_overide=<FILE> --use_existing_results_file=<FILE>] [--phenotype_inclusion_file=<FILE> | --phenotype_exclusion_file=<FILE>]
 
-    03b_R_association_testing.R --analysis_folder=<folder> --non_GRS_data=<FILE> --phenotype_files=<FILE> --analysis_name=<name> [--covariates=<FILE> --group_name_overide=<text> --N_cores=<number> --PheWAS_manifest_overide=<FILE>] [--phenotype_inclusion_file=<FILE> | --phenotype_exclusion_file=<FILE>]
+    03b_R_association_testing.R --analysis_folder=<folder> --non_GRS_data=<FILE> --phenotype_files=<FILE> --analysis_name=<name> [--covariates=<FILE> --group_name_overide=<text> --N_cores=<number> --PheWAS_manifest_overide=<FILE> --use_existing_results_file=<FILE>] [--phenotype_inclusion_file=<FILE> | --phenotype_exclusion_file=<FILE>]
 
 
 Options:
@@ -50,6 +50,9 @@ Options:
     --quantitative_Case_N=<number>        Number that represents the minimum number of cases for quantitative phenotype inclusion.
                                           [default: 100]
     --PheWAS_manifest_overide=<FILE>      Full file path of the alternative PheWAS_manifest file.
+    --use_existing_results_file=<FILE>         Full file path of existing results. Will append that file and save new file in save location inputted in
+                                          the rest of commands. Speeds up time of analysis by utilising existing results rather than re-running all
+                                          associations.
 
 ' -> doc
 
@@ -71,4 +74,5 @@ R_association_testing(analysis_folder=arguments$analysis_folder,
                       phenotype_inclusion_file=arguments$phenotype_inclusion_file,
                       phenotype_exclusion_file=arguments$phenotype_exclusion_file,
                       binary_Case_N=arguments$binary_Case_N,
-                      quantitative_Case_N=arguments$quantitative_Case_N)
+                      quantitative_Case_N=arguments$quantitative_Case_N,
+                      use_existing_results_file=arguments$use_existing_results)

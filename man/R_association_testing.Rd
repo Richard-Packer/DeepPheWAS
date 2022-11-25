@@ -17,7 +17,8 @@ R_association_testing(
   phenotype_inclusion_file,
   phenotype_exclusion_file,
   binary_Case_N,
-  quantitative_Case_N
+  quantitative_Case_N,
+  use_existing_results_file
 )
 }
 \arguments{
@@ -39,13 +40,15 @@ R_association_testing(
 
 \item{N_cores}{Number of cores requested if wanting to use parallel computing.}
 
-\item{phenotype_inclusion_file}{Full file path to a txt file containing single column containing full PheWAS_ID of phenotypes that will be included. Cannot be used with phenotype_exclusion_file argument.}
+\item{phenotype_inclusion_file}{Full file path to a plain txt file containing single column NO header containing full PheWAS_ID of phenotypes that will be included. Cannot be used with phenotype_exclusion_file argument.}
 
-\item{phenotype_exclusion_file}{Full file path to a txt file containing single column containing full PheWAS_ID of phenotypes that will be excluded. Cannot be used with phenotype_inclusion_file argument.}
+\item{phenotype_exclusion_file}{Full file path to a plain txt file containing single column NO header containing full PheWAS_ID of phenotypes that will be excluded. Cannot be used with phenotype_exclusion_file argument.}
 
 \item{binary_Case_N}{Number that represents the minimum number of cases for binary phenotype inclusion. Default=50}
 
 \item{quantitative_Case_N}{Number that represents the minimum number of cases for quantitative phenotype inclusion. Default=100}
+
+\item{use_existing_results_file}{Full file path of existing results. Will append that file and save new file in save location inputted in the rest of commands. Speeds up time of analysis by utilising existing results rather than re-running all associations.}
 }
 \value{
 Association test results as a RDS object.

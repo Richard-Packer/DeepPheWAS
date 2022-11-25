@@ -14,7 +14,8 @@ per_group_per_trait_GRS(
   analysis_save_name,
   quant_min_cases,
   binary_min_cases,
-  covariate_col_names
+  covariate_col_names,
+  old_results
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ per_group_per_trait_GRS(
 \item{binary_min_cases}{minimum number of binary cases.}
 
 \item{covariate_col_names}{column names of covariates.}
+
+\item{old_results}{existing results as list item.}
 }
 \value{
 GRS results as a saved RDS object.

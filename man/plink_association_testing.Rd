@@ -43,9 +43,9 @@ plink_association_testing(
 
 \item{save_plink_tables}{Select if wanting to save the raw plink results per group as a table always saved in analysis_folder/assoiation_results/group/group_plink_results_raw.}
 
-\item{phenotype_inclusion_file}{Full file path to a txt file containing single column containing full PheWAS_ID of phenotypes that will be included. Cannot be used with phenotype_exclusion_file argument.}
+\item{phenotype_inclusion_file}{Full file path to a plain txt file containing single column NO header containing full PheWAS_ID of phenotypes that will be included. Cannot be used with phenotype_exclusion_file argument.}
 
-\item{phenotype_exclusion_file}{Full file path to a txt file containing single column containing full PheWAS_ID of phenotypes that will be excluded. Cannot be used with phenotype_inclusion_file argument.}
+\item{phenotype_exclusion_file}{Full file path to a plain txt file containing single column NO header containing full PheWAS_ID of phenotypes that will be excluded. Cannot be used with phenotype_inclusion_file argument.}
 
 \item{split_group}{Comma separated groups that require splitting for more efficient analysis. Does not run the analysis per group but splits and saves the phenotypes into smaller files which can then be analysed using cluster based computing. The number of phenotypes in each split file is dependent on the type (binary or quantitative) and is set using N_quant_split and N_binary_split. Split files are saved in analysis_folder/group_split with group being the group name. A file is created in analysis_folder/group_split saved as group_split_guide with group once again being the group name inputted. This file lists the file names of the splits, which can be used to guide distributed computing analysis.}
 

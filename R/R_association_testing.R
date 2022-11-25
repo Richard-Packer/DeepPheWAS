@@ -1,3 +1,13 @@
+#' Simple function that extracts names of lists within lists.
+#'
+#' @param x Name of the first level of list.
+#' @param y list where names are extracted.
+#' @return a list of names from each internal list
+inner_names <- function(x,y){
+  all_ID <- y[[x]] %>%
+    dplyr::pull(.data$PheWAS_ID)
+}
+
 #' Applies association analysis per grouping variable for non-GRS data.
 #'
 #' @param x Group name
@@ -57,6 +67,7 @@ per_group_none_GRS  <- function(x,y,
 #' @param quant_min_cases minimum number of quantitative cases.
 #' @param binary_min_cases minimum number of binary cases.
 #' @param covariate_col_names column names of covariates.
+#' @param old_results existing results as list item.
 #' @return GRS results as a saved RDS object.
 per_group_per_trait_GRS <- function(x,
                                     GRS_input,
@@ -67,7 +78,8 @@ per_group_per_trait_GRS <- function(x,
                                     analysis_save_name,
                                     quant_min_cases,
                                     binary_min_cases,
-                                    covariate_col_names) {
+                                    covariate_col_names,
+                                    old_results) {
 
   selected_trait <- x
 
@@ -90,7 +102,38 @@ per_group_per_trait_GRS <- function(x,
                                         covariate_col_names=covariate_col_names),
                         SIMPLIFY = F,
                         USE.NAMES = T)
-  saveRDS(GRS_results,save_name)
+
+    {
+
+    }
+
+  if(is.null(old_results)){
+    saveRDS(GRS_results,save_name)
+  } else {
+
+    to_change <- old_results[names(GRS_results)]
+
+    adding_to_results <- function(a,b,c){
+      original_table <- b[[a]]
+      new_results <- c[[a]]
+
+      combined_results <- original_table %>%
+        dplyr::bind_rows(new_results)
+    }
+
+    updated_results <- mapply(adding_to_results,to_change,MoreArgs = list(b=old_results,c=GRS_results))
+
+    unchanged <- old_results[names(old_results)[!names(old_results) %in% names(updated_results)]]
+    if(length(unchanged)>0){
+    final <- append(unchanged,updated_results)[names(old_results)]
+    } else {
+  final <- updated_results
+    }
+    saveRDS(final,save_name)
+  }
+
+
+
 }
 
 #' Simple helper function for making folders
@@ -429,6 +472,7 @@ GRS_association <- function(e,a,b,c,d,
 #' @param phenotype_exclusion_file Full file path to a plain txt file containing single column NO header containing full PheWAS_ID of phenotypes that will be excluded. Cannot be used with phenotype_exclusion_file argument.
 #' @param binary_Case_N Number that represents the minimum number of cases for binary phenotype inclusion. Default=50
 #' @param quantitative_Case_N Number that represents the minimum number of cases for quantitative phenotype inclusion. Default=100
+#' @param use_existing_results_file Full file path of existing results. Will append that file and save new file in save location inputted in the rest of commands. Speeds up time of analysis by utilising existing results rather than re-running all associations.
 #' @return Association test results as a RDS object.
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
@@ -445,7 +489,8 @@ R_association_testing <- function(analysis_folder,
                                   phenotype_inclusion_file,
                                   phenotype_exclusion_file,
                                   binary_Case_N,
-                                  quantitative_Case_N){
+                                  quantitative_Case_N,
+                                  use_existing_results_file){
 . <- NULL
   # read in files
   if(is.null(PheWAS_manifest_overide)){
@@ -571,6 +616,25 @@ R_association_testing <- function(analysis_folder,
       dplyr::bind_rows(age_phenos)
   }
 
+  if(!is.null(use_existing_results_file)){
+    if(!file.exists(use_existing_results_file)){
+      rlang::abort(paste0("'use_existing_results_file' must be a file"))
+}
+      old_results <- readRDS(use_existing_results_file)
+
+      all_names <- mapply(inner_names,names(old_results),MoreArgs = list(y=old_results)) %>%
+        purrr::reduce(c) %>%
+        unique(.)
+
+      all_phenos <- all_phenos %>%
+        dplyr::filter(!"PheWAS_ID" %in% all_names)
+
+      appending_results <- TRUE
+  } else {
+    appending_results <- FALSE
+    old_results <- NULL
+    }
+
   if(!is.null(GRS_input)) {
       if(!file.exists(GRS_input)){
         rlang::abort(paste0("'GRS_input' must be a file"))
@@ -609,7 +673,8 @@ R_association_testing <- function(analysis_folder,
                                          analysis_save_name=analysis_save_name,
                                          quant_min_cases=quant_min_cases,
                                          binary_min_cases=binary_min_cases,
-                                         covariate_col_names=covariate_col_names),
+                                         covariate_col_names=covariate_col_names,
+                                         old_results=old_results),
                          mc.cores = N_cores)
     } else {
       mapply(per_group_per_trait_GRS,GRS_map_edit,
@@ -621,7 +686,8 @@ R_association_testing <- function(analysis_folder,
                              analysis_save_name=analysis_save_name,
                              quant_min_cases=quant_min_cases,
                              binary_min_cases=binary_min_cases,
-                             covariate_col_names=covariate_col_names))
+                             covariate_col_names=covariate_col_names,
+                             old_results=old_results))
     }
 
   } else if(!is.null(non_GRS_data)){
@@ -682,7 +748,30 @@ R_association_testing <- function(analysis_folder,
                              USE.NAMES = T)
     }
 
-    saveRDS(all_results,paste0(analysis_folder,"/",analysis_name,"_all_group_results_list.RDS"))
 
+    if(is.null(old_results)){
+      saveRDS(all_results,paste0(analysis_folder,"/",analysis_name,"_all_group_results_list.RDS"))
+    } else {
+
+      to_change <- old_results[names(all_results)]
+
+      adding_to_results <- function(a,b,c){
+        original_table <- b[[a]]
+        new_results <- c[[a]]
+
+        combined_results <- original_table %>%
+          dplyr::bind_rows(new_results)
+      }
+
+      updated_results <- mapply(adding_to_results,to_change,MoreArgs = list(b=old_results,c=all_results))
+
+      unchanged <- old_results[names(old_results)[!names(old_results) %in% names(updated_results)]]
+      if(length(unchanged)>0){
+        final <- append(unchanged,updated_results)[names(old_results)]
+      } else {
+        final <- updated_results
+      }
+      saveRDS(final,paste0(analysis_folder,"/",analysis_name,"_all_group_results_list.RDS"))
+    }
   }
 }

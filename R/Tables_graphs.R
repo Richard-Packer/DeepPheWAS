@@ -327,7 +327,7 @@ save_root <- save_folder
   if(is.null(PheWAS_ID_filter)){
     PheWAS_ID_filter <- unique(results$PheWAS_ID)
   } else {
-    PheWAS_IDs <- data.table::fread(PheWAS_ID_filter) %>%
+    PheWAS_IDs <- data.table::fread(PheWAS_ID_filter, header = F) %>%
       dplyr::pull(1)
     PheWAS_ID_filter <- unique(PheWAS_IDs)
   }
@@ -559,7 +559,7 @@ save_root <- save_folder
 #'@param R_association_results Select if results are from 03b_R_association_testing.R.
 #'@param save_folder File path of the folder to which the output will be saved.
 #'@param group_filter Comma-separated text input, used to filter the group to which the table and graph functions are applied. Inputted groups are the ones that are retained for analysis, group here refers to the grouping variable used to subset the analysis classically ancestry.
-#'@param PheWAS_ID_filter Full file path to file containing list of PheWAS_IDs, these will be retained and must include any sex split PheWAS_IDs in full. Use if wanting to apply the table and/or graphing functions a subset of phenotypes.
+#'@param PheWAS_ID_filter Full file path to a plain txt file containing single column NO header containing full PheWAS_ID of phenotypes that will be included Use if wanting to apply the table and/or graphing functions a subset of phenotypes.
 #'@param PheWAS_manifest_overide Full file path of the alternative PheWAS_manifest file.
 #'@param max_pheno Manual override for inputting maximum phenotypes analysed. Used for calculating FDR. The default used the largest number of associations in the results_file of any grouping.
 #'@param sig_FDR Value of FDR for which associations are reported as significant. Will alter the line of significance in both graph types and the reported phenotypes in the significant_pheno graphs. Default: 0.01.

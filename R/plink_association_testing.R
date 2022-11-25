@@ -242,8 +242,8 @@ association_tests <- function(y,x,
 #' @param PheWAS_manifest_overide Full file path of the alternative PheWAS_manifest file.
 #' @param plink_exe Command to execute plink2 program.
 #' @param save_plink_tables Select if wanting to save the raw plink results per group as a table always saved in analysis_folder/assoiation_results/group/group_plink_results_raw.
-#' @param phenotype_inclusion_file Full file path to a txt file containing single column containing full PheWAS_ID of phenotypes that will be included. Cannot be used with phenotype_exclusion_file argument.
-#' @param phenotype_exclusion_file Full file path to a txt file containing single column containing full PheWAS_ID of phenotypes that will be excluded. Cannot be used with phenotype_inclusion_file argument.
+#' @param phenotype_inclusion_file Full file path to a plain txt file containing single column NO header containing full PheWAS_ID of phenotypes that will be included. Cannot be used with phenotype_exclusion_file argument.
+#' @param phenotype_exclusion_file Full file path to a plain txt file containing single column NO header containing full PheWAS_ID of phenotypes that will be excluded. Cannot be used with phenotype_inclusion_file argument.
 #' @param split_group Comma separated groups that require splitting for more efficient analysis. Does not run the analysis per group but splits and saves the phenotypes into smaller files which can then be analysed using cluster based computing. The number of phenotypes in each split file is dependent on the type (binary or quantitative) and is set using N_quant_split and N_binary_split. Split files are saved in analysis_folder/group_split with group being the group name. A file is created in analysis_folder/group_split saved as group_split_guide with group once again being the group name inputted. This file lists the file names of the splits, which can be used to guide distributed computing analysis.
 #' @param N_quant_split Number of quantitative phenotypes per split file.
 #' @param N_binary_split Number of binary phenotypes per split file.
@@ -338,7 +338,7 @@ plink_association_testing <- function(analysis_folder,
     if(!file.exists(phenotype_inclusion_file)){
       rlang::abort(paste0("'phenotype_inclusion_file' must be a file"))
     }
-    phenotype_inclusion_ID <- data.table::fread(phenotype_inclusion_file) %>%
+    phenotype_inclusion_ID <- data.table::fread(phenotype_inclusion_file, header = F) %>%
       dplyr::pull(1)
     all_phenos <- all_possible_phenotypes %>%
       dplyr::filter(.data$PheWAS_ID %in% phenotype_inclusion_ID)
@@ -346,7 +346,7 @@ plink_association_testing <- function(analysis_folder,
     if(!file.exists(phenotype_exclusion_file)){
       rlang::abort(paste0("'phenotype_exclusion_file' must be a file"))
     }
-    phenotype_exclusion_ID <- data.table::fread(phenotype_exclusion_file) %>%
+    phenotype_exclusion_ID <- data.table::fread(phenotype_exclusion_file, header = F) %>%
       dplyr::pull(1)
     all_phenos <- all_possible_phenotypes %>%
       dplyr::filter(!.data$PheWAS_ID %in% phenotype_exclusion_ID)

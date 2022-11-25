@@ -425,8 +425,8 @@ GRS_association <- function(e,a,b,c,d,
 #' @param PheWAS_manifest_overide Full file path of the alternative PheWAS_manifest file.
 #' @param analysis_name Name for the analysis, is used later in saving tables, so should distinguish between other analyses. For GRS analysis this name is always the trait being analysed.
 #' @param N_cores Number of cores requested if wanting to use parallel computing.
-#' @param phenotype_inclusion_file Full file path to a txt file containing single column containing full PheWAS_ID of phenotypes that will be included. Cannot be used with phenotype_exclusion_file argument.
-#' @param phenotype_exclusion_file Full file path to a txt file containing single column containing full PheWAS_ID of phenotypes that will be excluded. Cannot be used with phenotype_inclusion_file argument.
+#' @param phenotype_inclusion_file Full file path to a plain txt file containing single column NO header containing full PheWAS_ID of phenotypes that will be included. Cannot be used with phenotype_exclusion_file argument.
+#' @param phenotype_exclusion_file Full file path to a plain txt file containing single column NO header containing full PheWAS_ID of phenotypes that will be excluded. Cannot be used with phenotype_exclusion_file argument.
 #' @param binary_Case_N Number that represents the minimum number of cases for binary phenotype inclusion. Default=50
 #' @param quantitative_Case_N Number that represents the minimum number of cases for quantitative phenotype inclusion. Default=100
 #' @return Association test results as a RDS object.
@@ -524,7 +524,7 @@ R_association_testing <- function(analysis_folder,
     if(!file.exists(phenotype_inclusion_file)){
       rlang::abort(paste0("'phenotype_inclusion_file' must be a file"))
     }
-    phenotype_inclusion_ID <- data.table::fread(phenotype_inclusion_file) %>%
+    phenotype_inclusion_ID <- data.table::fread(phenotype_inclusion_file, header = F) %>%
       dplyr::pull(1)
     nearly_all_phenos <- all_possible_phenotypes %>%
       dplyr::filter(.data$PheWAS_ID %in% phenotype_inclusion_ID)
@@ -543,7 +543,7 @@ R_association_testing <- function(analysis_folder,
     if(!file.exists(phenotype_exclusion_file)){
       rlang::abort(paste0("'phenotype_exclusion_file' must be a file"))
     }
-    phenotype_exclusion_ID <- data.table::fread(phenotype_exclusion_file) %>%
+    phenotype_exclusion_ID <- data.table::fread(phenotype_exclusion_file, header = F) %>%
       dplyr::pull(1)
     nearly_all_phenos <- all_possible_phenotypes %>%
       dplyr::filter(!.data$PheWAS_ID %in% phenotype_exclusion_ID)

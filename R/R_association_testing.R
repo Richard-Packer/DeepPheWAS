@@ -8,6 +8,22 @@ inner_names <- function(x,y){
     dplyr::pull(.data$PheWAS_ID)
 }
 
+
+#' Simple function that adds to existing list names of lists within lists.
+#'
+#' @param a Name of list to append.
+#' @param b RDS of original results.
+#' @param c new results
+#' @return an appended list.
+adding_to_results <- function(a,b,c){
+  original_table <- b[[a]]
+  new_results <- c[[a]]
+
+  combined_results <- original_table %>%
+    dplyr::bind_rows(new_results)
+}
+
+
 #' Applies association analysis per grouping variable for non-GRS data.
 #'
 #' @param x Group name
@@ -103,25 +119,13 @@ per_group_per_trait_GRS <- function(x,
                         SIMPLIFY = F,
                         USE.NAMES = T)
 
-    {
-
-    }
 
   if(is.null(old_results)){
     saveRDS(GRS_results,save_name)
   } else {
-
     to_change <- old_results[names(GRS_results)]
 
-    adding_to_results <- function(a,b,c){
-      original_table <- b[[a]]
-      new_results <- c[[a]]
-
-      combined_results <- original_table %>%
-        dplyr::bind_rows(new_results)
-    }
-
-    updated_results <- mapply(adding_to_results,to_change,MoreArgs = list(b=old_results,c=GRS_results))
+    updated_results <- mapply(adding_to_results,names(to_change),MoreArgs = list(b=old_results,c=GRS_results), SIMPLIFY = F)
 
     unchanged <- old_results[names(old_results)[!names(old_results) %in% names(updated_results)]]
     if(length(unchanged)>0){
@@ -131,9 +135,6 @@ per_group_per_trait_GRS <- function(x,
     }
     saveRDS(final,save_name)
   }
-
-
-
 }
 
 #' Simple helper function for making folders
@@ -627,7 +628,7 @@ R_association_testing <- function(analysis_folder,
         unique(.)
 
       all_phenos <- all_phenos %>%
-        dplyr::filter(!"PheWAS_ID" %in% all_names)
+        dplyr::filter(!.data$PheWAS_ID %in% all_names)
 
       appending_results <- TRUE
   } else {
@@ -755,15 +756,7 @@ R_association_testing <- function(analysis_folder,
 
       to_change <- old_results[names(all_results)]
 
-      adding_to_results <- function(a,b,c){
-        original_table <- b[[a]]
-        new_results <- c[[a]]
-
-        combined_results <- original_table %>%
-          dplyr::bind_rows(new_results)
-      }
-
-      updated_results <- mapply(adding_to_results,to_change,MoreArgs = list(b=old_results,c=all_results))
+      updated_results <- mapply(adding_to_results,names(to_change),MoreArgs = list(b=old_results,c=all_results))
 
       unchanged <- old_results[names(old_results)[!names(old_results) %in% names(updated_results)]]
       if(length(unchanged)>0){

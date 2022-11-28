@@ -22,7 +22,8 @@ adding_to_results <- function(a,b,c,d){
 
   combined_results <- original_table %>%
     dplyr::bind_rows(new_results) %>%
-    dplyr::mutate("name"={{d}})
+    dplyr::mutate("name"={{d}},
+                  table_save=.data$name)
 }
 
 #' Applies association analysis per grouping variable for non-GRS data.

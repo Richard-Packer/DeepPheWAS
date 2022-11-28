@@ -17,7 +17,7 @@ inner_names <- function(x,y){
 #' @param d name of the trait
 #' @param e group name
 #' @return an appended list.
-adding_to_results <- function(a,b,c,d){
+adding_to_results <- function(a,b,c,d,e){
   original_table <- b[[a]]
   new_results <- c[[a]]
 

@@ -4,7 +4,7 @@
 \alias{adding_to_results}
 \title{Simple function that adds to existing list names of lists within lists.}
 \usage{
-adding_to_results(a, b, c, d)
+adding_to_results(a, b, c, d, e)
 }
 \arguments{
 \item{a}{Name of list to append.}
@@ -14,6 +14,8 @@ adding_to_results(a, b, c, d)
 \item{c}{new results}
 
 \item{d}{name of the trait}
+
+\item{e}{group name}
 }
 \value{
 an appended list.

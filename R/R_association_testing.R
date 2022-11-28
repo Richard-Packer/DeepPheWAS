@@ -20,8 +20,10 @@ adding_to_results <- function(a,b,c,d){
   new_results <- c[[a]]
 
   combined_results <- original_table %>%
-    dplyr::bind_rows(new_results) %>%
-    mutate(name={{d}})
+    dplyr::bind_rows(new_results)
+
+  %>%
+    dplyr::mutate("name"={{d}})
 }
 
 #' Applies association analysis per grouping variable for non-GRS data.
@@ -125,7 +127,7 @@ per_group_per_trait_GRS <- function(x,
   } else {
     to_change <- old_results[names(GRS_results)]
 
-    updated_results <- mapply(adding_to_results,names(to_change),MoreArgs = list(b=old_results,c=GRS_results,d=selected_trait), SIMPLIFY = F)
+    updated_results <- mapply(adding_to_results,names(to_change),MoreArgs = list(b=old_results,c=GRS_results,d=selected_trait$trait), SIMPLIFY = F)
 
     unchanged <- old_results[names(old_results)[!names(old_results) %in% names(updated_results)]]
     if(length(unchanged)>0){

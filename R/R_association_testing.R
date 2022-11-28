@@ -20,7 +20,8 @@ adding_to_results <- function(a,b,c){
   new_results <- c[[a]]
 
   combined_results <- original_table %>%
-    dplyr::bind_rows(new_results)
+    dplyr::bind_rows(new_results) %>%
+    mutate(name=.data$selected_trait)
 }
 
 

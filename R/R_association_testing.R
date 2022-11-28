@@ -14,15 +14,14 @@ inner_names <- function(x,y){
 #' @param a Name of list to append.
 #' @param b RDS of original results.
 #' @param c new results
+#' @param d name of the trait
 #' @return an appended list.
 adding_to_results <- function(a,b,c,d){
   original_table <- b[[a]]
   new_results <- c[[a]]
 
   combined_results <- original_table %>%
-    dplyr::bind_rows(new_results)
-
-  %>%
+    dplyr::bind_rows(new_results) %>%
     dplyr::mutate("name"={{d}})
 }
 

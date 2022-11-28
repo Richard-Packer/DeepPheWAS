@@ -15,15 +15,14 @@ inner_names <- function(x,y){
 #' @param b RDS of original results.
 #' @param c new results
 #' @return an appended list.
-adding_to_results <- function(a,b,c){
+adding_to_results <- function(a,b,c,d){
   original_table <- b[[a]]
   new_results <- c[[a]]
 
   combined_results <- original_table %>%
     dplyr::bind_rows(new_results) %>%
-    mutate(name=.data$selected_trait)
+    mutate(name={{d}})
 }
-
 
 #' Applies association analysis per grouping variable for non-GRS data.
 #'
@@ -126,7 +125,7 @@ per_group_per_trait_GRS <- function(x,
   } else {
     to_change <- old_results[names(GRS_results)]
 
-    updated_results <- mapply(adding_to_results,names(to_change),MoreArgs = list(b=old_results,c=GRS_results), SIMPLIFY = F)
+    updated_results <- mapply(adding_to_results,names(to_change),MoreArgs = list(b=old_results,c=GRS_results,d=selected_trait), SIMPLIFY = F)
 
     unchanged <- old_results[names(old_results)[!names(old_results) %in% names(updated_results)]]
     if(length(unchanged)>0){
@@ -757,7 +756,7 @@ R_association_testing <- function(analysis_folder,
 
       to_change <- old_results[names(all_results)]
 
-      updated_results <- mapply(adding_to_results,names(to_change),MoreArgs = list(b=old_results,c=all_results))
+      updated_results <- mapply(adding_to_results,names(to_change),d=tested_variables,MoreArgs = list(b=old_results,c=all_results))
 
       unchanged <- old_results[names(old_results)[!names(old_results) %in% names(updated_results)]]
       if(length(unchanged)>0){

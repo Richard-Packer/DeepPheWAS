@@ -25,7 +25,7 @@ adding_to_results <- function(a,b,c,d,e){
     dplyr::bind_rows(new_results) %>%
     dplyr::mutate("name"={{d}},
                   table_save=.data$name,
-                  name_group=paste0(.data$name,"_",))
+                  name_group=paste0(.data$name,"_",{{e}}))
 }
 
 #' Applies association analysis per grouping variable for non-GRS data.

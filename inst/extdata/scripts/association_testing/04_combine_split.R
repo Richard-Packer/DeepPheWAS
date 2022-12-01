@@ -3,7 +3,7 @@
 This script combines the results from the split_group split_analysis arguments from 03a_PLINK_assoication_testing.R into a single result file and appends the original results file first removing the empty list and then adding the split group into it.
 
 Usage:
-    04_combine_split.R (--split_plink_results_folder=<folder>  --results_RDS_file=<FILE> --group_name=<name>)
+    04_combine_split.R (--split_plink_results_folder=<folder>  --results_RDS_file=<FILE> --group_name=<name> --analysis_name=<name>)
 
 Options:
     -h --help  Show this screen.

@@ -546,7 +546,9 @@ data_field <- PheWAS_manifest %>%
   dplyr::mutate(search_id=paste0("^",.data$field_code,"-"),
                 QC_flag_ID=ifelse(is.na(.data$QC_flag_ID),.data$QC_flag_ID,paste0("^",.data$QC_flag_ID,"-")),
                 date_code=ifelse(is.na(.data$date_code),.data$date_code,paste0("^",.data$date_code,"-")),
-                age_code=ifelse(is.na(.data$age_code),.data$age_code,paste0("^",.data$age_code,"-")))
+                age_code=ifelse(is.na(.data$age_code),.data$age_code,paste0("^",.data$age_code,"-")),
+                control_code=as.character(.data$control_code),
+                case_code=as.character(.data$case_code))
 # function to extract data_field phenotypes
 if (is.numeric(N_cores)) {
   data_field_variables_created <- parallel::mcmapply(data_field_extraction,

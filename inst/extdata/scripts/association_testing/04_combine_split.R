@@ -11,7 +11,7 @@ Options:
 
     Mandatory inputs
     --split_plink_results_folder=<folder>       Full path of the folder containing all of the PLINK results from the split_group, split_analysis option in
-                                                03a_PLINK_association_testing.R.
+                                                03a_PLINK_association_testing.R. Will almost always be the /plink_results folder.
 
     --results_RDS_file=<FILE>                   Full path of the results of the analysis from the 03a_PLINK_association_testing.R script. Is an R object.
 

@@ -142,7 +142,7 @@ minimum_data_R <- function(data_folder,
   } else {
     min_tab_data <- mapply(tab_data_clean,
                            tab_files,
-                           MoreArgs = list(y=headings, exclusion_table=exclusions),
+                           MoreArgs = list(y=headings, z=exclusions),
                            SIMPLIFY = F)
   }
   # Use purr to map and join Worst case scenario numbers don't match but it just introduces NA's.

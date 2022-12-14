@@ -51,4 +51,5 @@ generating_phecodes(health_data=arguments$health_data,
                     no_range_ID=arguments$no_range_ID,
                     no_phecodes=arguments$no_phecodes,
                     ICD10=arguments$ICD10,
-                    ICD9=arguments$ICD10)
+                    ICD9=arguments$ICD10,
+                    PheWAS_manifest_overide=arguments$PheWAS_manifest_overide)

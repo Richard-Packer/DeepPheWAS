@@ -10,6 +10,7 @@
 #' @param max_overlap maximum number of overlaps for labelled phenotypes in the all_pheno graphs
 #' @param graph_type save format of the graphs any input readable from ggsave is accepted
 #' @param label_size size of the text for labelled phenotypes.
+#' @keywords internal
 #' @return saved graphs per group
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
@@ -35,6 +36,7 @@ R_association_function <- function(x,save_root,analysis_name,graph_choice,FDR_fi
 #' @param max_overlap maximum number of overlaps for labelled phenotypes in the all_pheno graphs
 #' @param graph_type save format of the graphs any input readable from ggsave is accepted
 #' @param label_size size of the text for labelled phenotypes.
+#' @keywords internal
 #' @return saved graphs per group
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
@@ -67,6 +69,7 @@ per_group_function <- function(x,y,save_root,analysis_name,graph_choice,FDR_figu
 #' @param max_overlap maximum number of overlaps for labelled phenotypes in the all_pheno graphs
 #' @param graph_type save format of the graphs any input readable from ggsave is accepted
 #' @param label_size size of the text for labelled phenotypes.
+#' @keywords internal
 #' @return saved graphs per SNP.
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
@@ -85,6 +88,7 @@ per_snp_function <- function(a,y,save_root,analysis_name,graph_choice,FDR_figure
 #' @param x Group name
 #' @param max_pheno_tests the maximum number of tests that are being run across grouping variable. Must be at => the number of associations.
 #' @return data frame with new fdr column.
+#' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 
@@ -110,6 +114,7 @@ fdr_calc <- function(x,max_pheno_tests) {
 #' @param graph_type save format of the graphs any input readable from ggsave is accepted
 #' @param label_size size of the text for labelled phenotypes.
 #' @return Creates and then saves graphs from results files.
+#' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 making_graphs <- function(a,b,c,d,FDR_figure,max_FDR_graph,graph_save_location,PheWAS_label_filter,max_overlap,graph_type,label_size) {
@@ -285,6 +290,7 @@ if(is.null(PheWAS_label_filter)){
 #' @param graph_type save format of the graphs any input readable from ggsave is accepted
 #' @param label_size size of the text for labelled phenotypes.
 #' @return Saved tables and graphs, graphs created through calling additional functions.
+#' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 Deep_PheWAS_graphs_tables <- function(x,y,
@@ -450,7 +456,7 @@ save_root <- save_folder
                       MAC_controls=ifelse(.data$A1_FREQ<0.5,.data$A1_CTRL_CT,(.data$A1_CTRL_CT/.data$A1_CTRL_FREQ)*(1-.data$A1_CTRL_FREQ)),
                       expected_MAC_cases=ifelse(.data$A1_FREQ<0.5,(.data$A1_CASE_CT/.data$A1_CASE_FREQ)*.data$A1_CTRL_FREQ,(.data$A1_CASE_CT/.data$A1_CASE_FREQ)*(1-.data$A1_CTRL_FREQ)),
                       MAC_diff=.data$MAC_cases-.data$expected_MAC_cases,
-                      keep=ifelse(!is.na(.data$Beta),2,ifelse(.data$expected_MAC_cases<=2&.data$MAC_cases>=3,1,ifelse(.data$expected_MAC_cases>=7&(.data$MAC_cases<=5&.data$MAC_cases>=1),1,0))),
+                      keep=ifelse(.data$expected_MAC_cases<=2&.data$MAC_cases>=3,1,ifelse(.data$expected_MAC_cases>=7&(.data$MAC_cases<=5&.data$MAC_cases>=1),1,0)),
                       ratio=1/((.data$A1_CASE_CT/.data$A1_CASE_FREQ)/(.data$A1_CTRL_CT/.data$A1_CTRL_FREQ)),
                       sex_pheno=sub(".*_", "", .data$PheWAS_ID),
                       join_name = stringr::str_remove(.data$PheWAS_ID,"_male|_female")) %>%

@@ -147,6 +147,7 @@ exclusion_generator <- function(a,b,c,d,e,f,g,h) {
 #' @param range_ID_save_file Full path of the folder used to store the control exclusions R data object.
 #' @param ICD10 Comma-separated string representing the column names used in health_data for ICD-10 values. If there are no ICD-10 values, use NA or any text not used as a source in health data. Defaults to "ICD10".
 #' @param ICD9 Comma-separated string representing the column names used in health_data for ICD-9 values. If there are no ICD-9 values, use NA or any text not used as a source in health data. Defaults to "ICD9".
+#' @param PheWAS_manifest_overide Full file path of the alternative PheWAS_manifest file.
 #' @return A rds file containing phecode phenotypes.
 #' @export
 #' @importFrom magrittr %>%
@@ -161,7 +162,8 @@ generating_phecodes <- function(health_data,
                                 phecode_save_file,
                                 range_ID_save_file,
                                 ICD10,
-                                ICD9) {
+                                ICD9,
+                                PheWAS_manifest_overide) {
 
   # Load in and define variables -----------------------------------------------------------------
   if(!is.null(N_cores)) {
@@ -187,12 +189,34 @@ generating_phecodes <- function(health_data,
   if(!dir.exists(new_folder_range)){
     dir.create(new_folder_range)}
 
+  # PheWAS manifest
+  if(is.null(PheWAS_manifest_overide)){
+    PheWAS_manifest <- data.table::fread(system.file("extdata","PheWAS_manifest.csv.gz", package = "DeepPheWAS"))
+  } else {
+    if(!file.exists(PheWAS_manifest_overide)){
+      rlang::abort(paste0("'PheWAS_manifest_overide' must be a file"))
+    }
+    PheWAS_manifest <- data.table::fread(PheWAS_manifest_overide)
+    PheWAS_manifest_overide_colname <- c("PheWAS_ID","broad_catagory","category","phenotype","range_ID","sex","field_code","QC_flag_ID","QC_filter_values","first_last_max_min_value","date_code","age_code","case_code","control_code","exclude_case_control_crossover","included_in_analysis","quant_combination","primary_care_code_list","limits","lower_limit","upper_limit","transformation","analysis","age_col","pheno_group","short_desc","group_narrow","concept_name","concept_description","Notes")
+
+    if(!all(tibble::has_name(PheWAS_manifest,PheWAS_manifest_overide_colname))){
+      warning(paste0("'PheWAS_manifest_overide' does not have the correct colnames and may not produce the correct output, expected colnames are:
+                                 '"),paste(PheWAS_manifest_overide_colname, collapse=","),paste0("'
+                                 not:
+                                 "),paste(colnames(PheWAS_manifest), collapse=","),
+              paste0("
+                                 differences between inputed file and expected are:
+                                 "),paste(setdiff_all(names(PheWAS_manifest),PheWAS_manifest_overide_colname), collapse=","))
+
+    }
+  }
+
   # read in the phecode mapping files for ICD10 and ICD9
   phecode_map_ICD10 <- data.table::fread(system.file("extdata","phecode_map_rollup_ICD10.gz", package = "DeepPheWAS"))
   phecode_map_ICD9 <- data.table::fread(system.file("extdata","phecode_map_rollup_ICD9.gz", package = "DeepPheWAS"))
 
   # phecode definitions for mapping to phecodes
-  phecode_definitions <- data.table::fread(system.file("extdata","phecode_definitions.gz", package = "DeepPheWAS"))
+  phecode_definition <- data.table::fread(system.file("extdata","phecode_definitions.gz", package = "DeepPheWAS"))
 
   # optional file for control exclusions due to lack of suitable follow-up
   if(is.null(control_exclusions)) {
@@ -270,6 +294,16 @@ generating_phecodes <- function(health_data,
   ## then join the ICD10 and ICD9 data together and add in sex information via combined sex file
   phecodes_mapped <- dplyr::bind_rows(ICD10_mapped,ICD9_mapped) %>%
     dplyr::left_join(combined_sex)
+
+  # filter the phecode definition by available phecodes in the data
+  manifest_phecodes <- PheWAS_manifest %>%
+    dplyr::filter(.data$category=="Phecode") %>%
+    dplyr::mutate(phecode=stringr::str_remove(.data$PheWAS_ID,"P"))
+
+  phecode_definitions <- phecode_definition %>%
+    dplyr::filter(.data$phecode %in% unique(phecodes_mapped$phecode)) %>%
+    dplyr::filter(.data$phecode %in% unique(manifest_phecodes$phecode))
+
   # Phecode phenotype function -----------------------------------------------------
   # these are the variables that are used in the mapply function
   phewas_ID <- phecode_definitions[["phecode_name"]]

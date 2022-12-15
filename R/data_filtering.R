@@ -73,7 +73,7 @@ minimum_data_R <- function(data_folder,
   }
   # save_loc
   if(!dir.exists(dirname(save_loc))){
-    dir.create(dirname(save_loc))
+    dir.create(dirname(save_loc),recursive = T)
   }
 
   # Load in and define variables -----------------------------------------------------------------

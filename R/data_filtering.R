@@ -73,7 +73,7 @@ minimum_data_R <- function(data_folder,
   }
   # save_loc
   if(!dir.exists(dirname(save_loc))){
-    rlang::abort(paste0("'save_loc' must be in an existing directory"))
+    dir.create(dirname(save_loc))
   }
 
   # Load in and define variables -----------------------------------------------------------------

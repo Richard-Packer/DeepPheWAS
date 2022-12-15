@@ -47,3 +47,4 @@ GRS results as a saved RDS object.
 \description{
 Applies association analysis per grouping variable for GRS data.
 }
+\keyword{internal}

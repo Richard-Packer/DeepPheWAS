@@ -16,6 +16,7 @@
 #' @param n data coding for QC vales
 #' @param min_data dataframe of min_data
 #' @return A dataframe containing data field phenotype
+#' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 
@@ -383,6 +384,7 @@ data_field_extraction <- function (a,b,c,d,e,f,g,h,i,j,k,l,m,n,min_data) {
 #' @param current_data_fields vector of current data fields available generated from previous code
 #' @param data_field_variables dataframe of extracted data fields
 #' @return A dataframe containing combined data-field phenotype
+#' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 

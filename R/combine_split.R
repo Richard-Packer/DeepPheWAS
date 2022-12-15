@@ -5,6 +5,7 @@
 #' @param remove_string name of the analysis
 #' @param analysis_name Name for the analysis to be used in the naming of the output files.
 #' @return list of results
+#' @keywords internal
 #' @importFrom magrittr %>%
 plink_file_edit_join <- function(x,y,remove_string,analysis_name) {
   name <- data.frame(stringr::str_remove_all(y, paste(remove_string, collapse = "|"))) %>%

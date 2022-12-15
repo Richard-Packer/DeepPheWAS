@@ -25,3 +25,4 @@ A dataframe containing of extracted data, each data item is a row with participa
 \description{
 Searches and extracts data fields that have multiple records and adds a date for the data collection which is in separate data-field, current version works only with very specific UK Biobank data
 }
+\keyword{internal}

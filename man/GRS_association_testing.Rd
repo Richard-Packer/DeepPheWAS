@@ -47,3 +47,4 @@ A dataframe of association results per phenotype.
 \description{
 Runs R association testing.
 }
+\keyword{internal}

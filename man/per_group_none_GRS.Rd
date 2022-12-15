@@ -50,3 +50,4 @@ non-GRS results as list item.
 \description{
 Applies association analysis per grouping variable for non-GRS data.
 }
+\keyword{internal}

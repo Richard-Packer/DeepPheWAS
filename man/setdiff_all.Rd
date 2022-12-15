@@ -20,3 +20,4 @@ Creates a symmetrical version of setdiff
 \author{
 DIZtools
 }
+\keyword{internal}

@@ -13,6 +13,7 @@
 #' @param k data frame for control exclusions
 #' @param l data frame fro combined sex
 #' @return A dataframe containing phecode status for each participant
+#' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom data.table :=
 #' @importFrom rlang .data
@@ -124,6 +125,7 @@ phecoding <- function(a,b,c,d,e,f,g,h,i,j,k,l) {
 #' @param g 3rd upper phecode range
 #' @param h phecodes_mapped data frame
 #' @return A dataframe containing ids of participants to be excluded as controls for given set of phenotypes
+#' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 exclusion_generator <- function(a,b,c,d,e,f,g,h) {

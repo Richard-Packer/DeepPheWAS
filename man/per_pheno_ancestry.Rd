@@ -17,3 +17,4 @@ phenotype split by population
 \description{
 Splits phenotype by grouping variable
 }
+\keyword{internal}

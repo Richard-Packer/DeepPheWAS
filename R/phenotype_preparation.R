@@ -5,6 +5,7 @@
 #' @param z PheWAS_ID.
 #' @param PheWAS_manifest manifest file
 #' @return A dataframe of summary stats for phenotypes.
+#' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 sum_stats <- function(x,y,z,PheWAS_manifest) {
@@ -54,6 +55,7 @@ sum_stats <- function(x,y,z,PheWAS_manifest) {
 #' @param x Groups
 #' @param groupings_df grouping data frame
 #' @return Grouping ID dataframes as lists
+#' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 group_id_creater <- function(x,groupings_df) {
@@ -69,6 +71,7 @@ group_id_creater <- function(x,groupings_df) {
 #' @param call_rate_kinships call_rate_kinship file
 #' @param PheWAS_manifest manifest file
 #' @return A list phenotypes filtered for relatedness.
+#' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 relate_remove_fn <- function(x,y,call_rate_kinships,PheWAS_manifest) {
@@ -242,6 +245,7 @@ relate_remove_fn <- function(x,y,call_rate_kinships,PheWAS_manifest) {
 #' @param y Non-sex specific phenotype to be edited
 #' @param female_ID vector of female IDs
 #' @return Female sex-specific phenotype
+#' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 sex_specific_female <- function(x,y,female_ID) {
@@ -257,6 +261,7 @@ sex_specific_female <- function(x,y,female_ID) {
 #' @param y Non-sex specific phenotype to be edited
 #' @param male_ID vector of male IDs
 #' @return Male sex-specific phenotype
+#' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 sex_specific_male <- function(x,y,male_ID) {
@@ -274,6 +279,7 @@ sex_specific_male <- function(x,y,male_ID) {
 #' @param d Name of age_of_onset phenotype
 #' @param DOB_df date of birth data frame
 #' @return Age of onset phenotype as list.
+#' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 age_of_onset_pheno_creator <- function(d,a,b,c,DOB_df){
@@ -298,6 +304,7 @@ age_of_onset_pheno_creator <- function(d,a,b,c,DOB_df){
 #' @param x group identifier IDs
 #' @param all_phenotypes all phenotypes loaded in
 #' @return all phenotypes split by each population
+#' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 spliting_by_population <- function(x,all_phenotypes) {
@@ -309,6 +316,7 @@ spliting_by_population <- function(x,all_phenotypes) {
 #' @param x phenotype dataframe
 #' @param y Data frame of IDs per group identifier
 #' @return phenotype split by population
+#' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 per_pheno_ancestry <- function (x,y) {
@@ -325,6 +333,7 @@ per_pheno_ancestry <- function (x,y) {
 #' @param y Grouping variable names.
 #' @param PheWAS_manifest manifest file
 #' @return summary stats per phenotype per grouping variable.
+#' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 summary_all_pops <- function(x,y,PheWAS_manifest) {
@@ -349,6 +358,7 @@ summary_all_pops <- function(x,y,PheWAS_manifest) {
 #' @param binary_min_cases minimum case number required for binary traits.
 #' @param PheWAS_manifest PheWAS_manifest.
 #' @return PheWAS_ID meet filtering conditions for case number.
+#' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 selecting_phenotype_cases_N <- function(x,quant_min_cases,binary_min_cases,PheWAS_manifest) {
@@ -378,6 +388,7 @@ selecting_phenotype_cases_N <- function(x,quant_min_cases,binary_min_cases,PheWA
 #' @param x all phenotypes as list.
 #' @param y PheWAS_IDs to include.
 #' @return Phenotypes filtered for case number
+#' @keywords internal
 reducing_phenotypes <- function(x,y) {
 
   x <- x[names(x) %in% y == TRUE]
@@ -389,6 +400,7 @@ reducing_phenotypes <- function(x,y) {
 #' @param call_rate_kinships call_rate_kinship file
 #' @param PheWAS_manifest manifest file
 #' @return Phenotypes filtered for relatedness.
+#' @keywords internal
 relate_remove_all_pops <- function(x,call_rate_kinships,PheWAS_manifest) {
 
   PheWAS_ID <- names(x)
@@ -408,6 +420,7 @@ relate_remove_all_pops <- function(x,call_rate_kinships,PheWAS_manifest) {
 #' @param age_of_onset_all if True creates all age of onset phenotypes
 #' @param all_phenotypes all available phenotypes
 #' @return Phenotypes as dataframe ready for analysis
+#' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 join_cols_pheno <- function (x,IVNT,age_of_onset_phenotypes,PheWAS_manifest,age_of_onset_all,all_phenotypes) {
@@ -452,6 +465,7 @@ join_cols_pheno <- function (x,IVNT,age_of_onset_phenotypes,PheWAS_manifest,age_
 #' @param PheWAS_manifest the PheWAS manifest
 #' @param PheWAS_ID_list all PheWAS ID's in analysis
 #' @return Phenotypes as list edited to for combination into dataframe for association analysis
+#' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 converted_for_association <- function (x,y,PheWAS_manifest,PheWAS_ID_list) {
@@ -510,6 +524,7 @@ return(phenotype)
 #' @param age_of_onset_all If T creates all age_of_onset phenotypes
 #' @param all_phenotypes all available phenotypes
 #' @return Phenotypes as list transformed as directed ready to convert into a dataframe
+#' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 IVNT_transformation <- function(x,y,PheWAS_manifest,age_of_onset_phenotypes,age_of_onset_all,all_phenotypes) {
@@ -580,6 +595,7 @@ return(pheno_new)
 #' @param save_name_core save_name given as argument
 #' @param save_folder folder for the save_name given as an argument.
 #' @return A saved table of phenotypes per grouping name variable.
+#' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 saving_files <- function(a,b,save_name_core,save_folder) {

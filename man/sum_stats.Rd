@@ -21,3 +21,4 @@ A dataframe of summary stats for phenotypes.
 \description{
 Summarises the number of cases and controls per_phenotype inputed.
 }
+\keyword{internal}

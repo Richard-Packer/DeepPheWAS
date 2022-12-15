@@ -11,6 +11,7 @@
 #' @param bgen_input logical value if using bgen as store of genetic data
 #' @param ref_bgen option required for extracting data from begn files.
 #' @return A pgen file of the selected SNPs
+#' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 snp_selection <- function(x,analysis_folder,snp_guide,plink_exe,bgenix_exe,plink_type,snp_list_file,plink_input,bgen_input,ref_bgen) {
@@ -58,6 +59,7 @@ snp_selection <- function(x,analysis_folder,snp_guide,plink_exe,bgenix_exe,plink
 #'
 #' @param x SNP list input
 #' @return Recoded SNPs creates unique value unlike rsid which has duplicates.
+#' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 recoding_variants <- function(x) {

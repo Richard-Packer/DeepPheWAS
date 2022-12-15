@@ -47,3 +47,4 @@ Creates and then saves graphs from results files.
 \description{
 Makes graphs from converted RDS files.
 }
+\keyword{internal}

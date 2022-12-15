@@ -56,3 +56,4 @@ Plink association results.
 \description{
 Runs R association testing per group per trait.
 }
+\keyword{internal}

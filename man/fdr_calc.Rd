@@ -17,3 +17,4 @@ data frame with new fdr column.
 \description{
 Converts P values into false discovery rate.
 }
+\keyword{internal}

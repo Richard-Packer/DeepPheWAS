@@ -110,3 +110,4 @@ Saved tables and graphs, graphs created through calling additional functions.
 \description{
 Makes graphs from converted RDS files.
 }
+\keyword{internal}

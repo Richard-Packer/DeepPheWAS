@@ -47,3 +47,4 @@ saved graphs per SNP.
 \description{
 Produces per-SNP graphs.
 }
+\keyword{internal}

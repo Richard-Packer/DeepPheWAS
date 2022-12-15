@@ -19,3 +19,4 @@ summary stats per phenotype per grouping variable.
 \description{
 Applies sum_stats per grouping population for each phenotype
 }
+\keyword{internal}

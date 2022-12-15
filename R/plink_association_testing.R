@@ -5,6 +5,7 @@
 #' @param z Group name.
 #' @param analysis_folder main folder hosting analsysis
 #' @return Saves data frames
+#' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 saving_files_simple <- function(x,y,z,analysis_folder) {
@@ -18,6 +19,7 @@ saving_files_simple <- function(x,y,z,analysis_folder) {
 #' @param remove_string vector to remove
 #' @param analysis_name name of the analysis
 #' @return Saves data frames
+#' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 plink_file_edit_join <- function(x,y,remove_string,analysis_name) {
@@ -50,6 +52,7 @@ plink_file_edit_join <- function(x,y,remove_string,analysis_name) {
 #' @param covariates covariates file for association analysis
 #' @param split_analysis logical value if split analysis is being used.
 #' @return Plink association results.
+#' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 association_tests <- function(y,x,

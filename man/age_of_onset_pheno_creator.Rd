@@ -23,3 +23,4 @@ Age of onset phenotype as list.
 \description{
 Creates age of onset specific versions of existing phenotypes
 }
+\keyword{internal}

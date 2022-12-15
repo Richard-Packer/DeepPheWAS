@@ -23,3 +23,4 @@ an appended list.
 \description{
 Simple function that adds to existing list names of lists within lists.
 }
+\keyword{internal}

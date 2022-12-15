@@ -44,3 +44,4 @@ A pgen file of the selected SNPs
 \description{
 Extracts SNPs from bgen or plink binary files into single file that is used for association.
 }
+\keyword{internal}

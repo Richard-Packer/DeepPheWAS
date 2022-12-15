@@ -27,3 +27,4 @@ Combines PLINK results from the split_groups and split_analysis.
 
 edits plink results
 }
+\keyword{internal}

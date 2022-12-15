@@ -17,3 +17,4 @@ control populations in phenotype form.
 \description{
 Makes control populations for composite phenotypes
 }
+\keyword{internal}

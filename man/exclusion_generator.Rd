@@ -29,3 +29,4 @@ A dataframe containing ids of participants to be excluded as controls for given 
 \description{
 Creates exclusion ranges which are then used for composite phenotypes
 }
+\keyword{internal}

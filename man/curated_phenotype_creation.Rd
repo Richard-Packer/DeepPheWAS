@@ -21,3 +21,4 @@ A list of data frames of composite phenotypes
 \description{
 Makes composite phenotypes guided by composite phenotype map.
 }
+\keyword{internal}

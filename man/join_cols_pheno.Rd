@@ -32,3 +32,4 @@ Phenotypes as dataframe ready for analysis
 \description{
 Allows main conversion to data frame of phenotypes
 }
+\keyword{internal}

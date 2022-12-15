@@ -7,6 +7,7 @@
 #' @param e name of data source
 #' @param f dataframe containing date of assessment centre
 #' @return A dataframe containing of extracted data, each data item is a row with participant ID, code and source
+#' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 
@@ -56,6 +57,8 @@ SR_data_out <-  function(a,b,c,d,e,f) {
 #' @param vec2 vector 2
 #' @author DIZtools
 #' @return a vector of differences
+#' @keywords internal
+#' @keywords internal
 
 
 setdiff_all <- function(vec1, vec2) {

@@ -26,3 +26,4 @@ PheWAS_ID meet filtering conditions for case number.
 \description{
 Applies sum_stats per grouping population for each phenotype returning PheWAS_IDs filtered by case number
 }
+\keyword{internal}

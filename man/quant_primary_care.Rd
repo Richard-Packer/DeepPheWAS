@@ -29,3 +29,4 @@ A list of primary care quantitative phenotypes
 \description{
 Makes primary care quantitative phenotypes guided by PheWAS manifest
 }
+\keyword{internal}

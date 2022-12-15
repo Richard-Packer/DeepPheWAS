@@ -21,3 +21,4 @@ A list phenotypes filtered for relatedness.
 \description{
 Removes related individuals from phenotypes.
 }
+\keyword{internal}

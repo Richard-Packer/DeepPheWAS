@@ -10,8 +10,8 @@
 #' @param max_overlap maximum number of overlaps for labelled phenotypes in the all_pheno graphs
 #' @param graph_type save format of the graphs any input readable from ggsave is accepted
 #' @param label_size size of the text for labelled phenotypes.
-#' @keywords internal
 #' @return saved graphs per group
+#' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 R_association_function <- function(x,save_root,analysis_name,graph_choice,FDR_figure,max_FDR_graph,PheWAS_label_filter,max_overlap,graph_type,label_size){
@@ -36,8 +36,8 @@ R_association_function <- function(x,save_root,analysis_name,graph_choice,FDR_fi
 #' @param max_overlap maximum number of overlaps for labelled phenotypes in the all_pheno graphs
 #' @param graph_type save format of the graphs any input readable from ggsave is accepted
 #' @param label_size size of the text for labelled phenotypes.
-#' @keywords internal
 #' @return saved graphs per group
+#' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 per_group_function <- function(x,y,save_root,analysis_name,graph_choice,FDR_figure,max_FDR_graph,PheWAS_label_filter,max_overlap,graph_type,label_size) {
@@ -69,8 +69,8 @@ per_group_function <- function(x,y,save_root,analysis_name,graph_choice,FDR_figu
 #' @param max_overlap maximum number of overlaps for labelled phenotypes in the all_pheno graphs
 #' @param graph_type save format of the graphs any input readable from ggsave is accepted
 #' @param label_size size of the text for labelled phenotypes.
-#' @keywords internal
 #' @return saved graphs per SNP.
+#' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 per_snp_function <- function(a,y,save_root,analysis_name,graph_choice,FDR_figure,max_FDR_graph,PheWAS_label_filter,max_overlap,graph_type,label_size){

@@ -21,3 +21,4 @@ A list each containing 2 lists one for WDA and one for all dates used later in t
 \description{
 Creates clinical concepts for combination in composite phenotypes
 }
+\keyword{internal}

@@ -3,6 +3,7 @@
 #' @param code_list list of codes
 #' @param health_data dataframe containing health_data
 #' @return A dataframe containing of extracted data, each data item is a row with participant ID, code and source
+#' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @importFrom data.table :=
@@ -84,6 +85,7 @@ concept_source_data_extraction <- function(a,code_list,health_data) {
 #' @param x numeric list
 #' @param included_ID list of codes
 #' @return A dataframe containing of extracted data, each data item is a row with participant ID, code and source
+#' @keywords internal
 
 calc_minus_source_ID <- function(x,included_ID) {
   current_ID <- unlist(included_ID[x])
@@ -100,6 +102,7 @@ calc_minus_source_ID <- function(x,included_ID) {
 #' @param health_data dataframe containing health_data
 #' @param code_list_folder marker to detect if default concept data is used or alternative folder of concept code lists is provided
 #' @return A list each containing 2 lists one for WDA and one for all dates used later in the pipeline for clinical concepts
+#' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @importFrom data.table :=
@@ -253,6 +256,7 @@ clinical_code_lookup <- function (x,z,health_data,code_list_folder) {
 #' @param V2_drugs dataframe containing information on drugs coded using Read_V2 codes.
 #' @param code_list_folder marker to detect if default concept data is used or alternative folder of concept code lists is provided
 #' @return A list each containing 2 lists one for WDA and one for all dates used later in the pipeline for prescription concepts
+#' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @importFrom data.table :=

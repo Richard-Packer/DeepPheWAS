@@ -21,3 +21,4 @@ Phenotypes as list edited to for combination into dataframe for association anal
 \description{
 Converts phenotypes to form suitable for association analysis retains list format
 }
+\keyword{internal}

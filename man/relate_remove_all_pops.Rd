@@ -19,3 +19,4 @@ Phenotypes filtered for relatedness.
 \description{
 Removes related individuals from phenotypes per grouping.
 }
+\keyword{internal}

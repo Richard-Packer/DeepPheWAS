@@ -19,3 +19,4 @@ A dataframe containing only columns of interest
 \description{
 Searches and extracts named columns from data file
 }
+\keyword{internal}

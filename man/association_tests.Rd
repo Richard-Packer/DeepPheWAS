@@ -65,3 +65,4 @@ Plink association results.
 \description{
 Runs Plink2 association testing for the extracted variants
 }
+\keyword{internal}

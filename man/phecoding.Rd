@@ -37,3 +37,4 @@ A dataframe containing phecode status for each participant
 \description{
 Creates phecode phenotypes for available ICD9 and ICD10 data
 }
+\keyword{internal}

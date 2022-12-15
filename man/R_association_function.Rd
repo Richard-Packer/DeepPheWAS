@@ -44,3 +44,4 @@ saved graphs per group
 \description{
 Produces graphs for R-association data.
 }
+\keyword{internal}

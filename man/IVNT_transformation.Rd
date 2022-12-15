@@ -32,3 +32,4 @@ Phenotypes as list transformed as directed ready to convert into a dataframe
 \description{
 Applies transformations to phenotypes as directed by manifest file.
 }
+\keyword{internal}

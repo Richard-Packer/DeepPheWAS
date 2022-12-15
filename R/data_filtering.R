@@ -6,6 +6,7 @@
 #' @param y vector of column names to extract
 #' @param z dataframe of exclusions single column no header
 #' @return A dataframe containing only columns of interest
+#' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 

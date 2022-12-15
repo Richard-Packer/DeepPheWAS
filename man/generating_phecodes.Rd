@@ -14,7 +14,8 @@ generating_phecodes(
   phecode_save_file,
   range_ID_save_file,
   ICD10,
-  ICD9
+  ICD9,
+  PheWAS_manifest_overide
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ generating_phecodes(
 \item{ICD10}{Comma-separated string representing the column names used in health_data for ICD-10 values. If there are no ICD-10 values, use NA or any text not used as a source in health data. Defaults to "ICD10".}
 
 \item{ICD9}{Comma-separated string representing the column names used in health_data for ICD-9 values. If there are no ICD-9 values, use NA or any text not used as a source in health data. Defaults to "ICD9".}
+
+\item{PheWAS_manifest_overide}{Full file path of the alternative PheWAS_manifest file.}
 }
 \value{
 A rds file containing phecode phenotypes.

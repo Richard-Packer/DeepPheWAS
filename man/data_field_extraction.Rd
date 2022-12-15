@@ -43,3 +43,4 @@ A dataframe containing data field phenotype
 \description{
 Extracts data-field phenotypes from study data guided by PheWAS manifest
 }
+\keyword{internal}

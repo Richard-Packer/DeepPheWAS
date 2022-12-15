@@ -47,3 +47,4 @@ saved graphs per group
 \description{
 Produces per-group graphs.
 }
+\keyword{internal}

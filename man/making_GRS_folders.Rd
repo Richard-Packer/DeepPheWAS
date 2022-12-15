@@ -17,3 +17,4 @@ Plink association results.
 \description{
 Simple helper function for making folders
 }
+\keyword{internal}

@@ -19,3 +19,4 @@ A list of extracted concepts filtered for N_codes
 \description{
 Combines concepts for use in creating composite phenotypes
 }
+\keyword{internal}

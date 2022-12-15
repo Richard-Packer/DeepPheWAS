@@ -17,3 +17,4 @@ A data frame per PheWAS-ID for composite phenotypes.
 \description{
 Parses the instruction from composite phenotype map into commands interpretable in R.
 }
+\keyword{internal}

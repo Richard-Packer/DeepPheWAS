@@ -3,6 +3,7 @@
 #' @param x Name of the first level of list.
 #' @param y list where names are extracted.
 #' @return a list of names from each internal list
+#' @keywords internal
 inner_names <- function(x,y){
   all_ID <- y[[x]] %>%
     dplyr::pull(.data$PheWAS_ID)
@@ -17,6 +18,7 @@ inner_names <- function(x,y){
 #' @param d name of the trait
 #' @param e group name
 #' @return an appended list.
+#' @keywords internal
 adding_to_results <- function(a,b,c,d,e){
   original_table <- b[[a]]
   new_results <- c[[a]]
@@ -43,7 +45,7 @@ adding_to_results <- function(a,b,c,d,e){
 #' @param binary_min_cases minimum number of binary cases.
 #' @param covariate_col_names column names of covariates.
 #' @return non-GRS results as list item.
-
+#' @keywords internal
 per_group_none_GRS  <- function(x,y,
                                 tested_variables,
                                 non_GRS_data,
@@ -89,6 +91,7 @@ per_group_none_GRS  <- function(x,y,
 #' @param covariate_col_names column names of covariates.
 #' @param old_results existing results as list item.
 #' @return GRS results as a saved RDS object.
+#' @keywords internal
 per_group_per_trait_GRS <- function(x,
                                     GRS_input,
                                     non_GRS_data,
@@ -146,6 +149,7 @@ per_group_per_trait_GRS <- function(x,
 #' @param x Per trait map of files
 #' @param analysis_folder Location where analysis output is saved to.
 #' @return Plink association results.
+#' @keywords internal
 making_GRS_folders <- function(x,analysis_folder) {
 
   GRS_per_trait <- x
@@ -169,6 +173,7 @@ making_GRS_folders <- function(x,analysis_folder) {
 #' @param covariate_col_names column names of covariates.
 #' @param all_phenos Data frame containing all possible phenotypes including age coloumn covariates.
 #' @return A dataframe of association results per phenotype.
+#' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 GRS_association_testing <- function (a,b,c,d,phenotypes,PheWAS_manifest,GRS_cov,quant_min_cases,binary_min_cases,covariate_col_names,all_phenos) {
@@ -310,6 +315,7 @@ message(paste0(a))
 #' @param binary_min_cases minimum number of binary cases.
 #' @param covariate_col_names column names of covariates.
 #' @return Plink association results.
+#' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 GRS_association <- function(e,a,b,c,d,

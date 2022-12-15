@@ -17,3 +17,4 @@ a list of names from each internal list
 \description{
 Simple function that extracts names of lists within lists.
 }
+\keyword{internal}

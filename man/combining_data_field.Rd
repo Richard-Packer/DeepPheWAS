@@ -41,3 +41,4 @@ A dataframe containing combined data-field phenotype
 \description{
 Makes combined data-field phenotypes from study data guided by PheWAS manifest
 }
+\keyword{internal}

@@ -15,3 +15,4 @@ Recoded SNPs creates unique value unlike rsid which has duplicates.
 \description{
 Recodes SNP list input
 }
+\keyword{internal}

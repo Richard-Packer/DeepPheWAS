@@ -17,3 +17,4 @@ A vector of case names.
 \description{
 Helper function for per_line edit
 }
+\keyword{internal}

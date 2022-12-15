@@ -9,6 +9,7 @@
 #' @param DOB DOB information
 #' @param code_lists Full file path of the folder containing alternative primary care code lists.
 #' @return A list of primary care quantitative phenotypes
+#' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 

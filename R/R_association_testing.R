@@ -674,7 +674,7 @@ R_association_testing <- function(analysis_folder,
            GRS_map_edit,
            MoreArgs = list(analysis_folder=analysis_folder))
 
-    if(!is.null(N_cores)) {
+    if(!is.na(N_cores)) {
       parallel::mcmapply(per_group_per_trait_GRS,GRS_map_edit,
                          MoreArgs = list(GRS_input=GRS_input,
                                          non_GRS_data=non_GRS_data,
@@ -723,7 +723,7 @@ R_association_testing <- function(analysis_folder,
     # making folders
     lapply(phenotype_group_name, function(x) dir.create(paste0(analysis_folder,"/",x),recursive = T))
 
-    if(!is.null(N_cores)) {
+    if(!is.na(N_cores)) {
       all_results <- parallel::mcmapply(per_group_none_GRS,
                                         phenotype_group_name,
                                         phenotype_files,

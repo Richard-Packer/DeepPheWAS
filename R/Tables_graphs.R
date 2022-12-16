@@ -305,7 +305,10 @@ making_graphs <- function(a,b,c,d,FDR_figure,max_FDR_graph,graph_save_location,P
                      axis.ticks=ggplot2::element_line(colour="black"),
                      legend.key=ggplot2::element_blank(),
                      legend.key.height=ggplot2::unit(0.5,"line"))
-    if(c=="both") {
+    if(nrow(data_test)<1){
+      ggplot2::ggsave(filename = paste0(graph_save_location,"/",name_file,"_all_pheno.",graph_type),
+                      plot = all_pheno_graph, device = graph_type, dpi = 300, width = 9,height = 6,units = "in")
+    } else if(c=="both") {
       ggplot2::ggsave(filename = paste0(graph_save_location,"/",name_file,"_sig_pheno.",graph_type),
                       plot = sig_results_all, device = graph_type, dpi = 300, width = 9,height = 6,units = "in")
       ggplot2::ggsave(filename = paste0(graph_save_location,"/",name_file,"_all_pheno.",graph_type),

@@ -10,17 +10,24 @@
 #' @param max_overlap maximum number of overlaps for labelled phenotypes in the all_pheno graphs
 #' @param graph_type save format of the graphs any input readable from ggsave is accepted
 #' @param label_size size of the text for labelled phenotypes.
+#' @param order_groups_alphabetically T or F to order groups on graph alphabetically rather than default lowest FDR.
+#' @param order_phenotypes_alphabetically T or F to order phenotypes on graphs alphabetically rather than default lowest FDR.
+#' @param save_all_graphs T or F to always save every graph with or without a significant result (TRUE) or to only save when at least one association is significant (FALSE).
 #' @return saved graphs per group
 #' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
-R_association_function <- function(x,save_root,analysis_name,graph_choice,FDR_figure,max_FDR_graph,PheWAS_label_filter,max_overlap,graph_type,label_size){
+R_association_function <- function(x,save_root,analysis_name,graph_choice,FDR_figure,max_FDR_graph,PheWAS_label_filter,max_overlap,graph_type,label_size,order_groups_alphabetically,
+                                   order_phenotypes_alphabetically,
+                                   save_all_graphs){
   R_association_graph <- x %>%
     dplyr::group_split(.data$name)
   sex_label <- unique(x$sex_pheno_identifier)
   graph_save_location <- save_root
 
-  mapply(making_graphs,R_association_graph,MoreArgs = list(b="R",c=graph_choice,d=sex_label,FDR_figure=FDR_figure,max_FDR_graph=max_FDR_graph,graph_save_location=graph_save_location,PheWAS_label_filter=PheWAS_label_filter,max_overlap=max_overlap,graph_type=graph_type,label_size=label_size))
+  mapply(making_graphs,R_association_graph,MoreArgs = list(b="R",c=graph_choice,d=sex_label,FDR_figure=FDR_figure,max_FDR_graph=max_FDR_graph,graph_save_location=graph_save_location,PheWAS_label_filter=PheWAS_label_filter,max_overlap=max_overlap,graph_type=graph_type,label_size=label_size,order_groups_alphabetically=order_groups_alphabetically,
+                                                           order_phenotypes_alphabetically=order_phenotypes_alphabetically,
+                                                           save_all_graphs=save_all_graphs))
 }
 
 #' Produces per-group graphs.
@@ -36,11 +43,16 @@ R_association_function <- function(x,save_root,analysis_name,graph_choice,FDR_fi
 #' @param max_overlap maximum number of overlaps for labelled phenotypes in the all_pheno graphs
 #' @param graph_type save format of the graphs any input readable from ggsave is accepted
 #' @param label_size size of the text for labelled phenotypes.
+#' @param order_groups_alphabetically T or F to order groups on graph alphabetically rather than default lowest FDR.
+#' @param order_phenotypes_alphabetically T or F to order phenotypes on graphs alphabetically rather than default lowest FDR.
+#' @param save_all_graphs T or F to always save every graph with or without a significant result (TRUE) or to only save when at least one association is significant (FALSE).
 #' @return saved graphs per group
 #' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
-per_group_function <- function(x,y,save_root,analysis_name,graph_choice,FDR_figure,max_FDR_graph,PheWAS_label_filter,max_overlap,graph_type,label_size) {
+per_group_function <- function(x,y,save_root,analysis_name,graph_choice,FDR_figure,max_FDR_graph,PheWAS_label_filter,max_overlap,graph_type,label_size,order_groups_alphabetically,
+                               order_phenotypes_alphabetically,
+                               save_all_graphs) {
   per_group_name <- x %>%
     dplyr::group_by(.data$collective_name,.data$PheWAS_ID) %>%
     dplyr::slice_min(.data$FDR) %>%
@@ -54,7 +66,9 @@ per_group_function <- function(x,y,save_root,analysis_name,graph_choice,FDR_figu
 
   sex_label <- unique(x$sex_pheno_identifier)
 
-  mapply(making_graphs,per_group_name,MoreArgs = list(b="per_group_name",c=graph_choice,d=sex_label,FDR_figure=FDR_figure,max_FDR_graph=max_FDR_graph,graph_save_location=graph_save_location,PheWAS_label_filter=PheWAS_label_filter,max_overlap=max_overlap,graph_type=graph_type,label_size=label_size))
+  mapply(making_graphs,per_group_name,MoreArgs = list(b="per_group_name",c=graph_choice,d=sex_label,FDR_figure=FDR_figure,max_FDR_graph=max_FDR_graph,graph_save_location=graph_save_location,PheWAS_label_filter=PheWAS_label_filter,max_overlap=max_overlap,graph_type=graph_type,label_size=label_size,order_groups_alphabetically=order_groups_alphabetically,
+                                                      order_phenotypes_alphabetically=order_phenotypes_alphabetically,
+                                                      save_all_graphs=save_all_graphs))
 }
 #' Produces per-SNP graphs.
 #'
@@ -69,11 +83,16 @@ per_group_function <- function(x,y,save_root,analysis_name,graph_choice,FDR_figu
 #' @param max_overlap maximum number of overlaps for labelled phenotypes in the all_pheno graphs
 #' @param graph_type save format of the graphs any input readable from ggsave is accepted
 #' @param label_size size of the text for labelled phenotypes.
+#' @param order_groups_alphabetically T or F to order groups on graph alphabetically rather than default lowest FDR.
+#' @param order_phenotypes_alphabetically T or F to order phenotypes on graphs alphabetically rather than default lowest FDR.
+#' @param save_all_graphs T or F to always save every graph with or without a significant result (TRUE) or to only save when at least one association is significant (FALSE).
 #' @return saved graphs per SNP.
 #' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
-per_snp_function <- function(a,y,save_root,analysis_name,graph_choice,FDR_figure,max_FDR_graph,PheWAS_label_filter,max_overlap,graph_type,label_size){
+per_snp_function <- function(a,y,save_root,analysis_name,graph_choice,FDR_figure,max_FDR_graph,PheWAS_label_filter,max_overlap,graph_type,label_size,order_groups_alphabetically,
+                             order_phenotypes_alphabetically,
+                             save_all_graphs){
   per_SNP <- a %>%
     dplyr::group_split(.data$ID)
   sex_label <- unique(a$sex_pheno_identifier)
@@ -81,7 +100,9 @@ per_snp_function <- function(a,y,save_root,analysis_name,graph_choice,FDR_figure
   dir.create(per_SNP_folder)
   graph_save_location <- per_SNP_folder
 
-  mapply(making_graphs,per_SNP,MoreArgs = list(b="per_snp",c=graph_choice,d=sex_label,FDR_figure=FDR_figure,max_FDR_graph=max_FDR_graph,graph_save_location=graph_save_location,PheWAS_label_filter=PheWAS_label_filter,max_overlap=max_overlap,graph_type=graph_type,label_size=label_size))
+  mapply(making_graphs,per_SNP,MoreArgs = list(b="per_snp",c=graph_choice,d=sex_label,FDR_figure=FDR_figure,max_FDR_graph=max_FDR_graph,graph_save_location=graph_save_location,PheWAS_label_filter=PheWAS_label_filter,max_overlap=max_overlap,graph_type=graph_type,label_size=label_size,order_groups_alphabetically=order_groups_alphabetically,
+                                               order_phenotypes_alphabetically=order_phenotypes_alphabetically,
+                                               save_all_graphs=save_all_graphs))
 }
 #' Converts P values into false discovery rate.
 #'
@@ -113,59 +134,104 @@ fdr_calc <- function(x,max_pheno_tests) {
 #' @param max_overlap maximum number of overlaps for labelled phenotypes in the all_pheno graphs
 #' @param graph_type save format of the graphs any input readable from ggsave is accepted
 #' @param label_size size of the text for labelled phenotypes.
+#' @param order_groups_alphabetically T or F to order groups on graph alphabetically rather than default lowest FDR.
+#' @param order_phenotypes_alphabetically T or F to order phenotypes on graphs alphabetically rather than default lowest FDR.
+#' @param save_all_graphs T or F to always save every graph with or without a significant result (TRUE) or to only save when at least one association is significant (FALSE).
 #' @return Creates and then saves graphs from results files.
 #' @keywords internal
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
-making_graphs <- function(a,b,c,d,FDR_figure,max_FDR_graph,graph_save_location,PheWAS_label_filter,max_overlap,graph_type,label_size) {
-. <- NULL
+making_graphs <- function(a,b,c,d,FDR_figure,max_FDR_graph,graph_save_location,PheWAS_label_filter,max_overlap,graph_type,label_size,order_groups_alphabetically,
+                          order_phenotypes_alphabetically,
+                          save_all_graphs) {
+  . <- NULL
   data <- a
   data_test <- data %>%
     dplyr::filter(.data$FDR<=FDR_figure)
-
-  if (nrow(data_test)<1) {
+  if(isFALSE(save_all_graphs) & nrow(data_test)<1){
     return()
   } else {
     data <- data %>%
       dplyr::mutate(FDR=ifelse(.data$FDR==0,max_FDR_graph,.data$FDR))
 
-    order <- data  %>%
-      dplyr::group_by(.data$phenotype_group) %>%
-      dplyr::summarise(min_FDR=min(.data$FDR,na.rm = T)) %>%
-      dplyr::arrange(.data$min_FDR) %>%
-      dplyr::mutate(group_number =seq(1:(nrow(.)))) %>%
-      dplyr::select(.data$phenotype_group,.data$group_number)
-if(is.null(PheWAS_label_filter)){
-  all_pheno_data <- data %>%
-      dplyr::left_join(order,by="phenotype_group") %>%
-      tidyr::drop_na(.data$FDR) %>%
-      dplyr::arrange(.data$FDR) %>%
-      dplyr::arrange(.data$group_number) %>%
-      dplyr::mutate(annotate=ifelse(.data$FDR<=FDR_figure,T,F),
-                    short_desc_T=paste0(.data$short_desc," ",.data$group),
-                    short_desc=factor(.data$short_desc, levels = unique(.$short_desc)),
-                    seq=seq(nrow(.)),
-                    y_axis_info=-log10(.data$FDR)) %>%
-      dplyr::mutate(short_desc_T=factor(.data$short_desc_T, levels = unique(.$short_desc_T)),
-                    seq=seq+150*(.data$group_number-1))
-} else {
-  all_pheno_data <- data %>%
-    dplyr::left_join(order,by="phenotype_group") %>%
-    tidyr::drop_na(.data$FDR) %>%
-    dplyr::arrange(.data$FDR) %>%
-    dplyr::arrange(.data$group_number) %>%
-    dplyr::mutate(annotate=ifelse(.data$PheWAS_ID %in% PheWAS_label_filter,T,F),
-                  short_desc_T=paste0(.data$short_desc," ",.data$group),
-                  short_desc=factor(.data$short_desc, levels = unique(.$short_desc)),
-                  seq=seq(nrow(.)),
-                  y_axis_info=-log10(.data$FDR)) %>%
-    dplyr::mutate(short_desc_T=factor(.data$short_desc_T, levels = unique(.$short_desc_T)),
-                  seq=seq+150*(.data$group_number-1))
-}
+    if(order_groups_alphabetically){
+      order <- data  %>%
+        dplyr::group_by(.data$phenotype_group) %>%
+        dplyr::summarise(min_FDR=min(.data$FDR,na.rm = T)) %>%
+        dplyr::arrange(.data$phenotype_group) %>%
+        dplyr::mutate(group_number =seq(1:(nrow(.)))) %>%
+        dplyr::select(.data$phenotype_group,.data$group_number)
+    } else {
+      order <- data  %>%
+        dplyr::group_by(.data$phenotype_group) %>%
+        dplyr::summarise(min_FDR=min(.data$FDR,na.rm = T)) %>%
+        dplyr::arrange(.data$min_FDR) %>%
+        dplyr::mutate(group_number =seq(1:(nrow(.)))) %>%
+        dplyr::select(.data$phenotype_group,.data$group_number)
+    }
+    if(order_phenotypes_alphabetically){
+      if(is.null(PheWAS_label_filter)){
+        all_pheno_data <- data %>%
+          dplyr::left_join(order,by="phenotype_group") %>%
+          tidyr::drop_na(.data$FDR) %>%
+          dplyr::arrange(.data$description) %>%
+          dplyr::arrange(.data$group_number) %>%
+          dplyr::mutate(annotate=ifelse(.data$FDR<=FDR_figure,T,F),
+                        short_desc_T=paste0(.data$short_desc," ",.data$group),
+                        short_desc=factor(.data$short_desc, levels = unique(.$short_desc)),
+                        seq=seq(nrow(.)),
+                        y_axis_info=-log10(.data$FDR)) %>%
+          dplyr::mutate(short_desc_T=factor(.data$short_desc_T, levels = unique(.$short_desc_T)),
+                        seq=seq+150*(.data$group_number-1))
+      } else {
+        all_pheno_data <- data %>%
+          dplyr::left_join(order,by="phenotype_group") %>%
+          tidyr::drop_na(.data$FDR) %>%
+          dplyr::arrange(.data$description) %>%
+          dplyr::arrange(.data$group_number) %>%
+          dplyr::mutate(annotate=ifelse(.data$PheWAS_ID %in% PheWAS_label_filter,T,F),
+                        short_desc_T=paste0(.data$short_desc," ",.data$group),
+                        short_desc=factor(.data$short_desc, levels = unique(.$short_desc)),
+                        seq=seq(nrow(.)),
+                        y_axis_info=-log10(.data$FDR)) %>%
+          dplyr::mutate(short_desc_T=factor(.data$short_desc_T, levels = unique(.$short_desc_T)),
+                        seq=seq+150*(.data$group_number-1))
+      }
+
+    } else {
+
+      if(is.null(PheWAS_label_filter)){
+        all_pheno_data <- data %>%
+          dplyr::left_join(order,by="phenotype_group") %>%
+          tidyr::drop_na(.data$FDR) %>%
+          dplyr::arrange(.data$FDR) %>%
+          dplyr::arrange(.data$group_number) %>%
+          dplyr::mutate(annotate=ifelse(.data$FDR<=FDR_figure,T,F),
+                        short_desc_T=paste0(.data$short_desc," ",.data$group),
+                        short_desc=factor(.data$short_desc, levels = unique(.$short_desc)),
+                        seq=seq(nrow(.)),
+                        y_axis_info=-log10(.data$FDR)) %>%
+          dplyr::mutate(short_desc_T=factor(.data$short_desc_T, levels = unique(.$short_desc_T)),
+                        seq=seq+150*(.data$group_number-1))
+      } else {
+        all_pheno_data <- data %>%
+          dplyr::left_join(order,by="phenotype_group") %>%
+          tidyr::drop_na(.data$FDR) %>%
+          dplyr::arrange(.data$FDR) %>%
+          dplyr::arrange(.data$group_number) %>%
+          dplyr::mutate(annotate=ifelse(.data$PheWAS_ID %in% PheWAS_label_filter,T,F),
+                        short_desc_T=paste0(.data$short_desc," ",.data$group),
+                        short_desc=factor(.data$short_desc, levels = unique(.$short_desc)),
+                        seq=seq(nrow(.)),
+                        y_axis_info=-log10(.data$FDR)) %>%
+          dplyr::mutate(short_desc_T=factor(.data$short_desc_T, levels = unique(.$short_desc_T)),
+                        seq=seq+150*(.data$group_number-1))
+      }
+    }
     if(all(!is.na(match(c("Beta","OR"),colnames(all_pheno_data))))){
       all_pheno_data <- all_pheno_data %>%
-      dplyr::mutate(size=dplyr::case_when(is.na(.data$OR) ~ sqrt(.data$Beta^2),
-                                          is.na(.data$Beta) ~ sqrt((log(.data$OR))^2)))
+        dplyr::mutate(size=dplyr::case_when(is.na(.data$OR) ~ sqrt(.data$Beta^2),
+                                            is.na(.data$Beta) ~ sqrt((log(.data$OR))^2)))
     } else if(all(!is.na(match("Beta",colnames(all_pheno_data))) && is.na(match("OR",colnames(all_pheno_data))))) {
       all_pheno_data <- all_pheno_data %>%
         dplyr::mutate(size=sqrt(.data$Beta^2))
@@ -203,18 +269,18 @@ if(is.null(PheWAS_label_filter)){
       ggplot2::scale_x_continuous(name="Phenotype groups", limits=c(1,max.x), breaks=labels$tick, labels=labels$label, expand=c(.01,0)) +
       ggplot2::geom_hline(yintercept=-log10(FDR_figure),colour="red", alpha=I(1/3),size=1) +
       ggrepel::geom_text_repel(ggplot2::aes(label=.data$short_desc),colour="black",data=all_pheno_data[all_pheno_data$annotate,],
-                      size=label_size,angle=0,max.overlaps = max_overlap) +
+                               size=label_size,angle=0,max.overlaps = max_overlap) +
       ggplot2::guides(color="none",fill="none",shape=ggplot2::guide_legend("Direction of Effect")) +
       ggplot2::scale_size_area(name="Effect size",breaks=scales::breaks_extended(3),max_size = 4) +
       ggplot2::theme(panel.background=ggplot2::element_blank(),
-            panel.grid.minor=ggplot2::element_blank(),
-            axis.text.y=ggplot2::element_text(size=9, colour="black", hjust=1, vjust=.5),
-            axis.text.x=ggplot2::element_text(size=7, colour="black", angle=-45, hjust=0, vjust=0),
-            axis.line =ggplot2::element_line(colour="black"),
-            axis.ticks=ggplot2::element_line(colour="black"),
-            legend.position = c(0.8,0.8),
-            legend.key=ggplot2::element_blank(),
-            plot.margin = ggplot2::margin(1,60,1,1))
+                     panel.grid.minor=ggplot2::element_blank(),
+                     axis.text.y=ggplot2::element_text(size=9, colour="black", hjust=1, vjust=.5),
+                     axis.text.x=ggplot2::element_text(size=7, colour="black", angle=-45, hjust=0, vjust=0),
+                     axis.line =ggplot2::element_line(colour="black"),
+                     axis.ticks=ggplot2::element_line(colour="black"),
+                     legend.position = c(0.8,0.8),
+                     legend.key=ggplot2::element_blank(),
+                     plot.margin = ggplot2::margin(1,60,1,1))
 
     sig_pheno_data <- all_pheno_data %>%
       dplyr::filter(.data$FDR<0.01)
@@ -228,30 +294,30 @@ if(is.null(PheWAS_label_filter)){
       ggplot2::geom_hline(ggplot2::aes(yintercept=-log10(FDR_figure)),colour="red", alpha=I(1/3),size=1) +
       ggplot2::scale_y_continuous(limits=c(0, max(-log10(sig_pheno_data$FDR)))) +
       ggplot2::guides(fill=ggplot2::guide_legend(title="Phenotypic Category", ncol=1, override.aes=list(shape=24,size=1)),
-             col=ggplot2::guide_legend(title="Phenotypic Category", ncol=1),
-             shape=ggplot2::guide_legend(title="Direction of Effect", ncol=1,override.aes=list(size=1))) +
+                      col=ggplot2::guide_legend(title="Phenotypic Category", ncol=1),
+                      shape=ggplot2::guide_legend(title="Direction of Effect", ncol=1,override.aes=list(size=1))) +
       ggplot2::scale_size_area(name="Effect size",breaks=scales::breaks_extended(3),max_size = 4) +
       ggplot2::theme(panel.background=ggplot2::element_blank(),
-            panel.grid.minor=ggplot2::element_blank(),
-            axis.text.y=ggplot2::element_text(size=9, colour="black", hjust=1, vjust=.5),
-            axis.text.x=ggplot2::element_text(size=6, colour="black", angle=90, hjust=1, vjust=0),
-            axis.line =ggplot2::element_line(colour="black"),
-            axis.ticks=ggplot2::element_line(colour="black"),
-            legend.key=ggplot2::element_blank(),
-            legend.key.height=ggplot2::unit(0.5,"line"))
+                     panel.grid.minor=ggplot2::element_blank(),
+                     axis.text.y=ggplot2::element_text(size=9, colour="black", hjust=1, vjust=.5),
+                     axis.text.x=ggplot2::element_text(size=6, colour="black", angle=90, hjust=1, vjust=0),
+                     axis.line =ggplot2::element_line(colour="black"),
+                     axis.ticks=ggplot2::element_line(colour="black"),
+                     legend.key=ggplot2::element_blank(),
+                     legend.key.height=ggplot2::unit(0.5,"line"))
     if(c=="both") {
       ggplot2::ggsave(filename = paste0(graph_save_location,"/",name_file,"_sig_pheno.",graph_type),
-             plot = sig_results_all, device = graph_type, dpi = 300, width = 9,height = 6,units = "in")
+                      plot = sig_results_all, device = graph_type, dpi = 300, width = 9,height = 6,units = "in")
       ggplot2::ggsave(filename = paste0(graph_save_location,"/",name_file,"_all_pheno.",graph_type),
-             plot = all_pheno_graph, device = graph_type, dpi = 300, width = 9,height = 6,units = "in")
+                      plot = all_pheno_graph, device = graph_type, dpi = 300, width = 9,height = 6,units = "in")
 
     } else if (c=="sig_only") {
       ggplot2::ggsave(filename = paste0(graph_save_location,"/",name_file,"_sig_pheno.",graph_type),
-             plot = sig_results_all, device = graph_type, dpi = 300, width = 9,height = 6,units = "in")
+                      plot = sig_results_all, device = graph_type, dpi = 300, width = 9,height = 6,units = "in")
 
     } else if(c=="all_pheno") {
       ggplot2::ggsave(filename = paste0(graph_save_location,"/",name_file,"_all_pheno.",graph_type),
-             plot = all_pheno_graph, device = graph_type, dpi = 300, width = 9,height = 6,units = "in")
+                      plot = all_pheno_graph, device = graph_type, dpi = 300, width = 9,height = 6,units = "in")
     }
   }
 }
@@ -289,6 +355,9 @@ if(is.null(PheWAS_label_filter)){
 #' @param max_overlap maximum number of overlaps for labelled phenotypes in the all_pheno graphs
 #' @param graph_type save format of the graphs any input readable from ggsave is accepted
 #' @param label_size size of the text for labelled phenotypes.
+#' @param order_groups_alphabetically T or F to order groups on graph alphabetically rather than default lowest FDR.
+#' @param order_phenotypes_alphabetically T or F to order phenotypes on graphs alphabetically rather than default lowest FDR.
+#' @param save_all_graphs T or F to always save every graph with or without a significant result (TRUE) or to only save when at least one association is significant (FALSE).
 #' @return Saved tables and graphs, graphs created through calling additional functions.
 #' @keywords internal
 #' @importFrom magrittr %>%
@@ -320,11 +389,17 @@ Deep_PheWAS_graphs_tables <- function(x,y,
                                       MAC_figure,
                                       MAC_cases_N,
                                       MAC_control_N,
-                                      PheWAS_label_filter,max_overlap,graph_type,label_size){
+                                      PheWAS_label_filter,
+                                      max_overlap,
+                                      graph_type,
+                                      label_size,
+                                      order_groups_alphabetically,
+                                      order_phenotypes_alphabetically,
+                                      save_all_graphs){
 
   . <- NULL
   # define save folder
-save_root <- save_folder
+  save_root <- save_folder
 
   dir.create(save_root,recursive = T)
 
@@ -349,51 +424,51 @@ save_root <- save_folder
 
     if(all(!is.na(match(c("A1_CASE_CT","T_STAT"),colnames(results_PheWAS_ID_filter))))){
 
-    main_table <- results_PheWAS_ID_filter %>%
-      dplyr::left_join(SNP_list) %>%
-      dplyr::filter(.data$ID %in% SNP_list$ID,
-                    .data$rsid %in% SNP_filter,
-                    .data$group_name %in% group_name_filter) %>%
-    dplyr::mutate(dplyr::across(c(.data$POS,.data$A1_CT,.data$ALLELE_CT,.data$A1_CASE_CT,.data$A1_CTRL_CT,
-                                  .data$A1_FREQ,.data$A1_CASE_FREQ,.data$A1_CTRL_FREQ,.data$MACH_R2,.data$OBS_CT,
-                                  .data$OR,.data$`LOG(OR)_SE`,.data$L95,.data$U95,.data$Z_STAT,.data$P,.data$BETA,
-                                  .data$SE,.data$T_STAT), as.numeric),
-                  Beta=.data$BETA,
-                  group=paste0(x),
-                  minor_allele=ifelse(.data$A1_FREQ<0.5,.data$A1,.data$REF),
-                  MAF=ifelse(.data$A1_FREQ<0.5,.data$A1_FREQ,1-.data$A1_FREQ),
-                  SE=ifelse(is.na(.data$SE),.data$`LOG(OR)_SE`,.data$SE),
-                  alter_direction=dplyr::case_when(.data$coded_allele==.data$A1 ~ 0,
-                                                   .data$coded_allele!=.data$A1 ~ 1),
-                  Beta=ifelse(is.na(.data$Beta),NA,ifelse(.data$alter_direction==1,-1*.data$Beta,.data$Beta)),
-                  OR=ifelse(is.na(.data$OR),NA,ifelse(.data$alter_direction==1,1/.data$OR,.data$OR)),
-                  N_L95=ifelse(is.na(.data$OR),ifelse(.data$alter_direction==1,-1*.data$U95,.data$L95),
-                               ifelse(.data$alter_direction==1,1/.data$U95,.data$L95)),
-                  N_U95=ifelse(is.na(.data$OR),ifelse(.data$alter_direction==1,-1*.data$L95,.data$U95),
-                               ifelse(.data$alter_direction==1,1/.data$L95,.data$U95)),
-                  effect_direction=ifelse(is.na(.data$OR),ifelse(is.na(.data$Beta),NA,ifelse(.data$Beta>0,"positive","negative")),
-                                          ifelse(.data$OR>1,"positive","negative")),
-                  Z_STAT=ifelse(.data$alter_direction==1,-1*.data$Z_STAT,.data$Z_STAT),
-                  T_STAT=ifelse(.data$alter_direction==1,-1*.data$T_STAT,.data$T_STAT),
-                  Z_T_STAT=ifelse(is.na(.data$Z_STAT),.data$T_STAT,.data$Z_STAT),
-                  Error_flag=ifelse(.data$ERRCODE!=".",.data$ERRCODE,NA),
-                  ID=as.factor(.data$ID),
-                  MAC=ifelse(.data$A1_FREQ<0.5,.data$A1_CT,.data$ALLELE_CT-.data$A1_CT),
-                  MAC_cases=ifelse(.data$A1_FREQ<0.5,.data$A1_CASE_CT,(.data$A1_CASE_CT/.data$A1_CASE_FREQ)*(1-.data$A1_CASE_FREQ)),
-                  MAC_controls=ifelse(.data$A1_FREQ<0.5,.data$A1_CTRL_CT,(.data$A1_CTRL_CT/.data$A1_CTRL_FREQ)*(1-.data$A1_CTRL_FREQ)),
-                  expected_MAC_cases=ifelse(.data$A1_FREQ<0.5,(.data$A1_CASE_CT/.data$A1_CASE_FREQ)*.data$A1_CTRL_FREQ,(.data$A1_CASE_CT/.data$A1_CASE_FREQ)*(1-.data$A1_CTRL_FREQ)),
-                  MAC_diff=.data$MAC_cases-.data$expected_MAC_cases,
-                  keep=ifelse(!is.na(.data$Beta),2,ifelse(.data$expected_MAC_cases<=2&.data$MAC_cases>=3,1,ifelse(.data$expected_MAC_cases>=7&(.data$MAC_cases<=5&.data$MAC_cases>=1),1,0))),
-                  ratio=1/((.data$A1_CASE_CT/.data$A1_CASE_FREQ)/(.data$A1_CTRL_CT/.data$A1_CTRL_FREQ)),
-                  sex_pheno=sub(".*_", "", .data$PheWAS_ID),
-                  join_name = stringr::str_remove(.data$PheWAS_ID,"_male|_female")) %>%
-      dplyr::filter(.data$MAC >=MAC_figure,
-                    dplyr::case_when(.data$keep==0 ~ .data$MAC_cases >= MAC_cases_N & .data$MAC_controls >= MAC_control_N,
-                                     .data$keep==1 ~ .data$MAC_cases>=1 & .data$MAC_controls >= MAC_control_N,
-                                     .data$keep==2 ~ .data$MAC >= MAC_figure)) %>%
-      dplyr::left_join(PheWAS_manifest,by=c("join_name"="PheWAS_ID")) %>%
-      dplyr::mutate(short_desc=ifelse(.data$sex_pheno!=.data$PheWAS_ID,paste0(.data$short_desc," (",.data$sex_pheno,")"), .data$short_desc)) %>%
-      dplyr::select(.data$group,collective_name=.data$group_name,.data$PheWAS_ID,.data$category,description=.data$phenotype,N_ID=.data$OBS_CT,.data$rsid,.data$P,.data$OR,.data$Beta,L95=.data$N_L95,U95=.data$N_U95,.data$coded_allele,.data$non_coded_allele,.data$minor_allele,.data$MAF,.data$MAC,.data$MAC_cases,.data$MAC_controls,chromosome=.data$`#CHROM`,position=.data$POS,.data$Z_T_STAT,.data$SE,.data$effect_direction,.data$category,phenotype_group=.data$pheno_group,phenoytpe_group_narrow=.data$group_narrow,.data$short_desc,Info_score=.data$MACH_R2,firth=.data$`FIRTH?`,.data$TEST,.data$Error_flag,.data$ID,.data$graph_save_name)
+      main_table <- results_PheWAS_ID_filter %>%
+        dplyr::left_join(SNP_list) %>%
+        dplyr::filter(.data$ID %in% SNP_list$ID,
+                      .data$rsid %in% SNP_filter,
+                      .data$group_name %in% group_name_filter) %>%
+        dplyr::mutate(dplyr::across(c(.data$POS,.data$A1_CT,.data$ALLELE_CT,.data$A1_CASE_CT,.data$A1_CTRL_CT,
+                                      .data$A1_FREQ,.data$A1_CASE_FREQ,.data$A1_CTRL_FREQ,.data$MACH_R2,.data$OBS_CT,
+                                      .data$OR,.data$`LOG(OR)_SE`,.data$L95,.data$U95,.data$Z_STAT,.data$P,.data$BETA,
+                                      .data$SE,.data$T_STAT), as.numeric),
+                      Beta=.data$BETA,
+                      group=paste0(x),
+                      minor_allele=ifelse(.data$A1_FREQ<0.5,.data$A1,.data$REF),
+                      MAF=ifelse(.data$A1_FREQ<0.5,.data$A1_FREQ,1-.data$A1_FREQ),
+                      SE=ifelse(is.na(.data$SE),.data$`LOG(OR)_SE`,.data$SE),
+                      alter_direction=dplyr::case_when(.data$coded_allele==.data$A1 ~ 0,
+                                                       .data$coded_allele!=.data$A1 ~ 1),
+                      Beta=ifelse(is.na(.data$Beta),NA,ifelse(.data$alter_direction==1,-1*.data$Beta,.data$Beta)),
+                      OR=ifelse(is.na(.data$OR),NA,ifelse(.data$alter_direction==1,1/.data$OR,.data$OR)),
+                      N_L95=ifelse(is.na(.data$OR),ifelse(.data$alter_direction==1,-1*.data$U95,.data$L95),
+                                   ifelse(.data$alter_direction==1,1/.data$U95,.data$L95)),
+                      N_U95=ifelse(is.na(.data$OR),ifelse(.data$alter_direction==1,-1*.data$L95,.data$U95),
+                                   ifelse(.data$alter_direction==1,1/.data$L95,.data$U95)),
+                      effect_direction=ifelse(is.na(.data$OR),ifelse(is.na(.data$Beta),NA,ifelse(.data$Beta>0,"positive","negative")),
+                                              ifelse(.data$OR>1,"positive","negative")),
+                      Z_STAT=ifelse(.data$alter_direction==1,-1*.data$Z_STAT,.data$Z_STAT),
+                      T_STAT=ifelse(.data$alter_direction==1,-1*.data$T_STAT,.data$T_STAT),
+                      Z_T_STAT=ifelse(is.na(.data$Z_STAT),.data$T_STAT,.data$Z_STAT),
+                      Error_flag=ifelse(.data$ERRCODE!=".",.data$ERRCODE,NA),
+                      ID=as.factor(.data$ID),
+                      MAC=ifelse(.data$A1_FREQ<0.5,.data$A1_CT,.data$ALLELE_CT-.data$A1_CT),
+                      MAC_cases=ifelse(.data$A1_FREQ<0.5,.data$A1_CASE_CT,(.data$A1_CASE_CT/.data$A1_CASE_FREQ)*(1-.data$A1_CASE_FREQ)),
+                      MAC_controls=ifelse(.data$A1_FREQ<0.5,.data$A1_CTRL_CT,(.data$A1_CTRL_CT/.data$A1_CTRL_FREQ)*(1-.data$A1_CTRL_FREQ)),
+                      expected_MAC_cases=ifelse(.data$A1_FREQ<0.5,(.data$A1_CASE_CT/.data$A1_CASE_FREQ)*.data$A1_CTRL_FREQ,(.data$A1_CASE_CT/.data$A1_CASE_FREQ)*(1-.data$A1_CTRL_FREQ)),
+                      MAC_diff=.data$MAC_cases-.data$expected_MAC_cases,
+                      keep=ifelse(!is.na(.data$Beta),2,ifelse(.data$expected_MAC_cases<=2&.data$MAC_cases>=3,1,ifelse(.data$expected_MAC_cases>=7&(.data$MAC_cases<=5&.data$MAC_cases>=1),1,0))),
+                      ratio=1/((.data$A1_CASE_CT/.data$A1_CASE_FREQ)/(.data$A1_CTRL_CT/.data$A1_CTRL_FREQ)),
+                      sex_pheno=sub(".*_", "", .data$PheWAS_ID),
+                      join_name = stringr::str_remove(.data$PheWAS_ID,"_male|_female")) %>%
+        dplyr::filter(.data$MAC >=MAC_figure,
+                      dplyr::case_when(.data$keep==0 ~ .data$MAC_cases >= MAC_cases_N & .data$MAC_controls >= MAC_control_N,
+                                       .data$keep==1 ~ .data$MAC_cases>=1 & .data$MAC_controls >= MAC_control_N,
+                                       .data$keep==2 ~ .data$MAC >= MAC_figure)) %>%
+        dplyr::left_join(PheWAS_manifest,by=c("join_name"="PheWAS_ID")) %>%
+        dplyr::mutate(short_desc=ifelse(.data$sex_pheno!=.data$PheWAS_ID,paste0(.data$short_desc," (",.data$sex_pheno,")"), .data$short_desc)) %>%
+        dplyr::select(.data$group,collective_name=.data$group_name,.data$PheWAS_ID,.data$category,description=.data$phenotype,N_ID=.data$OBS_CT,.data$rsid,.data$P,.data$OR,.data$Beta,L95=.data$N_L95,U95=.data$N_U95,.data$coded_allele,.data$non_coded_allele,.data$minor_allele,.data$MAF,.data$MAC,.data$MAC_cases,.data$MAC_controls,chromosome=.data$`#CHROM`,position=.data$POS,.data$Z_T_STAT,.data$SE,.data$effect_direction,.data$category,phenotype_group=.data$pheno_group,phenoytpe_group_narrow=.data$group_narrow,.data$short_desc,Info_score=.data$MACH_R2,firth=.data$`FIRTH?`,.data$TEST,.data$Error_flag,.data$ID,.data$graph_save_name)
 
     } else if(all(!is.na(match("T_STAT",colnames(results_PheWAS_ID_filter))) &&  is.na(match("A1_CASE_CT",colnames(results_PheWAS_ID_filter))))){
 
@@ -469,8 +544,8 @@ save_root <- save_folder
         dplyr::select(.data$group,collective_name=.data$group_name,.data$PheWAS_ID,.data$category,description=.data$phenotype,N_ID=.data$OBS_CT,.data$rsid,.data$P,.data$OR,L95=.data$N_L95,U95=.data$N_U95,.data$coded_allele,.data$non_coded_allele,.data$minor_allele,.data$MAF,.data$MAC,.data$MAC_cases,.data$MAC_controls,chromosome=.data$`#CHROM`,position=.data$POS,.data$Z_T_STAT,.data$SE,.data$effect_direction,.data$category,phenotype_group=.data$pheno_group,phenoytpe_group_narrow=.data$group_narrow,.data$short_desc,Info_score=.data$MACH_R2,firth=.data$`FIRTH?`,.data$TEST,.data$Error_flag,.data$ID,.data$graph_save_name)
 
     } else {
-        rlang::abort(paste0("Results loaded do not have the correct columns and are missing at minimum 'T_STAT' or 'A1_CASE_CT'"))
-}
+      rlang::abort(paste0("Results loaded do not have the correct columns and are missing at minimum 'T_STAT' or 'A1_CASE_CT'"))
+    }
     main_table_fdr_split <- main_table %>%
       dplyr::filter(.data$PheWAS_ID %in% updated_manifest$PheWAS_ID) %>%
       dplyr::group_split(.data$ID)
@@ -539,18 +614,24 @@ save_root <- save_folder
     }
     if(per_group_name_graph) {
 
-      mapply(per_group_function,main_table_fdr_split,MoreArgs = list(y=x,save_root=save_root,analysis_name=analysis_name,graph_choice=graph_choice,FDR_figure=FDR_figure,max_FDR_graph=max_FDR_graph,PheWAS_label_filter=PheWAS_label_filter,max_overlap=max_overlap,graph_type=graph_type,label_size=label_size))
+      mapply(per_group_function,main_table_fdr_split,MoreArgs = list(y=x,save_root=save_root,analysis_name=analysis_name,graph_choice=graph_choice,FDR_figure=FDR_figure,max_FDR_graph=max_FDR_graph,PheWAS_label_filter=PheWAS_label_filter,max_overlap=max_overlap,graph_type=graph_type,label_size=label_size,order_groups_alphabetically=order_groups_alphabetically,
+                                                                     order_phenotypes_alphabetically=order_phenotypes_alphabetically,
+                                                                     save_all_graphs=save_all_graphs))
     }
     if(per_snp_graph) {
 
-      mapply(per_snp_function,main_table_fdr_split,MoreArgs = list(y=x,save_root=save_root,analysis_name=analysis_name,graph_choice=graph_choice,FDR_figure=FDR_figure,max_FDR_graph=max_FDR_graph,PheWAS_label_filter=PheWAS_label_filter,max_overlap=max_overlap,graph_type=graph_type,label_size=label_size))
+      mapply(per_snp_function,main_table_fdr_split,MoreArgs = list(y=x,save_root=save_root,analysis_name=analysis_name,graph_choice=graph_choice,FDR_figure=FDR_figure,max_FDR_graph=max_FDR_graph,PheWAS_label_filter=PheWAS_label_filter,max_overlap=max_overlap,graph_type=graph_type,label_size=label_size,order_groups_alphabetically=order_groups_alphabetically,
+                                                                   order_phenotypes_alphabetically=order_phenotypes_alphabetically,
+                                                                   save_all_graphs=save_all_graphs))
     }
   }
 
   if(R_association_graph) {
     mapply(R_association_function,main_table_fdr_split,MoreArgs = list(save_root=save_root,analysis_name=analysis_name,
-           graph_choice=graph_choice,FDR_figure=FDR_figure,max_FDR_graph=max_FDR_graph,PheWAS_label_filter=PheWAS_label_filter,
-           max_overlap=max_overlap,graph_type=graph_type,label_size=label_size))
+                                                                       graph_choice=graph_choice,FDR_figure=FDR_figure,max_FDR_graph=max_FDR_graph,PheWAS_label_filter=PheWAS_label_filter,
+                                                                       max_overlap=max_overlap,graph_type=graph_type,label_size=label_size,order_groups_alphabetically=order_groups_alphabetically,
+                                                                       order_phenotypes_alphabetically=order_phenotypes_alphabetically,
+                                                                       save_all_graphs=save_all_graphs))
   }
 
 }
@@ -587,8 +668,11 @@ save_root <- save_folder
 #'@param R_association_graph Specify whether a figure of the results from the association analysis from 03b_R_association_testing.R should be produced (TRUE) or not (FALSE). Default is FALSE.
 #'@param PheWAS_ID_label_filter Full file path to plain text file containing single headed column of PheWAS_IDs. Only these PheWAS_IDs will be labelled within any graphical output designed to be used primarily when trying to edit a single graph as the filter will apply to all graphs being created.
 #'@param max_overlap_labels Number, represents maximum overlaps for labelling of phenotypes in the all_pheno graph, lowering the number has the effect of reducing the total number of phenotypes labelled. Default: 20
-#'@param graph_file_save Allows user to specifiy the file format of the graphs, for example pdf or png. Default: png
+#'@param graph_file_save Allows user to specify the file format of the graphs, for example pdf or png. Default: png
 #'@param label_text_size Number, represents the text size of the labelled phenotypes in all_pheno graph. Default: 2
+#'@param order_groups_alphabetically Specify whether the groups in the graphs should be ordered by lowest FDR (FALSE) or alphabetically (TRUE).
+#'@param order_phenotypes_alphabetically Specify whether the phenotypes within each group are ordered by the lowest FDR (FALSE) or alphabetically (TRUE).
+#'@param save_all_graphs Specify whether to always save every graph with or without a significant result (TRUE) or to only save when at least one association is significant (FALSE).
 #' @return Tables and graphs of the association results.
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
@@ -623,176 +707,184 @@ graphs_tables_DeepPheWAS <- function(results_file,
                                      PheWAS_ID_label_filter,
                                      max_overlap_labels,
                                      graph_file_save,
-                                     label_text_size){
-if(is.null(PheWAS_manifest_overide)){
-  PheWAS_manifest <- data.table::fread(system.file("extdata","PheWAS_manifest.csv.gz", package = "DeepPheWAS"))
-} else {
-  if(!file.exists(PheWAS_manifest_overide)){
-    rlang::abort(paste0("'PheWAS_manifest_overide' must be a file"))
-  }
-  PheWAS_manifest <- data.table::fread(PheWAS_manifest_overide)
-  PheWAS_manifest_overide_colname <- c("PheWAS_ID","broad_catagory","category","phenotype","range_ID","sex","field_code","QC_flag_ID","QC_filter_values","first_last_max_min_value","date_code","age_code","case_code","control_code","exclude_case_control_crossover","included_in_analysis","quant_combination","primary_care_code_list","limits","lower_limit","upper_limit","transformation","analysis","age_col","pheno_group","short_desc","group_narrow","concept_name","concept_description","Notes")
+                                     label_text_size,
+                                     order_groups_alphabetically,
+                                     order_phenotypes_alphabetically,
+                                     save_all_graphs){
+  if(is.null(PheWAS_manifest_overide)){
+    PheWAS_manifest <- data.table::fread(system.file("extdata","PheWAS_manifest.csv.gz", package = "DeepPheWAS"))
+  } else {
+    if(!file.exists(PheWAS_manifest_overide)){
+      rlang::abort(paste0("'PheWAS_manifest_overide' must be a file"))
+    }
+    PheWAS_manifest <- data.table::fread(PheWAS_manifest_overide)
+    PheWAS_manifest_overide_colname <- c("PheWAS_ID","broad_catagory","category","phenotype","range_ID","sex","field_code","QC_flag_ID","QC_filter_values","first_last_max_min_value","date_code","age_code","case_code","control_code","exclude_case_control_crossover","included_in_analysis","quant_combination","primary_care_code_list","limits","lower_limit","upper_limit","transformation","analysis","age_col","pheno_group","short_desc","group_narrow","concept_name","concept_description","Notes")
 
-  if(!all(tibble::has_name(PheWAS_manifest,PheWAS_manifest_overide_colname))){
-    warning(paste0("'PheWAS_manifest_overide' does not have the correct colnames and may not produce the correct output, expected colnames are:
+    if(!all(tibble::has_name(PheWAS_manifest,PheWAS_manifest_overide_colname))){
+      warning(paste0("'PheWAS_manifest_overide' does not have the correct colnames and may not produce the correct output, expected colnames are:
                                  '"),paste(PheWAS_manifest_overide_colname, collapse=","),paste0("'
                                  not:
                                  "),paste(colnames(PheWAS_manifest), collapse=","),
-            paste0("
+              paste0("
                                  differences between inputed file and expected are:
                                  "),paste(setdiff_all(names(PheWAS_manifest),PheWAS_manifest_overide_colname), collapse=","))
+    }
   }
-}
 
-# create an updated manifests that includes sex-specific phenotypes, equates ot maximum possible phenotypes
-PheWAS_manifest_edit <- PheWAS_manifest %>%
-  dplyr::select(.data$PheWAS_ID,.data$sex,.data$phenotype,.data$category,.data$pheno_group,.data$group_narrow,.data$short_desc,.data$included_in_analysis) %>%
-  dplyr::filter(.data$included_in_analysis==1)
-sex_names <- c("Male","Female")
-PheWAS_manifest_male <- PheWAS_manifest_edit %>%
-  dplyr::filter(!.data$sex %in% sex_names) %>%
-  dplyr::mutate(PheWAS_ID=paste0(.data$PheWAS_ID,"_male"),
-                short_desc=paste(.data$short_desc," (male)"),
-                phenotype=paste0("Male stratified variant of ",.data$phenotype))
-PheWAS_manifest_female <- PheWAS_manifest_edit %>%
-  dplyr::filter(!.data$sex %in% sex_names) %>%
-  dplyr::mutate(PheWAS_ID=paste0(.data$PheWAS_ID,"_female"),
-                short_desc=paste(.data$short_desc," (female)"),
-                phenotype=paste0("Female stratified variant of ",.data$phenotype))
-PheWAS_manifest_AOO <-  PheWAS_manifest_edit %>%
-  dplyr::mutate(PheWAS_ID=paste0(.data$PheWAS_ID,"_age_of_onset"),
-                short_desc=paste(.data$short_desc," (age of onset)"),
-                phenotype=paste0("Age of onset of ",.data$phenotype))
+  # create an updated manifests that includes sex-specific phenotypes, equates ot maximum possible phenotypes
+  PheWAS_manifest_edit <- PheWAS_manifest %>%
+    dplyr::select(.data$PheWAS_ID,.data$sex,.data$phenotype,.data$category,.data$pheno_group,.data$group_narrow,.data$short_desc,.data$included_in_analysis) %>%
+    dplyr::filter(.data$included_in_analysis==1)
+  sex_names <- c("Male","Female")
+  PheWAS_manifest_male <- PheWAS_manifest_edit %>%
+    dplyr::filter(!.data$sex %in% sex_names) %>%
+    dplyr::mutate(PheWAS_ID=paste0(.data$PheWAS_ID,"_male"),
+                  short_desc=paste(.data$short_desc," (male)"),
+                  phenotype=paste0("Male stratified variant of ",.data$phenotype))
+  PheWAS_manifest_female <- PheWAS_manifest_edit %>%
+    dplyr::filter(!.data$sex %in% sex_names) %>%
+    dplyr::mutate(PheWAS_ID=paste0(.data$PheWAS_ID,"_female"),
+                  short_desc=paste(.data$short_desc," (female)"),
+                  phenotype=paste0("Female stratified variant of ",.data$phenotype))
+  PheWAS_manifest_AOO <-  PheWAS_manifest_edit %>%
+    dplyr::mutate(PheWAS_ID=paste0(.data$PheWAS_ID,"_age_of_onset"),
+                  short_desc=paste(.data$short_desc," (age of onset)"),
+                  phenotype=paste0("Age of onset of ",.data$phenotype))
 
-updated_manifest <- PheWAS_manifest_edit %>%
-  dplyr::bind_rows(PheWAS_manifest_male,PheWAS_manifest_female,PheWAS_manifest_AOO) %>%
-  dplyr::select(.data$PheWAS_ID,.data$phenotype,.data$category,phenotype_group=.data$pheno_group,.data$group_narrow,.data$short_desc)
-#read in all results
-all_results <- purrr::compact(readRDS(results_file))
-# group_filter
-if(!is.null(group_filter)) {
-  group_filter <- unlist(strsplit(group_filter,","))
-} else {
-  group_filter <- names(all_results)
-}
-all_results <- all_results[group_filter]
-group_names <- names(all_results)
-# edit to plink results
-if(plink_results){
-  # SNP_list edit only for plink list
-  SNP_list <- data.table::fread(SNP_list) %>%
-    dplyr::mutate(group=.data$group_name,
-                  coded_number=match(stringr::str_sub(.data$coded_allele,1,1),LETTERS),
-                  non_coded_number=match(stringr::str_sub(.data$non_coded_allele,1,1),LETTERS),
-                  multi=dplyr::case_when(nchar(.data$coded_allele) > 1 & nchar(.data$non_coded_allele)== 1 ~ 1,
-                                         nchar(.data$non_coded_allele) > 1 & nchar(.data$coded_allele)== 1 ~ 2,
-                                         nchar(.data$coded_allele) > 1 & nchar(.data$non_coded_allele) <1 ~ 3),
-                  allele_order=ifelse(.data$non_coded_number>.data$coded_number,paste0(.data$coded_allele,"_",.data$non_coded_allele),
-                                      ifelse(.data$coded_number>.data$non_coded_number,paste0(.data$non_coded_allele,"_",.data$coded_allele),
-                                             ifelse(.data$coded_number==.data$non_coded_number,
-                                                    ifelse(.data$multi==1,paste0(.data$non_coded_allele,"_",.data$coded_allele),
-                                                           ifelse(.data$multi==2,paste0(.data$coded_allele,"_",.data$non_coded_allele),
-                                                                  ifelse(nchar(.data$coded_allele)>nchar(.data$non_coded_allele),paste0(.data$non_coded_allele,"_",.data$coded_allele),paste0(.data$coded_allele,"_",.data$non_coded_allele)))),NA))),
-                  ID=paste0(.data$rsid,"_",.data$allele_order)) %>%
-    dplyr::select(.data$chromosome,.data$rsid,.data$group_name,.data$coded_allele,.data$non_coded_allele,.data$graph_save_name,.data$ID)
-  # create SNP_filter
-  if(!is.null(SNP_filter)) {
-    SNP_filter <- data.table::fread(SNP_filter) %>%
-      dplyr::pull(.data$rsid)
+  updated_manifest <- PheWAS_manifest_edit %>%
+    dplyr::bind_rows(PheWAS_manifest_male,PheWAS_manifest_female,PheWAS_manifest_AOO) %>%
+    dplyr::select(.data$PheWAS_ID,.data$phenotype,.data$category,phenotype_group=.data$pheno_group,.data$group_narrow,.data$short_desc)
+  #read in all results
+  all_results <- purrr::compact(readRDS(results_file))
+  # group_filter
+  if(!is.null(group_filter)) {
+    group_filter <- unlist(strsplit(group_filter,","))
   } else {
-    SNP_filter <- SNP_list %>%
-      dplyr::pull(.data$rsid)
+    group_filter <- names(all_results)
   }
-  # group_name filter
-  if(!is.null(group_name_filter)) {
-    group_name_filter <- data.table::fread(group_name_filter) %>%
-      dplyr::pull(.data$group_name)
+  all_results <- all_results[group_filter]
+  group_names <- names(all_results)
+  # edit to plink results
+  if(plink_results){
+    # SNP_list edit only for plink list
+    SNP_list <- data.table::fread(SNP_list) %>%
+      dplyr::mutate(group=.data$group_name,
+                    coded_number=match(stringr::str_sub(.data$coded_allele,1,1),LETTERS),
+                    non_coded_number=match(stringr::str_sub(.data$non_coded_allele,1,1),LETTERS),
+                    multi=dplyr::case_when(nchar(.data$coded_allele) > 1 & nchar(.data$non_coded_allele)== 1 ~ 1,
+                                           nchar(.data$non_coded_allele) > 1 & nchar(.data$coded_allele)== 1 ~ 2,
+                                           nchar(.data$coded_allele) > 1 & nchar(.data$non_coded_allele) <1 ~ 3),
+                    allele_order=ifelse(.data$non_coded_number>.data$coded_number,paste0(.data$coded_allele,"_",.data$non_coded_allele),
+                                        ifelse(.data$coded_number>.data$non_coded_number,paste0(.data$non_coded_allele,"_",.data$coded_allele),
+                                               ifelse(.data$coded_number==.data$non_coded_number,
+                                                      ifelse(.data$multi==1,paste0(.data$non_coded_allele,"_",.data$coded_allele),
+                                                             ifelse(.data$multi==2,paste0(.data$coded_allele,"_",.data$non_coded_allele),
+                                                                    ifelse(nchar(.data$coded_allele)>nchar(.data$non_coded_allele),paste0(.data$non_coded_allele,"_",.data$coded_allele),paste0(.data$coded_allele,"_",.data$non_coded_allele)))),NA))),
+                    ID=paste0(.data$rsid,"_",.data$allele_order)) %>%
+      dplyr::select(.data$chromosome,.data$rsid,.data$group_name,.data$coded_allele,.data$non_coded_allele,.data$graph_save_name,.data$ID)
+    # create SNP_filter
+    if(!is.null(SNP_filter)) {
+      SNP_filter <- data.table::fread(SNP_filter) %>%
+        dplyr::pull(.data$rsid)
+    } else {
+      SNP_filter <- SNP_list %>%
+        dplyr::pull(.data$rsid)
+    }
+    # group_name filter
+    if(!is.null(group_name_filter)) {
+      group_name_filter <- data.table::fread(group_name_filter) %>%
+        dplyr::pull(.data$group_name)
+    } else {
+      group_name_filter <- SNP_list %>%
+        dplyr::pull(.data$group_name)
+    }
+  }
+  # inputs into graphs and tables limits to only those that should have been analysed, but does not limit to those selected for graphs. Or is manually selected
+  if(is.null(max_pheno)) {
+    max_pheno_tests <- max(unlist(lapply(all_results, function(x) nrow(data.frame(ids=unique(x$PheWAS_ID)) %>% dplyr::filter(.data$ids %in% updated_manifest$PheWAS_ID)))))
   } else {
-    group_name_filter <- SNP_list %>%
-      dplyr::pull(.data$group_name)
+    max_pheno_tests <- as.numeric(max_pheno)
   }
-}
-# inputs into graphs and tables limits to only those that should have been analysed, but does not limit to those selected for graphs. Or is manually selected
-if(is.null(max_pheno)) {
-  max_pheno_tests <- max(unlist(lapply(all_results, function(x) nrow(data.frame(ids=unique(x$PheWAS_ID)) %>% dplyr::filter(.data$ids %in% updated_manifest$PheWAS_ID)))))
-} else {
-  max_pheno_tests <- as.numeric(max_pheno)
-}
-if(is.na(as.numeric(sig_FDR))){
-  rlang::abort(paste0("'sig_FDR' must be a numeral"))
-}
-FDR_figure <- as.numeric(sig_FDR)
-if(is.na(as.numeric(MAC))){
-  rlang::abort(paste0("'MAC' must be a numeral"))
-}
-MAC_figure <- as.numeric(MAC)
-if(is.na(as.numeric(MAC_case))){
-  rlang::abort(paste0("'MAC_case' must be a numeral"))
-}
-MAC_cases_N <- as.numeric(MAC_case)
-if(is.na(as.numeric(MAC_control))){
-  rlang::abort(paste0("'MAC_control' must be a numeral"))
-}
-MAC_control_N <- as.numeric(MAC_control)
-if(is.na(as.numeric(max_FDR_graph))){
-  rlang::abort(paste0("'max_FDR_graph' must be a numeral"))
-}
-max_FDR_graph_parse <- as.numeric(max_FDR_graph)
-max_FDR_graph <- 10^(-max_FDR_graph_parse)
-if(!is.null(PheWAS_ID_label_filter)){
-  if(!file.exists(PheWAS_ID_label_filter)){
-    rlang::abort(paste0("'PheWAS_ID_label_filter' must be a file"))
+  if(is.na(as.numeric(sig_FDR))){
+    rlang::abort(paste0("'sig_FDR' must be a numeral"))
   }
-  PheWAS_label_filter <- data.table::fread(PheWAS_ID_label_filter) %>%
-    dplyr::pull(1)
-} else {
-  PheWAS_label_filter <- NULL
-}
-if(is.na(as.numeric(max_overlap_labels))){
-  rlang::abort(paste0("'max_overlap_labels' must be a numeral"))
-}
-max_overlap <- as.numeric(max_overlap_labels)
-graph_type <- graph_file_save
-if(is.na(as.numeric(label_text_size))){
-  rlang::abort(paste0("'label_text_size' must be a numeral"))
-}
-label_size <- as.numeric(label_text_size)
+  FDR_figure <- as.numeric(sig_FDR)
+  if(is.na(as.numeric(MAC))){
+    rlang::abort(paste0("'MAC' must be a numeral"))
+  }
+  MAC_figure <- as.numeric(MAC)
+  if(is.na(as.numeric(MAC_case))){
+    rlang::abort(paste0("'MAC_case' must be a numeral"))
+  }
+  MAC_cases_N <- as.numeric(MAC_case)
+  if(is.na(as.numeric(MAC_control))){
+    rlang::abort(paste0("'MAC_control' must be a numeral"))
+  }
+  MAC_control_N <- as.numeric(MAC_control)
+  if(is.na(as.numeric(max_FDR_graph))){
+    rlang::abort(paste0("'max_FDR_graph' must be a numeral"))
+  }
+  max_FDR_graph_parse <- as.numeric(max_FDR_graph)
+  max_FDR_graph <- 10^(-max_FDR_graph_parse)
+  if(!is.null(PheWAS_ID_label_filter)){
+    if(!file.exists(PheWAS_ID_label_filter)){
+      rlang::abort(paste0("'PheWAS_ID_label_filter' must be a file"))
+    }
+    PheWAS_label_filter <- data.table::fread(PheWAS_ID_label_filter) %>%
+      dplyr::pull(1)
+  } else {
+    PheWAS_label_filter <- NULL
+  }
+  if(is.na(as.numeric(max_overlap_labels))){
+    rlang::abort(paste0("'max_overlap_labels' must be a numeral"))
+  }
+  max_overlap <- as.numeric(max_overlap_labels)
+  graph_type <- graph_file_save
+  if(is.na(as.numeric(label_text_size))){
+    rlang::abort(paste0("'label_text_size' must be a numeral"))
+  }
+  label_size <- as.numeric(label_text_size)
 
-# graph choices
-if(no_graph_all & isFALSE(no_graph_sig)) {
-  graph_choice <- "sig_only"
-} else if(isFALSE(no_graph_all) & no_graph_sig) {
-  graph_choice <- "all_pheno"
-} else {
-  graph_choice <- "both"
-}
+  # graph choices
+  if(no_graph_all & isFALSE(no_graph_sig)) {
+    graph_choice <- "sig_only"
+  } else if(isFALSE(no_graph_all) & no_graph_sig) {
+    graph_choice <- "all_pheno"
+  } else {
+    graph_choice <- "both"
+  }
 
-mapply(Deep_PheWAS_graphs_tables,group_names,all_results,MoreArgs = list(save_folder=save_folder,
-                                                                         PheWAS_ID_filter=PheWAS_ID_filter,
-                                                                         plink_results=plink_results,
-                                                                         save_raw_plink=save_raw_plink,
-                                                                         analysis_name=analysis_name,
-                                                                         SNP_list=SNP_list,
-                                                                         group_name_filter=group_name_filter,
-                                                                         no_save_table_all_results=no_save_table_all_results,
-                                                                         SNP_filter=SNP_filter,
-                                                                         MAC=MAC,
-                                                                         PheWAS_manifest=PheWAS_manifest,
-                                                                         updated_manifest=updated_manifest,
-                                                                         sex_split=sex_split,
-                                                                         save_table_per_group_name=save_table_per_group_name,
-                                                                         save_table_per_snp=save_table_per_snp,
-                                                                         R_association_graph=R_association_graph,
-                                                                         graph_choice=graph_choice,
-                                                                         R_association_results=R_association_results,
-                                                                         per_group_name_graph=per_group_name_graph,
-                                                                         per_snp_graph=per_snp_graph,
-                                                                         max_pheno_tests=max_pheno_tests,
-                                                                         FDR_figure=FDR_figure,
-                                                                         max_FDR_graph=max_FDR_graph,
-                                                                         MAC_figure=MAC_figure,
-                                                                         MAC_cases_N=MAC_cases_N,
-                                                                         MAC_control_N=MAC_control_N,
-                                                                         PheWAS_label_filter=PheWAS_label_filter,
-                                                                         max_overlap=max_overlap,graph_type=graph_type,label_size=label_size))
+  mapply(Deep_PheWAS_graphs_tables,group_names,all_results,MoreArgs = list(save_folder=save_folder,
+                                                                           PheWAS_ID_filter=PheWAS_ID_filter,
+                                                                           plink_results=plink_results,
+                                                                           save_raw_plink=save_raw_plink,
+                                                                           analysis_name=analysis_name,
+                                                                           SNP_list=SNP_list,
+                                                                           group_name_filter=group_name_filter,
+                                                                           no_save_table_all_results=no_save_table_all_results,
+                                                                           SNP_filter=SNP_filter,
+                                                                           MAC=MAC,
+                                                                           PheWAS_manifest=PheWAS_manifest,
+                                                                           updated_manifest=updated_manifest,
+                                                                           sex_split=sex_split,
+                                                                           save_table_per_group_name=save_table_per_group_name,
+                                                                           save_table_per_snp=save_table_per_snp,
+                                                                           R_association_graph=R_association_graph,
+                                                                           graph_choice=graph_choice,
+                                                                           R_association_results=R_association_results,
+                                                                           per_group_name_graph=per_group_name_graph,
+                                                                           per_snp_graph=per_snp_graph,
+                                                                           max_pheno_tests=max_pheno_tests,
+                                                                           FDR_figure=FDR_figure,
+                                                                           max_FDR_graph=max_FDR_graph,
+                                                                           MAC_figure=MAC_figure,
+                                                                           MAC_cases_N=MAC_cases_N,
+                                                                           MAC_control_N=MAC_control_N,
+                                                                           PheWAS_label_filter=PheWAS_label_filter,
+                                                                           max_overlap=max_overlap,
+                                                                           graph_type=graph_type,
+                                                                           label_size=label_size,
+                                                                           order_groups_alphabetically=order_groups_alphabetically,
+                                                                           order_phenotypes_alphabetically=order_phenotypes_alphabetically,
+                                                                           save_all_graphs=save_all_graphs))
 }

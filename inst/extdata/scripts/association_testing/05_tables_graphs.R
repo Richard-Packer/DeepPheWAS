@@ -2,9 +2,9 @@
 'Creates result tables and graphs for the association analyses from either the GRS or plink methods. The two usages below represent inputting data from 03a_PLINK_association_testing.R and 03b_R_association_testing.R.
 To produce graphs input the per_group_name_graph, per_snp_graph or R_association_graph depending on result source and transformation of the data required. There are many options to select related to filtering for MAC in plink results and general appearance of the graphs. By using the provided filter inputs it is possible to edit any individual graphs using the array of options.
 
-Usage: 05_tables_graphs.R (--results_file=<FILE> --analysis_name=<name> --plink_results --SNP_list=<FILE> --save_folder=<FOLDER>) [ --group_filter=<text> --PheWAS_ID_filter=<FILE> --PheWAS_manifest_overide=<FILE> --max_pheno=<number> --sig_FDR=<number> --no_save_table_all_results --no_graph_all --no_graph_sig --max_FDR_graph=<number> --SNP_filter=<FILE> --group_name_filter=<FILE> --save_raw_plink --MAC=<number> --MAC_case=<number> --MAC_control=<number> --per_group_name_graph --per_snp_graph --save_table_per_group_name --save_table_per_snp --sex_split --PheWAS_ID_label_filter=<FILE> --max_overlap_labels=<number> --graph_file_save=<name> --label_text_size=<number>]
+Usage: 05_tables_graphs.R (--results_file=<FILE> --analysis_name=<name> --plink_results --SNP_list=<FILE> --save_folder=<FOLDER>) [ --group_filter=<text> --PheWAS_ID_filter=<FILE> --PheWAS_manifest_overide=<FILE> --max_pheno=<number> --sig_FDR=<number> --no_save_table_all_results --no_graph_all --no_graph_sig --max_FDR_graph=<number> --SNP_filter=<FILE> --group_name_filter=<FILE> --save_raw_plink --MAC=<number> --MAC_case=<number> --MAC_control=<number> --per_group_name_graph --per_snp_graph --save_table_per_group_name --save_table_per_snp --sex_split --PheWAS_ID_label_filter=<FILE> --max_overlap_labels=<number> --graph_file_save=<name> --label_text_size=<number> --order_groups_alphabetically --order_phenotypes_alphabetically --save_all_graphs]
 
-       05_tables_graphs.R (--results_file=<FILE> --analysis_name=<name> --R_association_results --save_folder=<FOLDER>) [--group_filter=<text> --PheWAS_ID_filter=<FILE> --PheWAS_manifest_overide=<FILE> --max_pheno=<number> --sig_FDR=<number> --no_save_table_all_results --no_graph_all --no_graph_sig --max_FDR_graph=<number> --R_association_graph --sex_split --PheWAS_ID_label_filter=<FILE> --max_overlap_labels=<number> --graph_file_save=<name> --label_text_size=<number>]
+       05_tables_graphs.R (--results_file=<FILE> --analysis_name=<name> --R_association_results --save_folder=<FOLDER>) [--group_filter=<text> --PheWAS_ID_filter=<FILE> --PheWAS_manifest_overide=<FILE> --max_pheno=<number> --sig_FDR=<number> --no_save_table_all_results --no_graph_all --no_graph_sig --max_FDR_graph=<number> --R_association_graph --sex_split --PheWAS_ID_label_filter=<FILE> --max_overlap_labels=<number> --graph_file_save=<name> --label_text_size=<number> --order_groups_alphabetically --order_phenotypes_alphabetically --save_all_graphs]
 
 Options:
     -h --help  Show this screen.
@@ -42,8 +42,12 @@ Options:
                                       output designed to be used primarily when trying to edit a single graph as the filter will apply to all graphs being created.
     --max_overlap_labels=<number>     Number, represents maximum overlaps for labelling of phenotypes in the all_pheno graph, lowering the number has the effect of reducing the total
                                       number of phenotypes labelled. [default: 20]
-    --graph_file_save=<name>          Allows user to specifiy the file format of the graphs, for example pdf or png. [default: png]
+    --graph_file_save=<name>          Allows user to specify the file format of the graphs, for example pdf or png. [default: png]
     --label_text_size=<number>        Number, represents the text size of the labelled phenotypes in all_pheno graph. [default: 2]
+    --order_groups_alphabetically     Specify whether the groups in the graphs should be ordered by lowest FDR (FALSE) or alphabetically (TRUE).
+    --order_phenotypes_alphabetically Specify whether the phenotypes within each group are ordered by the lowest FDR (FALSE) or alphabetically (TRUE).
+    --save_all_graphs                 Specify whether to always save every graph with or without a significant result (TRUE) or to only save when at least one association is
+                                      significant (FALSE).
 
     Options for plink results
     --SNP_filter=<FILE>               Full path of a file containing SNP IDs, used to filter the output to a given subset of SNPs. Use if wanting to apply the table and/or graphing functions
@@ -74,7 +78,7 @@ Options:
 
 suppressMessages(library(docopt))
 
-arguments <- docopt(doc, version = 'v0.2 05_tables_graphs.R')
+arguments <- docopt(doc)
 
 library(DeepPheWAS)
 
@@ -108,4 +112,8 @@ graphs_tables_DeepPheWAS(results_file=arguments$results_file,
                          PheWAS_ID_label_filter=arguments$PheWAS_ID_label_filter,
                          max_overlap_labels=arguments$max_overlap_labels,
                          graph_file_save=arguments$graph_file_save,
-                         label_text_size=arguments$label_text_size)
+                         label_text_size=arguments$label_text_size,
+                         order_groups_alphabetically=arguments$order_groups_alphabetically,
+                         order_phenotypes_alphabetically=arguments$order_phenotypes_alphabetically,
+                         save_all_graphs=arguments$save_all_graphs
+                         )

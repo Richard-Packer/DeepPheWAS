@@ -35,7 +35,10 @@ graphs_tables_DeepPheWAS(
   PheWAS_ID_label_filter,
   max_overlap_labels,
   graph_file_save,
-  label_text_size
+  label_text_size,
+  order_groups_alphabetically,
+  order_phenotypes_alphabetically,
+  save_all_graphs
 )
 }
 \arguments{
@@ -97,9 +100,15 @@ graphs_tables_DeepPheWAS(
 
 \item{max_overlap_labels}{Number, represents maximum overlaps for labelling of phenotypes in the all_pheno graph, lowering the number has the effect of reducing the total number of phenotypes labelled. Default: 20}
 
-\item{graph_file_save}{Allows user to specifiy the file format of the graphs, for example pdf or png. Default: png}
+\item{graph_file_save}{Allows user to specify the file format of the graphs, for example pdf or png. Default: png}
 
 \item{label_text_size}{Number, represents the text size of the labelled phenotypes in all_pheno graph. Default: 2}
+
+\item{order_groups_alphabetically}{Specify whether the groups in the graphs should be ordered by lowest FDR (FALSE) or alphabetically (TRUE).}
+
+\item{order_phenotypes_alphabetically}{Specify whether the phenotypes within each group are ordered by the lowest FDR (FALSE) or alphabetically (TRUE).}
+
+\item{save_all_graphs}{Specify whether to always save every graph with or without a significant result (TRUE) or to only save when at least one association is significant (FALSE).}
 }
 \value{
 Tables and graphs of the association results.

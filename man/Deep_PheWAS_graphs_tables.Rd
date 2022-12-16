@@ -36,7 +36,10 @@ Deep_PheWAS_graphs_tables(
   PheWAS_label_filter,
   max_overlap,
   graph_type,
-  label_size
+  label_size,
+  order_groups_alphabetically,
+  order_phenotypes_alphabetically,
+  save_all_graphs
 )
 }
 \arguments{
@@ -103,6 +106,12 @@ Deep_PheWAS_graphs_tables(
 \item{graph_type}{save format of the graphs any input readable from ggsave is accepted}
 
 \item{label_size}{size of the text for labelled phenotypes.}
+
+\item{order_groups_alphabetically}{T or F to order groups on graph alphabetically rather than default lowest FDR.}
+
+\item{order_phenotypes_alphabetically}{T or F to order phenotypes on graphs alphabetically rather than default lowest FDR.}
+
+\item{save_all_graphs}{T or F to always save every graph with or without a significant result (TRUE) or to only save when at least one association is significant (FALSE).}
 }
 \value{
 Saved tables and graphs, graphs created through calling additional functions.

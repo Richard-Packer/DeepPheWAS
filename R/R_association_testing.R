@@ -340,18 +340,23 @@ GRS_association <- function(e,a,b,c,d,
   variable_name <- d
 
   ## Load the GRS
+
   GRS <- data.table::fread(b) %>%
     dplyr::rename(eid=1)
-
+  if(!is.null(GRS_input)){
   # combine GRS with covariates
   GRS_cov <- GRS %>%
     dplyr::left_join(covariates) %>%
     tidyr::drop_na()
-
+} else if(!is.null(non_GRS_data)){
+  GRS_cov <- GRS %>%
+    dplyr::left_join(covariates) %>%
+    dplyr::select("eid",tidyr::any_of(a)) %>%
+    tidyr::drop_na()
+  }
   # link phenotypes with GRS
   phenotypes <- data.table::fread(c) %>%
     dplyr::select(1,tidyselect::any_of(all_phenos$PheWAS_ID))
-
   available_phenotypes <- colnames(phenotypes)
 
   if(!is.null(covariates)) {

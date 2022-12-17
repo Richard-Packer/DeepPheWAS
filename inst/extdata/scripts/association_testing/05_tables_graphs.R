@@ -24,53 +24,53 @@ Options:
 
     Options for both inputs
 
-    --group_filter=<text>             Comma-separated text input, used to filter the group to which the table and graph functions are applied. Inputted groups
-									                    are the ones that are retained for analysis, group here refers to the grouping variable used to subset the analysis classically ancestry.
-    --PheWAS_ID_filter=<FILE>         Full path of a file describing the subset of PheWAS IDs that will be included in the output.
-    --PheWAS_manifest_overide=<FILE>  Full file path of the alternative PheWAS_manifest file.
-    --max_pheno=<number>              Manual override for inputting maximum phenotypes analysed. Used for calculating FDR. The default used the largest number
-                                      of associations in the results_file of any grouping.
-    --sig_FDR=<number>                Value of FDR for which associations are reported as significant. Will alter the line of significance in both graph types
-                                      and the reported phenotypes in the significant_pheno graphs. [default: 0.01]
-    --no_save_table_all_results       Specify whether a table containing all the results should be saved (FALSE) or not (TRUE). Default is FALSE.
-    --no_graph_all                    Specify whether a figure of all the results should be produced (FALSE) or not (TRUE). Default is FALSE.
-    --no_graph_sig                    Specify whether a figure of the significant results should be produced (FALSE) or not (TRUE). Default is FALSE.
-    --max_FDR_graph=<number>          Maximum value for the y-axis to be used when the FDR for a particular association is exceptionally small. Default is 300. [default: 300]
-    --sex_split                       Specify whether the figure should be stratified by sex (TRUE) or not (FALSE). If TRUE, this will produce separate figures for
-                                      males, females and combined. Default is FALSE. Does not create split tables.
-    --PheWAS_ID_label_filter=<FILE>   Full file path to plain text file containing single headed column of PheWAS_IDs. Only these PheWAS_IDs will be labelled within any graphical
-                                      output designed to be used primarily when trying to edit a single graph as the filter will apply to all graphs being created.
-    --max_overlap_labels=<number>     Number, represents maximum overlaps for labelling of phenotypes in the all_pheno graph, lowering the number has the effect of reducing the total
-                                      number of phenotypes labelled. [default: 20]
-    --graph_file_save=<name>          Allows user to specify the file format of the graphs, for example pdf or png. [default: png]
-    --label_text_size=<number>        Number, represents the text size of the labelled phenotypes in all_pheno graph. [default: 2]
-    --order_groups_alphabetically     Specify whether the groups in the graphs should be ordered by lowest FDR (FALSE) or alphabetically (TRUE).
+    --group_filter=<text>               Comma-separated text input, used to filter the group to which the table and graph functions are applied. Inputted groups
+									                      are the ones that are retained for analysis, group here refers to the grouping variable used to subset the analysis classically ancestry.
+    --PheWAS_ID_filter=<FILE>           Full path of a file describing the subset of PheWAS IDs that will be included in the output.
+    --PheWAS_manifest_overide=<FILE>    Full file path of the alternative PheWAS_manifest file.
+    --max_pheno=<number>                Manual override for inputting maximum phenotypes analysed. Used for calculating FDR. The default used the largest number
+                                        of associations in the results_file of any grouping.
+    --sig_FDR=<number>                  Value of FDR for which associations are reported as significant. Will alter the line of significance in both graph types
+                                        and the reported phenotypes in the significant_pheno graphs. [default: 0.01]
+    --no_save_table_all_results         Specify whether a table containing all the results should be saved (FALSE) or not (TRUE). Default is FALSE.
+    --no_graph_all                      Specify whether a figure of all the results should be produced (FALSE) or not (TRUE). Default is FALSE.
+    --no_graph_sig                      Specify whether a figure of the significant results should be produced (FALSE) or not (TRUE). Default is FALSE.
+    --max_FDR_graph=<number>            Maximum value for the y-axis to be used when the FDR for a particular association is exceptionally small. Default is 300. [default: 300]
+    --sex_split                         Specify whether the figure should be stratified by sex (TRUE) or not (FALSE). If TRUE, this will produce separate figures for
+                                        males, females and combined. Default is FALSE. Does not create split tables.
+    --PheWAS_ID_label_filter=<FILE>     Full file path to plain text file containing single headed column of PheWAS_IDs. Only these PheWAS_IDs will be labelled within any graphical
+                                        output designed to be used primarily when trying to edit a single graph as the filter will apply to all graphs being created.
+    --max_overlap_labels=<number>       Number, represents maximum overlaps for labelling of phenotypes in the all_pheno graph, lowering the number has the effect of reducing the total
+                                        number of phenotypes labelled. [default: 20]
+    --graph_file_save=<name>            Allows user to specify the file format of the graphs, for example pdf or png. [default: png]
+    --label_text_size=<number>          Number, represents the text size of the labelled phenotypes in all_pheno graph. [default: 2]
+    --order_groups_alphabetically       Specify whether the groups in the graphs should be ordered by lowest FDR (FALSE) or alphabetically (TRUE).
     --order_phenotypes_alphabetically   Specify whether the phenotypes within each group are ordered by the lowest FDR (FALSE) or alphabetically (TRUE).
-    --save_all_graphs                 Specify whether to always save every graph with or without a significant result (TRUE) or to only save when at least one association is
-                                      significant (FALSE).
+    --save_all_graphs                   Specify whether to always save every graph with or without a significant result (TRUE) or to only save when at least one association is
+                                        significant (FALSE).
 
     Options for plink results
-    --SNP_filter=<FILE>               Full path of a file containing SNP IDs, used to filter the output to a given subset of SNPs. Use if wanting to apply the table and/or graphing functions
-                                      a subset of results. Only works for plink_results.
-    --group_name_filter=<FILE>        Full path of the file containing a list of group_names that correspond with those defined in SNP_list. This can be used if the table and/or
-									                    graphing functions should be applied to a subset of SNPs, such as only those in a given credible set. This option can only be used with
-									                    association results generated by 03a_PLINK_association_testing.R.
-    --save_raw_plink                  Specify whether the unfiltered association results from the PLINK analysis should be saved (TRUE) or not (FALSE). Default is FALSE.
-    --MAC=<number>                    MAC (minor allele count) filter applied to all associations, only applicable in results from03a_PLINK_association_testing.R
-                                      [default: 20]
-    --MAC_case=<number>               Minor allele count among cases for filtering the association results. only applicable in results from 03a_PLINK_association_testing.R and only in binary phenotypes.
-							                        Default is 5. [default: 5]
-    --MAC_control=<number>            MAC (minor allele count) filter applied only to controls, only applicable in results from PheWAS_association_PLINK.R
-                                      and only in binary phenotypes. [default: 10]
-    --per_group_name_graph            Select if wanting to produce graphs per-group_name. This is used when looking to report the most significant finding
-                                      across several SNPs for a single construct, potentially and gene or a sentinal SNP with a credible set. It is an
-                                      column in the SNP_list file. Default is FALSE.
-    --per_snp_graph                   Specify whether a figure is produced for every SNP provided (TRUE) or not (FALSE). Default is FALSE.
-    --save_table_per_group_name       Select if wanting to save a table of results per_group_name. Will extract the lowest FDR value for a
-                                      PheWAS_ID-group_name combination and report that. Only works for plink_results.
-    --save_table_per_snp              Specify whether a results table should be generated for every SNP provided (TRUE) or not (FALSE). Default is FALSE. Will be saved in a created folder named
-                                      /analysis_name_group_per_SNP_tables. Example if the group was groupA and analysis_name top_SNPs the folder would be
-                                      /top_SNPs_groupA_per_SNP_tables.
+    --SNP_filter=<FILE>                 Full path of a file containing SNP IDs, used to filter the output to a given subset of SNPs. Use if wanting to apply the table and/or graphing functions
+                                        a subset of results. Only works for plink_results.
+    --group_name_filter=<FILE>          Full path of the file containing a list of group_names that correspond with those defined in SNP_list. This can be used if the table and/or
+									                      graphing functions should be applied to a subset of SNPs, such as only those in a given credible set. This option can only be used with
+									                      association results generated by 03a_PLINK_association_testing.R.
+    --save_raw_plink                    Specify whether the unfiltered association results from the PLINK analysis should be saved (TRUE) or not (FALSE). Default is FALSE.
+    --MAC=<number>                      MAC (minor allele count) filter applied to all associations, only applicable in results from03a_PLINK_association_testing.R
+                                        [default: 20]
+    --MAC_case=<number>                 Minor allele count among cases for filtering the association results. only applicable in results from 03a_PLINK_association_testing.R and only in
+                                        binary phenotypes. Default is 5. [default: 5]
+    --MAC_control=<number>              MAC (minor allele count) filter applied only to controls, only applicable in results from PheWAS_association_PLINK.R
+                                        and only in binary phenotypes. [default: 10]
+    --per_group_name_graph              Select if wanting to produce graphs per-group_name. This is used when looking to report the most significant finding
+                                        across several SNPs for a single construct, potentially and gene or a sentinal SNP with a credible set. It is an
+                                        column in the SNP_list file. Default is FALSE.
+    --per_snp_graph                     Specify whether a figure is produced for every SNP provided (TRUE) or not (FALSE). Default is FALSE.
+    --save_table_per_group_name         Select if wanting to save a table of results per_group_name. Will extract the lowest FDR value for a
+                                        PheWAS_ID-group_name combination and report that. Only works for plink_results.
+    --save_table_per_snp                Specify whether a results table should be generated for every SNP provided (TRUE) or not (FALSE). Default is FALSE. Will be saved in a created folder named
+                                        /analysis_name_group_per_SNP_tables. Example if the group was groupA and analysis_name top_SNPs the folder would be
+                                        /top_SNPs_groupA_per_SNP_tables.
 
     Options R association results
     --R_association_graph             Specify whether a figure of the results from the association analysis from 03b_R_association_testing.R should be produced (TRUE) or not (FALSE). Default is FALSE.

@@ -45,7 +45,7 @@ Options:
     --graph_file_save=<name>          Allows user to specify the file format of the graphs, for example pdf or png. [default: png]
     --label_text_size=<number>        Number, represents the text size of the labelled phenotypes in all_pheno graph. [default: 2]
     --order_groups_alphabetically     Specify whether the groups in the graphs should be ordered by lowest FDR (FALSE) or alphabetically (TRUE).
-    --order_phenotypes_alphabetically Specify whether the phenotypes within each group are ordered by the lowest FDR (FALSE) or alphabetically (TRUE).
+    --order_phenotypes_alphabetically   Specify whether the phenotypes within each group are ordered by the lowest FDR (FALSE) or alphabetically (TRUE).
     --save_all_graphs                 Specify whether to always save every graph with or without a significant result (TRUE) or to only save when at least one association is
                                       significant (FALSE).
 

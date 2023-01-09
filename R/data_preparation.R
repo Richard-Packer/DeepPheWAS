@@ -299,12 +299,14 @@ data_preparation_R <- function(min_data,
       tidyr::drop_na(.data$read_2) %>%
       dplyr::mutate(source="V2") %>%
       dplyr::select(.data$eid,code=.data$read_2,date=.data$event_dt,.data$source) %>%
-      tidyr::drop_na()
+      tidyr::drop_na() %>%
+      dplyr::mutate(date=as.Date(.data$date),code=as.character(.data$code),eid=as.integer(.data$eid), source=as.character(.data$source))
     GP_read_V3 <- GP_C %>%
       tidyr::drop_na(.data$read_3) %>%
       dplyr::mutate(source="V3") %>%
       dplyr::select(.data$eid,code=.data$read_3,date=.data$event_dt,.data$source) %>%
-      tidyr::drop_na()
+      tidyr::drop_na() %>%
+      dplyr::mutate(date=as.Date(.data$date),code=as.character(.data$code),eid=as.integer(.data$eid), source=as.character(.data$source))
     # combine
     all_phenotype_data <- all_phenotype_data  %>%
       dplyr::bind_rows(GP_read_V3,GP_read_V2)

@@ -50,8 +50,13 @@ curated_phenotype_creation <- function(a,x,phenotypes,curated_pheno_list) {
 
       range_ID <- unique(x$range_ID)
 
+      if(range_ID %in% names(phenotypes)) {
+
       range_ID_full <- phenotypes[[range_ID]] %>%
         dplyr::pull(.data$eid)
+      } else {
+        range_ID_full <-c()
+      }
 
       curated_controls <- mapply(per_line_edit,
                                  control_input,

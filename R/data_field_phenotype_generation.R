@@ -52,6 +52,9 @@ data_field_extraction <- function (a,b,c,d,e,f,g,h,i,j,k,l,m,n,min_data) {
     all_values <- unique(as.vector(as.matrix(per_data_field[,-1])))
     case_values <- as.numeric(unlist(strsplit(e,",")))
     control_values <- as.numeric(unlist(strsplit(f,",")))
+    if(!any(all_values %in% case_values)){
+      return()
+    }
     # leave only values that represent cases
     na_values_controls <- all_values[- which(all_values %in% case_values)]
     # and controls

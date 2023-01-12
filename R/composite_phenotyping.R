@@ -92,7 +92,6 @@ curated_phenotype_creation <- function(a,x,phenotypes,curated_pheno_list) {
 #' @importFrom rlang .data
 combining_codes <- function(x,y,phenotypes) {
   if(is.character(phenotypes[[x]]$earliest_date)) {
-
     concept_extracted <- phenotypes[[x]] %>%
       dplyr::rename(any_code=2) %>%
       dplyr::filter(.data$any_code >= y) %>%
@@ -100,7 +99,8 @@ combining_codes <- function(x,y,phenotypes) {
   } else {
     concept_extracted <- phenotypes[[x]] %>%
       dplyr::rename(any_code=2) %>%
-      dplyr::filter(.data$any_code >= y)
+      dplyr::filter(.data$any_code >= y) %>%
+      dplyr::mutate(earliest_date=as.Date(earliest_date))
   }
   return(concept_extracted)
 }

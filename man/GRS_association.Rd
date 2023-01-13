@@ -18,7 +18,8 @@ GRS_association(
   analysis_save_name,
   quant_min_cases,
   binary_min_cases,
-  covariate_col_names
+  covariate_col_names,
+  no_covariate
 )
 }
 \arguments{
@@ -49,6 +50,8 @@ GRS_association(
 \item{binary_min_cases}{minimum number of binary cases.}
 
 \item{covariate_col_names}{column names of covariates.}
+
+\item{no_covariate}{T or F if no covariate file.}
 }
 \value{
 Plink association results.

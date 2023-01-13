@@ -44,6 +44,7 @@ adding_to_results <- function(a,b,c,d,e){
 #' @param quant_min_cases minimum number of quantitative cases.
 #' @param binary_min_cases minimum number of binary cases.
 #' @param covariate_col_names column names of covariates.
+#' @param no_covariate T or F if no covariate file.
 #' @return non-GRS results as list item.
 #' @keywords internal
 per_group_none_GRS  <- function(x,y,
@@ -56,7 +57,8 @@ per_group_none_GRS  <- function(x,y,
                                 analysis_save_name,
                                 quant_min_cases,
                                 binary_min_cases,
-                                covariate_col_names){
+                                covariate_col_names,
+                                no_covariate){
 
   GRS_results <- mapply(GRS_association,
                         a=tested_variables,
@@ -70,7 +72,8 @@ per_group_none_GRS  <- function(x,y,
                                         analysis_save_name=analysis_save_name,
                                         quant_min_cases=quant_min_cases,
                                         binary_min_cases=binary_min_cases,
-                                        covariate_col_names=covariate_col_names),
+                                        covariate_col_names=covariate_col_names,
+                                        no_covariate=no_covariate),
                         SIMPLIFY = F,
                         USE.NAMES = T) %>%
     purrr::reduce(dplyr::bind_rows)
@@ -90,6 +93,7 @@ per_group_none_GRS  <- function(x,y,
 #' @param binary_min_cases minimum number of binary cases.
 #' @param covariate_col_names column names of covariates.
 #' @param old_results existing results as list item.
+#' @param no_covariate T or F if no covariate file.
 #' @return GRS results as a saved RDS object.
 #' @keywords internal
 per_group_per_trait_GRS <- function(x,
@@ -102,7 +106,8 @@ per_group_per_trait_GRS <- function(x,
                                     quant_min_cases,
                                     binary_min_cases,
                                     covariate_col_names,
-                                    old_results) {
+                                    old_results,
+                                    no_covariate) {
 
   selected_trait <- x
 
@@ -122,7 +127,8 @@ per_group_per_trait_GRS <- function(x,
                                         analysis_save_name=analysis_save_name,
                                         quant_min_cases=quant_min_cases,
                                         binary_min_cases=binary_min_cases,
-                                        covariate_col_names=covariate_col_names),
+                                        covariate_col_names=covariate_col_names,
+                                        no_covariate=no_covariate),
                         SIMPLIFY = F,
                         USE.NAMES = T)
 
@@ -314,6 +320,7 @@ message(paste0(a))
 #' @param quant_min_cases minimum number of quantitative cases.
 #' @param binary_min_cases minimum number of binary cases.
 #' @param covariate_col_names column names of covariates.
+#' @param no_covariate T or F if no covariate file.
 #' @return Plink association results.
 #' @keywords internal
 #' @importFrom magrittr %>%
@@ -327,7 +334,8 @@ GRS_association <- function(e,a,b,c,d,
                             analysis_save_name,
                             quant_min_cases,
                             binary_min_cases,
-                            covariate_col_names) {
+                            covariate_col_names,
+                            no_covariate) {
 
   results_name <- a
 
@@ -359,7 +367,14 @@ GRS_association <- function(e,a,b,c,d,
     dplyr::select(1,tidyselect::any_of(all_phenos$PheWAS_ID))
   available_phenotypes <- colnames(phenotypes)
 
-  if(!is.null(covariates)) {
+  if(no_covariate) {
+    association_guide <- all_phenos %>%
+      dplyr::filter(.data$PheWAS_ID %in% available_phenotypes) %>%
+      tidyr::drop_na(.data$analysis) %>%
+      dplyr::mutate(age_col_complete = "",
+                    analysis_option = ifelse(.data$analysis=="quant","gaussian","binomial")) %>%
+      dplyr::select(.data$PheWAS_ID,.data$age_col_complete,.data$analysis_option)
+  } else {
     association_guide <- all_phenos %>%
       dplyr::filter(.data$PheWAS_ID %in% available_phenotypes) %>%
       tidyr::drop_na(.data$analysis) %>%
@@ -367,14 +382,6 @@ GRS_association <- function(e,a,b,c,d,
                     age_col_complete = ifelse(.data$age_col=="named",paste0(.data$temp_name,"_age"),"age"),
                     analysis_option = ifelse(.data$analysis=="quant","gaussian","binomial")) %>%
       dplyr::select(.data$PheWAS_ID,.data$age_col_complete,.data$analysis_option)
-  } else {
-    association_guide <- all_phenos %>%
-      dplyr::filter(.data$PheWAS_ID %in% available_phenotypes) %>%
-      tidyr::drop_na(.data$analysis) %>%
-      dplyr::mutate(age_col_complete = "",
-                    analysis_option = ifelse(.data$analysis=="quant","gaussian","binomial")) %>%
-      dplyr::select(.data$PheWAS_ID,.data$age_col_complete,.data$analysis_option)
-
   }
 
 
@@ -556,10 +563,12 @@ R_association_testing <- function(analysis_folder,
     covariates <- data.table::fread(covariates)
     covariate_col_names <- covariates %>%
       dplyr::select(-.data$eid,-.data$age)
+    no_covariate <- FALSE
   } else {
     covariates <- data.frame(eid=NA)
     covariate_col_names <- covariates %>%
       dplyr::select(-.data$eid)
+    no_covariate <- TRUE
   }
 
   # defining all_phenos
@@ -690,7 +699,8 @@ R_association_testing <- function(analysis_folder,
                                          quant_min_cases=quant_min_cases,
                                          binary_min_cases=binary_min_cases,
                                          covariate_col_names=covariate_col_names,
-                                         old_results=old_results),
+                                         old_results=old_results,
+                                         no_covariate=no_covariate),
                          mc.cores = N_cores)
     } else {
       mapply(per_group_per_trait_GRS,GRS_map_edit,
@@ -703,7 +713,8 @@ R_association_testing <- function(analysis_folder,
                              quant_min_cases=quant_min_cases,
                              binary_min_cases=binary_min_cases,
                              covariate_col_names=covariate_col_names,
-                             old_results=old_results))
+                             old_results=old_results,
+                             no_covariate=no_covariate))
     }
 
   } else if(!is.null(non_GRS_data)){
@@ -741,7 +752,8 @@ R_association_testing <- function(analysis_folder,
                                                         analysis_save_name=analysis_save_name,
                                                         quant_min_cases=quant_min_cases,
                                                         binary_min_cases=binary_min_cases,
-                                                        covariate_col_names=covariate_col_names),
+                                                        covariate_col_names=covariate_col_names,
+                                                        no_covariate=no_covariate),
                                         mc.cores = N_cores,
                                         SIMPLIFY = F,
                                         USE.NAMES = T)
@@ -759,7 +771,8 @@ R_association_testing <- function(analysis_folder,
                                              analysis_save_name=analysis_save_name,
                                              quant_min_cases=quant_min_cases,
                                              binary_min_cases=binary_min_cases,
-                                             covariate_col_names=covariate_col_names),
+                                             covariate_col_names=covariate_col_names,
+                                             no_covariate=no_covariate),
                              SIMPLIFY = F,
                              USE.NAMES = T)
     }

@@ -15,7 +15,8 @@ per_group_per_trait_GRS(
   quant_min_cases,
   binary_min_cases,
   covariate_col_names,
-  old_results
+  old_results,
+  no_covariate
 )
 }
 \arguments{
@@ -40,6 +41,8 @@ per_group_per_trait_GRS(
 \item{covariate_col_names}{column names of covariates.}
 
 \item{old_results}{existing results as list item.}
+
+\item{no_covariate}{T or F if no covariate file.}
 }
 \value{
 GRS results as a saved RDS object.

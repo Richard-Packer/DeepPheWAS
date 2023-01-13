@@ -100,7 +100,7 @@ combining_codes <- function(x,y,phenotypes) {
     concept_extracted <- phenotypes[[x]] %>%
       dplyr::rename(any_code=2) %>%
       dplyr::filter(.data$any_code >= y) %>%
-      dplyr::mutate(earliest_date=as.Date(earliest_date))
+      dplyr::mutate(earliest_date=as.Date(.data$earliest_date))
   }
   return(concept_extracted)
 }

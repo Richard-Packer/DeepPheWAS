@@ -1,0 +1,2 @@
+trait,group,phenotype_data,genetic_data,column_name
+example,all,phenotype_file_location,DeepPheWAS/extdata/worked_example/GRS_example_data.gz,GRS_ex

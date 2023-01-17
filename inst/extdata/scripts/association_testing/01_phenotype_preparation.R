@@ -42,7 +42,7 @@ Options:
     --female=<number>                       Value corresponding to females in the combined_sex file must be a number. [default: 0]
     --PheWAS_manifest_overide=<FILE>        Full file path of the alternative PheWAS_manifest file.
 
-    --age_of_onset_phenotypes=<FILE>        Full file path to file containing three columns PheWAS_ID,lower_limit,upper_limit,transformation. PheWAS_ID are
+    --age_of_onset_phenotypes=<FILE>        Full file path to file containing four columns PheWAS_ID,lower_limit,upper_limit,transformation. PheWAS_ID are
                                             the phenotypes to create the age_of_onset phenotypes for, lower_limit is the lower age boundary to filter read
                                             as <=, upper_limit is the upper age boundary acceptable read as >=. Transformation is the type of transformation
                                             (if any) that should be applied to the phenotype. Current accepted transformations are IVNT for inverse normal

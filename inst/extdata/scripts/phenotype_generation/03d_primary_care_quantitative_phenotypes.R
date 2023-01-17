@@ -2,7 +2,7 @@
 'This script creates quantitative phenotypes from UK Biobank primary care data. The script uses the PheWAS_manifest.csv file (provided with package) as a guide to creating phenotypes.
 
 Usage:
-    03d_primary_care_quantitiative_phenotypes.R (--GPC=<FILE> --DOB=<FILE> --phenotype_save_file=<FILE>) [--N_cores=<number> --PheWAS_manifest_overide=<FILE> --code_list_overide=<FOLDER>]
+    03d_primary_care_quantititive_phenotypes.R (--GPC=<FILE> --DOB=<FILE> --phenotype_save_file=<FILE>) [--N_cores=<number> --PheWAS_manifest_overide=<FILE> --code_list_overide=<FOLDER>]
 
 Options:
     -h --help                                 Show this screen.

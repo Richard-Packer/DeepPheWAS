@@ -1,2 +1,2 @@
 chromosome,genetic_file_location,psam_fam_sample_file_location
-7,/DeepPheWAS/extdata/worked_example/example,/DeepPheWAS/extdata/worked_example/example.fam.gz
+7,/extdata/worked_example/example,/extdata/worked_example/example.fam.gz

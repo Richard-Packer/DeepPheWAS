@@ -15,6 +15,6 @@ devtools::install_github("Richard-Packer/DeepPheWAS")
 ```
 ## Use
 
-For a detailed tutorial and further details see out Github pages site.
+For a detailed tutorial see our Github pages site.
 
 https://richard-packer.github.io/DeepPheWAS_site/

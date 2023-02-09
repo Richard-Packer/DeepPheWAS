@@ -206,10 +206,8 @@ snp_extractor <- function(genetic_file_guide,
 
   lapply(pvar_file_loc,recoding_variants)
 
-  # list all pgen files
-  plink_merge_list <- list.files(paste0(analysis_folder,"/temp_plink"),pattern = "_temp.pgen")
 
-  if(length(plink_merge_list)==1) {
+  if(length(unique(chr_to_search)==1)) {
 
     plink_name <- stringr::str_remove(unlist(plink_merge_list),".pgen")
     plink_location <- paste0(analysis_folder,"/temp_plink/",plink_name)

@@ -566,6 +566,9 @@ IVNT_transformation <- function(x,y,PheWAS_manifest,age_of_onset_phenotypes,age_
 
     pheno <- x %>%
       dplyr::rename(any_code=2)
+
+    pheno <- data.table::as.data.table(pheno)
+
     pheno_col <- pheno %>%
       dplyr::pull(.data$any_code)
 

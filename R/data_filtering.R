@@ -151,7 +151,7 @@ minimum_data_R <- function(data_folder,
     purrr::reduce(dplyr::full_join, by="eid", suffix=c(".x", ""))
   duplicated_cols <- endsWith(names(minimum_tab), ".x")
   if (any(duplicated_cols)) {
-    minimum_tab[duplicated_cols] <- NULL
+    minimum_tab[, which(duplicated_cols) := NULL]
     warning("Data files contain duplicate columns. The ones from the files specified last were kept.")
   }
   if(r_format) {

@@ -604,7 +604,7 @@ Deep_PheWAS_graphs_tables <- function(x,y,
       grouping <- x
       per_group_name_folder <- paste0(save_root,"/",analysis_name,"_",x,"_results_per_collective_name/")
       dir.create(per_group_name_folder)
-      data.table::fwrite(per_group_name,paste0(save_root,x,"_results_per_collective_name_all_",analysis_name,".csv"))
+      data.table::fwrite(per_group_name,paste0(save_root,"/",x,"_results_per_collective_name_all_",analysis_name,".csv"))
       lapply(per_group_name_split,function(x) data.table::fwrite(x,paste0(per_group_name_folder,unique(x$collective_name),"_",grouping,"_results.csv")))
     }
     if(save_table_per_snp){

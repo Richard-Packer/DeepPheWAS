@@ -14,7 +14,7 @@ curated_phenotype_creation <- function(a,x,phenotypes,curated_pheno_list) {
   pheno_name <- a
   message(pheno_name)
   all_concepts <- x %>%
-    dplyr::select(.data$PheWAS_ID,tidyselect::starts_with("C_")) %>%
+    dplyr::select("PheWAS_ID",tidyselect::starts_with("C_")) %>%
     tidyr::pivot_longer(tidyselect::starts_with("C_"), names_to = "Concepts", values_drop_na = T) %>%
     dplyr::pull(.data$value)
 
@@ -119,7 +119,7 @@ AND <- function(a,b,c,d) {
   case <- a %>%
     dplyr::inner_join(b, by = "eid") %>%
     dplyr::mutate(earliest_date.x = lubridate::ymd(.data$earliest_date.x), earliest_date.y=lubridate::ymd(.data$earliest_date.y),
-                  gap = .data$earliest_date.y-.data$earliest_date.x,
+                  gap = as.numeric(.data$earliest_date.y-.data$earliest_date.x),
                   earliest_date=.data$earliest_date.x,
                   any_code=.data$any_code.x+.data$any_code.y) %>%
     dplyr::filter(dplyr::between(.data$gap,c,d)) %>%
@@ -140,11 +140,12 @@ NOT <- function(a,b,c,d)  {
   exclusions <- a %>%
     dplyr::inner_join(b, by = "eid") %>%
     dplyr::mutate(earliest_date.x = lubridate::ymd(.data$earliest_date.x), earliest_date.y=lubridate::ymd(.data$earliest_date.y),
-                  gap = .data$earliest_date.y-.data$earliest_date.x,
+                  gap = as.numeric(.data$earliest_date.y-.data$earliest_date.x),
                   earliest_date=.data$earliest_date.x,
                   any_code=.data$any_code.x+.data$any_code.y) %>%
     dplyr::filter(dplyr::between(.data$gap,c,d)) %>%
     dplyr::pull(.data$eid)
+
 
   case <- a %>%
     dplyr::filter(!.data$eid %in% exclusions)
@@ -167,7 +168,7 @@ per_line_edit <- function(x,phenotypes) {
 
   #removing the fixed cols and then removing cols with NA from the columns requiring conversion
   fixed_details <- x %>%
-    dplyr::select(.data$PheWAS_ID,.data$phenotype,.data$broad_category,.data$range_ID,.data$`Case/control`,.data$Control_N,.data$Case_N)
+    dplyr::select("PheWAS_ID","phenotype","broad_category","range_ID","Case/control","Control_N","Case_N")
 
   conversion_columns <- x %>%
     dplyr::select(!tidyselect::any_of(colnames(fixed_details))) %>%

@@ -566,7 +566,7 @@ Deep_PheWAS_graphs_tables <- function(x,y,
       dplyr::select(.data$name,.data$PheWAS_ID,.data$category,.data$phenotype,.data$P,.data$OR,.data$Beta,.data$L95,.data$U95,.data$SE,.data$phenotype_group,.data$group_narrow,.data$short_desc,.data$effect_direction,.data$group,.data$name_group)
 
     main_table_fdr_split <- tibble::as_tibble(main_table) %>%
-      dplyr::group_split(.data$unique_name)
+      dplyr::group_split(.data$name)
   }
   if(length(main_table_fdr_split)==0){
     return()

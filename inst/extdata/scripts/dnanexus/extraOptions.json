@@ -1,0 +1,5 @@
+{
+    "defaultRuntimeAttributes" : {
+      "docker" : "nshrine/deep_phewas"
+    }
+}

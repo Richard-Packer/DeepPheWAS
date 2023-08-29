@@ -560,9 +560,7 @@ IVNT_transformation <- function(x,y,PheWAS_manifest,age_of_onset_phenotypes,age_
     dplyr::select(.data$transformation) %>%
     dplyr::pull()
 }
-  if (is.na(type)) {
-    return(x)
-  } else if (type == "IVNT") {
+  if (type == "IVNT") {
 
     pheno <- x %>%
       dplyr::rename(any_code=2)
@@ -588,8 +586,10 @@ IVNT_transformation <- function(x,y,PheWAS_manifest,age_of_onset_phenotypes,age_
       dplyr::bind_cols(IVNT_col) %>%
       dplyr::select(tidyselect::any_of(desired_col_names))
 
-return(pheno_new)
-  }
+    return(pheno_new)
+  } else {
+      return(x)
+  } 
 }
 #' Saves list objects as dataframes per grouping variable
 #'

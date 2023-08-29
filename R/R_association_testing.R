@@ -209,8 +209,8 @@ message(paste0(a))
       return()
   }
 
-  if(b=="age") {
-    formula_covariates <- paste(" + ", paste(colnames(covariate_col_names), collapse = " + "))
+  if(b=="") {
+    formula_covariates <- paste(colnames(covariate_col_names), collapse = " + ")
   } else {
     formula_covariates <- paste0(" + ", paste(c(b,colnames(covariate_col_names)), collapse = " + "))
   }
@@ -358,8 +358,8 @@ GRS_association <- function(e,a,b,c,d,
     tidyr::drop_na()
 } else if(!is.null(non_GRS_data)){
   GRS_cov <- GRS %>%
-    dplyr::select("eid",tidyr::any_of(a)) %>%
     dplyr::left_join(covariates) %>%
+    dplyr::select("eid",tidyr::any_of(a)) %>%
     tidyr::drop_na()
   }
   # link phenotypes with GRS
@@ -373,7 +373,7 @@ GRS_association <- function(e,a,b,c,d,
       tidyr::drop_na(.data$analysis) %>%
       dplyr::mutate(age_col_complete = "",
                     analysis_option = ifelse(.data$analysis=="quant","gaussian","binomial")) %>%
-      dplyr::select("PheWAS_ID","age_col_complete","analysis_option")
+      dplyr::select(.data$PheWAS_ID,.data$age_col_complete,.data$analysis_option)
   } else {
     association_guide <- all_phenos %>%
       dplyr::filter(.data$PheWAS_ID %in% available_phenotypes) %>%
@@ -381,7 +381,7 @@ GRS_association <- function(e,a,b,c,d,
       dplyr::mutate(temp_name=stringr::str_remove(.data$PheWAS_ID,"_male|_female|_age_of_onset"),
                     age_col_complete = ifelse(.data$age_col=="named",paste0(.data$temp_name,"_age"),"age"),
                     analysis_option = ifelse(.data$analysis=="quant","gaussian","binomial")) %>%
-      dplyr::select("PheWAS_ID","age_col_complete","analysis_option")
+      dplyr::select(.data$PheWAS_ID,.data$age_col_complete,.data$analysis_option)
   }
 
 
@@ -562,12 +562,12 @@ R_association_testing <- function(analysis_folder,
     }
     covariates <- data.table::fread(covariates)
     covariate_col_names <- covariates %>%
-      dplyr::select(-"eid","age")
+      dplyr::select(-.data$eid,-.data$age)
     no_covariate <- FALSE
   } else {
     covariates <- data.frame(eid=NA)
     covariate_col_names <- covariates %>%
-      dplyr::select("eid")
+      dplyr::select(-.data$eid)
     no_covariate <- TRUE
   }
 

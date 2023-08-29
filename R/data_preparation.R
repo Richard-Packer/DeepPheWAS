@@ -40,8 +40,12 @@ SR_data_out <-  function(a,b,c,d,e,f) {
     dplyr::left_join(SR_dates,by=c("rowid")) %>%
     dplyr::select(.data$eid,.data$code,date_of_dx=.data$year_dx,date_of_visit={{field_id_assesment_selection}}) %>%
     dplyr::mutate(date_of_dx = ifelse(.data$date_of_dx == -1, NA, ifelse(.data$date_of_dx == -3, NA, .data$date_of_dx)),
-                  date_of_dx = lubridate::ymd(lubridate::round_date(lubridate::date_decimal(.data$date_of_dx), unit = "day")),
-                  date_of_visit = lubridate::ymd(.data$date_of_visit),
+                  date_of_dx = lubridate::date_decimal(.data$date_of_dx) %>%
+                      (lubridate::round_date)(unit="day") %>%
+                      (lubridate::parse_date_time)(c("dmy","ymd")) %>%
+                      (lubridate::as_date),
+                  date_of_visit = lubridate::parse_date_time(.data$date_of_visit, c("dmy", "ymd")) %>%
+                      (lubridate::as_date),
                   date = dplyr::coalesce(.data$date_of_dx,.data$date_of_visit),
                   source=e,
                   code=as.character(.data$code)) %>%
@@ -181,14 +185,14 @@ data_preparation_R <- function(min_data,
       # data
       cancer_reg_data <- tab_data %>%
         dplyr::select(1,tidyselect::matches("^40006-")) %>%
-        dplyr::mutate_all(dplyr::na_if,"") %>%
+        dplyr::mutate_if(is.character, dplyr::na_if,"") %>%
         tidyr::pivot_longer(c(2:length(colnames(.))),names_to = "type",values_to = "code") %>%
         tibble::rowid_to_column() %>%
         tidyr::drop_na() %>%
         dplyr::left_join(cancer_reg_date, by=c("rowid")) %>%
         tidyr::drop_na() %>%
         dplyr::mutate(code=ifelse(nchar(.data$code) > 4, (stringr::str_extract(.data$code, "^.{4}")), .data$code),
-                      date=lubridate::ymd(.data$year_dx),
+                      date=lubridate::dmy(.data$year_dx),
                       source="cancer") %>%
         dplyr::select(.data$eid,.data$code,.data$date,.data$source)
       # combine
@@ -287,7 +291,8 @@ data_preparation_R <- function(min_data,
     # GP clinical data
     GP_C <- GP_C %>%
       dplyr::filter(!.data$eid %in% exclusions) %>%
-      dplyr::mutate(event_dt=lubridate::dmy(.data$event_dt))
+      dplyr::mutate(event_dt=lubridate::parse_date_time(.data$event_dt, c("dmy", "ymd")) %>%
+                        (lubridate::as_date))
     # need to retain an edited copy as further phenotypes require this information
     data.table::fwrite(GP_C,paste0(save_location,"/GP_C_edit.txt.gz"), na = NA, quote = TRUE)
     # GP_ID file
@@ -333,7 +338,8 @@ data_preparation_R <- function(min_data,
     # GP prescription data
     GP_P <- GP_P %>%
       dplyr::filter(!.data$eid %in% exclusions) %>%
-      dplyr::mutate(issue_date=lubridate::dmy(.data$issue_date)) %>%
+      dplyr::mutate(issue_date=lubridate::parse_date_time(.data$issue_date, c("ymd", "dmy")) %>%
+                        (lubridate::as_date)) %>%
       dplyr::mutate(issue_date=format(.data$issue_date, "%Y-%m-%d"),
                     dmd_code=as.character(.data$dmd_code))
     # write
@@ -382,16 +388,17 @@ data_preparation_R <- function(min_data,
     HES <- HESIN_diag
     HES_dates <- HESIN_table %>%
       dplyr::select(.data$eid, .data$ins_index, .data$epistart,.data$admidate) %>%
-      dplyr::na_if("") %>%
+      dplyr::mutate_if(is.character, dplyr::na_if,"") %>%
       dplyr::mutate(dated=ifelse((is.na(.data$epistart)==T & is.na(.data$admidate)==T), NA,ifelse(is.na(.data$epistart)==T, .data$admidate, .data$epistart))) %>%
-      dplyr::mutate(dates=lubridate::dmy(.data$dated)) %>%
+#      dplyr::mutate(dates=lubridate::parse_date_time(.data$dated, c("ymd", "dmy")) %>%
+        dplyr::mutate(dates=lubridate::as_date(.data$dated)) %>%
       dplyr::select(.data$eid, .data$ins_index, .data$dates) %>%
       tidyr::drop_na()
     # combine
     HES_all <- HES %>%
       dplyr::left_join(HES_dates) %>%
       tidyr::drop_na(.data$dates) %>%
-      dplyr::mutate_all(dplyr::na_if,"") %>%
+      dplyr::mutate_if(is.character, dplyr::na_if,"") %>%
       dplyr::select(-.data$diag_icd9_nb,-.data$diag_icd10_nb,-.data$arr_index) %>%
       dplyr::filter(!.data$eid %in% exclusions) %>%
       dplyr::mutate(diag_icd10= ifelse(nchar(.data$diag_icd10) > 4, (stringr::str_extract(.data$diag_icd10, "^.{4}")), .data$diag_icd10),
@@ -510,7 +517,8 @@ data_preparation_R <- function(min_data,
 
     MD <- cause_of_death %>%
       dplyr::left_join(date_of_death) %>%
-      dplyr::mutate(date_of_death=lubridate::dmy(.data$date_of_death)) %>%
+      dplyr::mutate(date_of_death=lubridate::parse_date_time(.data$date_of_death, c("ymd", "dmy")) %>%
+                        (lubridate::as_date)) %>%
       tidyr::drop_na(.data$date_of_death)
     ## check to see if there is anyone with multiple dates of death
     MD_date_check <- MD %>%

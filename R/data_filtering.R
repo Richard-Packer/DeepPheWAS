@@ -148,12 +148,7 @@ minimum_data_R <- function(data_folder,
   }
   # Use purr to map and join Worst case scenario numbers don't match but it just introduces NA's.
   minimum_tab <- min_tab_data %>%
-    purrr::reduce(dplyr::full_join, by="eid", suffix=c(".x", ""))
-  duplicated_cols <- endsWith(names(minimum_tab), ".x")
-  if (any(duplicated_cols)) {
-    minimum_tab[, which(duplicated_cols) := NULL]
-    warning("Data files contain duplicate columns. The ones from the files specified last were kept.")
-  }
+    purrr::reduce(dplyr::full_join, by="eid")
   if(r_format) {
     colnames(minimum_tab) <- stringr::str_replace(colnames(minimum_tab),"f\\.","")
     colnames(minimum_tab) <- stringr::str_replace(colnames(minimum_tab),"\\.","-")

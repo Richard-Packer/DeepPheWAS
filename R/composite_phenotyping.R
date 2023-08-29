@@ -14,7 +14,7 @@ curated_phenotype_creation <- function(a,x,phenotypes,curated_pheno_list) {
   pheno_name <- a
   message(pheno_name)
   all_concepts <- x %>%
-    dplyr::select("PheWAS_ID",tidyselect::starts_with("C_")) %>%
+    dplyr::select(.data$PheWAS_ID,tidyselect::starts_with("C_")) %>%
     tidyr::pivot_longer(tidyselect::starts_with("C_"), names_to = "Concepts", values_drop_na = T) %>%
     dplyr::pull(.data$value)
 
@@ -119,7 +119,7 @@ AND <- function(a,b,c,d) {
   case <- a %>%
     dplyr::inner_join(b, by = "eid") %>%
     dplyr::mutate(earliest_date.x = lubridate::ymd(.data$earliest_date.x), earliest_date.y=lubridate::ymd(.data$earliest_date.y),
-                  gap = as.numeric(.data$earliest_date.y-.data$earliest_date.x),
+                  gap = .data$earliest_date.y-.data$earliest_date.x,
                   earliest_date=.data$earliest_date.x,
                   any_code=.data$any_code.x+.data$any_code.y) %>%
     dplyr::filter(dplyr::between(.data$gap,c,d)) %>%
@@ -140,12 +140,11 @@ NOT <- function(a,b,c,d)  {
   exclusions <- a %>%
     dplyr::inner_join(b, by = "eid") %>%
     dplyr::mutate(earliest_date.x = lubridate::ymd(.data$earliest_date.x), earliest_date.y=lubridate::ymd(.data$earliest_date.y),
-                  gap = as.numeric(.data$earliest_date.y-.data$earliest_date.x),
+                  gap = .data$earliest_date.y-.data$earliest_date.x,
                   earliest_date=.data$earliest_date.x,
                   any_code=.data$any_code.x+.data$any_code.y) %>%
     dplyr::filter(dplyr::between(.data$gap,c,d)) %>%
     dplyr::pull(.data$eid)
-
 
   case <- a %>%
     dplyr::filter(!.data$eid %in% exclusions)
@@ -168,7 +167,7 @@ per_line_edit <- function(x,phenotypes) {
 
   #removing the fixed cols and then removing cols with NA from the columns requiring conversion
   fixed_details <- x %>%
-    dplyr::select("PheWAS_ID","phenotype","broad_category","range_ID","Case/control","Control_N","Case_N")
+    dplyr::select(.data$PheWAS_ID,.data$phenotype,.data$broad_category,.data$range_ID,.data$`Case/control`,.data$Control_N,.data$Case_N)
 
   conversion_columns <- x %>%
     dplyr::select(!tidyselect::any_of(colnames(fixed_details))) %>%
@@ -200,12 +199,12 @@ per_line_edit <- function(x,phenotypes) {
     CBA <- paste0("CBA_",1)
 
     if((x %>% dplyr::select(!!G_Na))[[1]]=="minf"){
-      gap_a_convert <- -Inf } else {
+      gap_a_convert <- as.difftime(-Inf, units="days") } else {
         gap_a_convert <- as.numeric((x %>% dplyr::select(!!G_Na))[[1]])
       }
 
     if((x %>% dplyr::select(!!G_Nb))[[1]]=="minf"){
-      gap_b_convert <- -Inf } else {
+      gap_b_convert <- as.difftime(Inf, units="days") } else {
         gap_b_convert <- as.numeric((x %>% dplyr::select(!!G_Nb))[[1]])
       }
 
@@ -402,8 +401,8 @@ per_line_edit <- function(x,phenotypes) {
       if(names(RHS_list[index_RHS])=="concept") {
 
         RHS_N_codes <- as.numeric(unlist(strsplit(RHS_list[[index_RHS]]$n_codes[[1]],",")))
-        gap_a <- unlist(RHS_list[[index_RHS]]$gap_a[[1]],",")
-        gap_b <- unlist(RHS_list[[index_RHS]]$gap_b[[1]],",")
+        gap_a <- unlist(RHS_list[[index_RHS]]$gap_a[[1]],",") %>% as.difftime(units="days")
+        gap_b <- unlist(RHS_list[[index_RHS]]$gap_b[[1]],",") %>% as.difftime(units="days")
         RHS_concept_codes <- unlist(strsplit(RHS_list[[index_RHS]]$concept_file[[1]],","))
         RHS_concept <- mapply(combining_codes,
                               RHS_concept_codes,
@@ -418,8 +417,8 @@ per_line_edit <- function(x,phenotypes) {
       } else if(names(RHS_list[index_RHS])=="evaluated_statement") {
 
         RHS_N_codes <- 1
-        gap_a <- -Inf
-        gap_b <- Inf
+        gap_a <- as.difftime(-Inf, units="days")
+        gap_b <- as.difftime(Inf, units="days")
         RHS_concept <- RHS_list[[index_RHS]]$concept_file
 
       }
@@ -473,12 +472,12 @@ concept_list_conversion <- function(x,y) {
   CBA <- paste0("CBA_",x)
 
   if((y %>% dplyr::select(!!G_Na))[[1]]=="minf"){
-    gap_a_convert <- -Inf } else {
+    gap_a_convert <- as.difftime(-Inf, units="days") } else {
       gap_a_convert <- as.numeric((y %>% dplyr::select(!!G_Na))[[1]])
     }
 
   if((y %>% dplyr::select(!!G_Nb))[[1]]=="minf"){
-    gap_b_convert <- -Inf } else {
+    gap_b_convert <- as.difftime(Inf, units="days") } else {
       gap_b_convert <- as.numeric((y %>% dplyr::select(!!G_Nb))[[1]])
     }
 

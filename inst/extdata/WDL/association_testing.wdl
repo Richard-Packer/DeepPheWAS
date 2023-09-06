@@ -101,7 +101,7 @@ task extracting_snps {
 
 	command <<<
 		echo ~{sep="," bgis} &&
-		paste <(tr ',' '\n' <<< "~{sep=',' bgens}") <(tr ',', '\n' <<< "~{sep=',' sample_files}") | gawk 'BEGIN { OFS = ","; print "chromosome,genetic_file_location,psam_fam_sample_file_location" } { sub(".bgen", "", $1); print gensub(".+ukb22828_c(.+)_b0_v3", "\\1", "g", $1), $1, $2 }' > genetic_file_guide.csv &&
+		paste <(tr ',' '\n' <<< "~{sep=',' bgens}" | sort) <(tr ',', '\n' <<< "~{sep=',' sample_files}" | sort) | gawk 'BEGIN { OFS = ","; print "chromosome,genetic_file_location,psam_fam_sample_file_location" } { sub(".bgen", "", $1); print gensub(".+ukb22828_c(.+)_b0_v3", "\\1", "g", $1), $1, $2 }' > genetic_file_guide.csv &&
 		Rscript `Rscript -e 'cat(system.file("extdata/scripts/association_testing","02_extracting_snps.R", package = "DeepPheWAS"))'` \
 		--SNP_list ~{snp_list} \
 		--genetic_file_guide genetic_file_guide.csv \

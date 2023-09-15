@@ -185,17 +185,20 @@ clinical_code_lookup <- function (x,z,health_data,code_list_folder) {
                             MoreArgs = list(code_list=code_list,health_data=health_data),
                             SIMPLIFY = F)
 
+  rowMins <- function(x, na.rm = FALSE) {
+    stopifnot(is.data.frame(x))
+    do.call(pmin, c(unname(as.list(x)), list(na.rm = na.rm)))
+  }
+
   ## Wide dates all file primary file used for phenotype generation
   wide_dates <- lapply(per_source_data,'[[',"wide_date") %>%
     purrr::reduce(dplyr::full_join) %>%
-    dplyr::rowwise() %>%
-    dplyr::mutate(earliest_date = min(!!! rlang::syms(names(.)[2:ncol(.)]), na.rm = T)) %>%
+    dplyr::mutate(earliest_date = rowMins(dplyr::across(2:dplyr::last_col()), na.rm = TRUE)) %>%
     dplyr::select(.data$eid,.data$earliest_date)
 
   wide_count <- lapply(per_source_data,'[[',"wide_file") %>%
     purrr::reduce(dplyr::full_join) %>%
-    dplyr::rowwise() %>%
-    dplyr::mutate(any_code=sum(!!! rlang::syms(names(.)[2:ncol(.)]), na.rm = T))
+    dplyr::mutate(any_code = rowSums(dplyr::across(2:dplyr::last_col()), na.rm = TRUE))
 
   WA <- wide_dates %>%
     dplyr::left_join(wide_count)

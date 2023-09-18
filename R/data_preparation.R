@@ -42,10 +42,8 @@ SR_data_out <-  function(a,b,c,d,e,f) {
     dplyr::mutate(date_of_dx = ifelse(.data$date_of_dx == -1, NA, ifelse(.data$date_of_dx == -3, NA, .data$date_of_dx)),
                   date_of_dx = lubridate::date_decimal(.data$date_of_dx) %>%
                       (lubridate::round_date)(unit="day") %>%
-                      (lubridate::parse_date_time)(c("dmy","ymd")) %>%
-                      (lubridate::as_date),
-                  date_of_visit = lubridate::parse_date_time(.data$date_of_visit, c("dmy", "ymd")) %>%
-                      (lubridate::as_date),
+                      parse_date_if_needed(),
+                  date_of_visit = parse_date_if_needed(.data$date_of_visit),
                   date = dplyr::coalesce(.data$date_of_dx,.data$date_of_visit),
                   source=e,
                   code=as.character(.data$code)) %>%
@@ -192,7 +190,7 @@ data_preparation_R <- function(min_data,
         dplyr::left_join(cancer_reg_date, by=c("rowid")) %>%
         tidyr::drop_na() %>%
         dplyr::mutate(code=ifelse(nchar(.data$code) > 4, (stringr::str_extract(.data$code, "^.{4}")), .data$code),
-                      date=lubridate::dmy(.data$year_dx),
+                      date=parse_date_if_needed(.data$year_dx),
                       source="cancer") %>%
         dplyr::select(.data$eid,.data$code,.data$date,.data$source)
       # combine
@@ -291,8 +289,7 @@ data_preparation_R <- function(min_data,
     # GP clinical data
     GP_C <- GP_C %>%
       dplyr::filter(!.data$eid %in% exclusions) %>%
-      dplyr::mutate(event_dt=lubridate::parse_date_time(.data$event_dt, c("dmy", "ymd")) %>%
-                        (lubridate::as_date))
+      dplyr::mutate(event_dt=parse_date_if_needed(.data$event_dt))
     # need to retain an edited copy as further phenotypes require this information
     data.table::fwrite(GP_C,paste0(save_location,"/GP_C_edit.txt.gz"), na = NA, quote = TRUE)
     # GP_ID file
@@ -338,8 +335,7 @@ data_preparation_R <- function(min_data,
     # GP prescription data
     GP_P <- GP_P %>%
       dplyr::filter(!.data$eid %in% exclusions) %>%
-      dplyr::mutate(issue_date=lubridate::parse_date_time(.data$issue_date, c("ymd", "dmy")) %>%
-                        (lubridate::as_date)) %>%
+      dplyr::mutate(issue_date=parse_date_if_needed(.data$issue_date)) %>%
       dplyr::mutate(issue_date=format(.data$issue_date, "%Y-%m-%d"),
                     dmd_code=as.character(.data$dmd_code))
     # write
@@ -390,8 +386,7 @@ data_preparation_R <- function(min_data,
       dplyr::select(.data$eid, .data$ins_index, .data$epistart,.data$admidate) %>%
       dplyr::mutate_if(is.character, dplyr::na_if,"") %>%
       dplyr::mutate(dated=ifelse((is.na(.data$epistart)==T & is.na(.data$admidate)==T), NA,ifelse(is.na(.data$epistart)==T, .data$admidate, .data$epistart))) %>%
-#      dplyr::mutate(dates=lubridate::parse_date_time(.data$dated, c("ymd", "dmy")) %>%
-        dplyr::mutate(dates=lubridate::as_date(.data$dated)) %>%
+      dplyr::mutate(dates=lubridate::as_date(.data$dated)) %>%
       dplyr::select(.data$eid, .data$ins_index, .data$dates) %>%
       tidyr::drop_na()
     # combine
@@ -517,8 +512,7 @@ data_preparation_R <- function(min_data,
 
     MD <- cause_of_death %>%
       dplyr::left_join(date_of_death) %>%
-      dplyr::mutate(date_of_death=lubridate::parse_date_time(.data$date_of_death, c("ymd", "dmy")) %>%
-                        (lubridate::as_date)) %>%
+      dplyr::mutate(date_of_death=parse_date_if_needed(.data$date_of_death)) %>%
       tidyr::drop_na(.data$date_of_death)
     ## check to see if there is anyone with multiple dates of death
     MD_date_check <- MD %>%
@@ -577,5 +571,21 @@ data_preparation_R <- function(min_data,
       dplyr::select(.data$eid,.data$DOB)
     # write
     data.table::fwrite(DOB,paste0(save_location,"/DOB"))
+  }
+}
+
+# Helpers --------------------------------------------------------------------
+
+# At some point dates in UK Biobank source data have been in DMY format,
+# although in latest data dates seem to consistently be in YMD.
+parse_date_if_needed <- function(x, orders = c("ymd", "dmy")) {
+  if (lubridate::is.Date(x)) {
+    x
+  } else if (lubridate::is.POSIXt(x)) {
+    lubridate::as_date(x)
+  } else if (is.character(x)) {
+    lubridate::as_date(lubridate::parse_date_time(x, orders))
+  } else {
+    stop("Don't know how to parse <", class(x)[1], "> to date.")
   }
 }

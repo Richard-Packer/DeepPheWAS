@@ -211,11 +211,11 @@ formula_phenotypes <- function(min_data,
   #Chronic multi-site pain
   if("53" %in% current_field_id & "21003" %in% current_field_id & "6159" %in% current_field_id){
     age <- min_data %>%
-      dplyr::select(.data$eid,tidyselect::matches("^21003-")) %>%
+      dplyr::select("eid",tidyselect::matches("^21003-")) %>%
       dplyr::select(1,age=2) %>%
       tidyr::drop_na()
     date <- min_data %>%
-      dplyr::select(.data$eid,tidyselect::matches("^53-"))%>%
+      dplyr::select("eid",tidyselect::matches("^53-"))%>%
       dplyr::select(1,earliest_date=2) %>%
       tidyr::drop_na() %>%
       dplyr::mutate(earliest_date=lubridate::ymd(.data$earliest_date))
@@ -237,25 +237,29 @@ formula_phenotypes <- function(min_data,
         )
     }
 
-    pain_all_over <- multi_site_pain %>%
-      dplyr::filter(.data$`6159-0.0`==8)
+    no_pain <- multi_site_pain %>%
+      dplyr::filter(.data$`6159-0.0`==-7) %>%
+      dplyr::mutate(`6159-0.0`=0) %>%
+      dplyr::select("eid",Q1000=`6159-0.0`)
 
-    case_values <- c(1,2,3,4,5,6,7,8)
+    case_values <- c(1,2,3,4,5,6,7)
     control_values <- c(NA)
 
     multi_site_pain_filter <- multi_site_pain %>%
-      dplyr::filter(!.data$eid %in% pain_all_over$eid) %>%
+      dplyr::filter(!.data$eid %in% no_pain$eid) %>%
       dplyr::mutate(dplyr::across(-.data$eid, dplyr::na_if, -3)) %>%
-      tidyr::drop_na(.data$`6159-0.0`) %>%
-      dplyr::mutate(dplyr::across(-.data$eid, dplyr::na_if, -7))
+      dplyr::mutate(dplyr::across(-.data$eid, dplyr::na_if, 8)) %>%
+      tidyr::drop_na(.data$`6159-0.0`)
     # now convert all non-na to 1
     multi_site_pain_filtered <- multi_site_pain_filter %>%
       dplyr::mutate(dplyr::across(dplyr::everything(),~replace(.data$., .data$. %in% case_values,1))) %>%
       dplyr::mutate(dplyr::across(dplyr::everything(),~replace(.data$., .data$. %in% control_values,0))) %>%
       dplyr::mutate(Q1000=.data$`6159-0.0`+.data$`6159-0.1`+.data$`6159-0.2`+.data$`6159-0.3`+.data$`6159-0.4`+.data$`6159-0.5`+.data$`6159-0.6`) %>%
+      dplyr::select("eid","Q1000") %>%
+      dplyr::bind_rows(no_pain) %>%
       dplyr::left_join(age) %>%
       dplyr::left_join(date) %>%
-      dplyr::select(.data$eid,.data$Q1000,.data$earliest_date,Q1000_age=.data$age)
+      dplyr::select("eid","Q1000","earliest_date",Q1000_age="age")
 
     multisite_pain_list <- list(Q1000=multi_site_pain_filtered)
     formula_phenotypes <- append(formula_phenotypes,multisite_pain_list)

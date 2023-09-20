@@ -583,9 +583,10 @@ making_control_pop_lists <- function(x, control_populations) {
 #' @param phenotype_save_file Full path for the save file for the generated composite phenotypes RDS.
 #' @param control_populations Full path of the "control_populations" file containing columns of IDs, column names are used to create lists of IDs. Saved as a list called control_populations.RDS in the folder inputted in the phenotype_folder flag. The lists are used to define some of the composite phenotype control populations as directed by the composite_phenotype_map file. The unedited version of the composite_phenotype_map file uses two populations, all_pop and primary_care_pop, which represent all IDs in the sample and all IDs with available primary care data. To create composite phenotypes, the names of these list must match the composite_phenotype_map file. The 02_data_preparation.R script creates a control_populations file that is used by default.
 #' @param update_list Option to run this script as an update to an existing composite_phenotype list object. If specified, this script will use phenotype_save_file to load the existing list and then save over that file upon completion.
+#' @param control_pop_save_file Full path for the save file for the generated composite control populations RDS.
 #' @return An RDS file containing lists of data-frames each representing a single composite phenotype.
 #' @importFrom magrittr %>%
-#' @importFrom rlang .data
+#' @importFrom rlang .data %||%
 #' @export
 composite_phenotyping <- function(composite_phenotype_map_overide,
                                   phenotype_folder,
@@ -593,7 +594,9 @@ composite_phenotyping <- function(composite_phenotype_map_overide,
                                   N_iterations,
                                   phenotype_save_file,
                                   control_populations,
-                                  update_list) {
+                                  update_list,
+                                  control_pop_save_file = NULL
+                                  ) {
 
   save_file_name <- phenotype_save_file
 
@@ -615,12 +618,12 @@ composite_phenotyping <- function(composite_phenotype_map_overide,
                              SIMPLIFY = F)
   # save
   if(!is.null(phenotype_folder)){
-    saveRDS(population_lists,paste0(phenotype_folder,"/","control_populations.RDS"))
-    phenotype_files_vector <- c(phenotype_files_vector,paste0(phenotype_folder,"/","control_populations.RDS"))
+    control_pop_save_file <- control_pop_save_file %||% paste0(phenotype_folder,"/","control_populations.RDS")
   } else if(!is.null(phenotype_files)){
-    saveRDS(population_lists,paste0(dirname(c(unlist(strsplit(phenotype_files,",")))[[1]]),"/","control_populations.RDS"))
-    phenotype_files_vector <- c(phenotype_files_vector,paste0(dirname(phenotype_files_vector[[1]]),"/","control_populations.RDS"))
+    control_pop_save_file <- control_pop_save_file %||% paste0(dirname(c(unlist(strsplit(phenotype_files,",")))[[1]]),"/","control_populations.RDS")
   }
+  saveRDS(population_lists,control_pop_save_file)
+  phenotype_files_vector <- c(phenotype_files_vector,control_pop_save_file)
 
   # number of times the function is iterated over
   if(is.na(as.numeric(N_iterations))){

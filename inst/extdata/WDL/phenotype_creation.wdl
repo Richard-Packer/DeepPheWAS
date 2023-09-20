@@ -170,17 +170,20 @@ task composite_phenotypes {
     }
 
     String phenotype_save_file = "composite_phenotypes.RDS"
+    String control_pop_save_file = "control_populations.RDS"
 
     command <<<
        Rscript `Rscript -e 'cat(system.file("extdata/scripts/phenotype_generation","05_composite_phenotypes.R", package = "DeepPheWAS"))'` \
        --phenotype_files ~{data_field_file}~{"," + phecode_file}~{"," + range_ID_file}~{"," + concept_file}~{"," + all_dates_file}~{"," + PQP_file}~{"," + formula_file} \
-       --phenotype_save_file composite_phenotypes.RDS \
+       --phenotype_save_file ~{phenotype_save_file} \
+       --control_pop_save_file ~{control_pop_save_file} \
        ~{"--control_populations " + control_populations} \
        ~{"--composite_phenotype_map_overide " + composite_phenotype_map_overide}
     >>>
 
     output {
-        File out = phenotype_save_file
+        File composite_phenotypes = phenotype_save_file
+        File control_populations = control_pop_save_file
     }
 
     runtime {

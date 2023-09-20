@@ -75,6 +75,7 @@ workflow phenotype_generation {
 		Array[File]+ concept = creating_concepts.out
 		File pqp = primary_care_quantitative_phenotypes.out
 		File formula = formula_phenotypes.out
-		File composite = composite_phenotypes.out
+		File composite = composite_phenotypes.composite_phenotypes
+		File composite_control = composite_phenotypes.control_pop_save_file
 	}
 }

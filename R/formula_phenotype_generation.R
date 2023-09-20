@@ -223,6 +223,20 @@ formula_phenotypes <- function(min_data,
     multi_site_pain <- min_data %>%
       dplyr::select(.data$eid,tidyselect::matches("^6159-0"))
 
+    if (is.character(multi_site_pain$`6159-0.0`)) {
+      # Exported RAP data has multi-selection values included as a pipe-separated string
+      # rather than the previously expected format with array-elements in separate columns.
+      # We assume there are 7 parts as that assumption is made when computing Q1000 below.
+      multi_site_pain <- multi_site_pain %>%
+        tidyr::separate(
+          col = .data$`6159-0.0`,
+          sep = "\\|",
+          into = paste0("6159-0.", 0:6),
+          fill = "right",
+          convert = TRUE
+        )
+    }
+
     pain_all_over <- multi_site_pain %>%
       dplyr::filter(.data$`6159-0.0`==8)
 
@@ -245,7 +259,7 @@ formula_phenotypes <- function(min_data,
 
     multisite_pain_list <- list(Q1000=multi_site_pain_filtered)
     formula_phenotypes <- append(formula_phenotypes,multisite_pain_list)
+  }
 
-    }
   saveRDS(formula_phenotypes,phenotype_save_location)
 }

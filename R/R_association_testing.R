@@ -346,7 +346,7 @@ GRS_association <- function(e,a,b,c,d,
   }
 
   variable_name <- d
-
+  message(variable_name)
   ## Load the GRS
 
   GRS <- data.table::fread(b) %>%
@@ -400,6 +400,10 @@ GRS_association <- function(e,a,b,c,d,
                                                 all_phenos=all_phenos),
                                 SIMPLIFY = F) %>%
     purrr::reduce(dplyr::bind_rows)
+
+  if(nrow(association_results)==0) {
+    return()
+  }
 
   if ("Beta" %in% colnames(association_results) & "OR" %in% colnames(association_results)) {
     association_results_edit <- association_results %>%
